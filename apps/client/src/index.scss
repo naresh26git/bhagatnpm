@@ -1,0 +1,36 @@
+// html,
+// body,
+// #root {
+//   height: 100%;
+// }
+
+// @import "bootstrap/scss/bootstrap";
+html,
+body,
+#root {
+  height: 100%;
+  font-family: "Poppins";
+  font-size: 0.935rem;
+}
+
+.nav-tabs > li > button,
+.nav-tabs > li > button:hover,
+.nav-tabs > li > button:focus {
+  border: none !important;
+  color: #a1a1a1;
+}
+.nav-tabs > li > button.active,
+.nav-tabs > li > button.active:focus,
+.nav-tabs > li > button.active:hover {
+  cursor: default;
+  font-weight: bold;
+  color: #000000 !important;
+  border: none;
+  border-bottom: 2px solid #000000 !important;
+}
+.nav-tabs {
+  border: none !important;
+}
+@import "bootstrap/scss/bootstrap";
+
+@import "./font-family.css";

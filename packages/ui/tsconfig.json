@@ -1,0 +1,9 @@
+{
+  "extends": "tsconfig/react-library.json",
+  "include": ["."],
+  "exclude": ["dist", "build", "node_modules"],
+  "compilerOptions": {
+    "lib": ["DOM", "ES2021"],
+    "disableSizeLimit": true
+  }
+}

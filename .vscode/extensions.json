@@ -1,0 +1,13 @@
+{
+  "recommendations": [
+    "EditorConfig.EditorConfig",
+    "PKief.material-icon-theme",
+    "naumovs.color-highlight",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "aaron-bond.better-comments",
+    "Gruntfuggly.todo-tree",
+    "DavidAnson.vscode-markdownlint",
+    "yzhang.markdown-all-in-one"
+  ]
+}
