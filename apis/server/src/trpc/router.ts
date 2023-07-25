@@ -6,6 +6,8 @@ import { designationRoutes } from "./routes/designation";
 import { familyDetailRoutes } from "./routes/family-details";
 import { helpDeskRoutes } from "./routes/help-desks";
 import { hrRoutes } from "./routes/hr";
+import { identificationRoutes } from "./routes/identification";
+import { identificationTypeRoutes } from "./routes/identification/identificationType";
 import { leaveRoutes } from "./routes/leaves";
 import { leaveTypeRoutes } from "./routes/leaves/leave-types";
 import { payRollRoutes } from "./routes/pay-rolls";
@@ -33,6 +35,8 @@ export const appRouter = trpc.router({
   hr: hrRoutes,
   company: companyRoutes,
   imageUpload: uploadRoutes,
+  identification: identificationRoutes,
+  identificationTypes: identificationTypeRoutes,
 });
 
 // export type definition of API
