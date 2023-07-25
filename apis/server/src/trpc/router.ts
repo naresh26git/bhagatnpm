@@ -10,6 +10,7 @@ import { leaveRoutes } from "./routes/leaves";
 import { leaveTypeRoutes } from "./routes/leaves/leave-types";
 import { payRollRoutes } from "./routes/pay-rolls";
 import { personalInfoRoutes } from "./routes/personal-infos";
+import { qualificationRoutes } from "./routes/qualification";
 import { roleRoutes } from "./routes/roles";
 import { timeSheetRoutes } from "./routes/time-sheets";
 import { uploadRoutes } from "./routes/upload-image";
@@ -33,6 +34,7 @@ export const appRouter = trpc.router({
   hr: hrRoutes,
   company: companyRoutes,
   imageUpload: uploadRoutes,
+  qualification: qualificationRoutes,
 });
 
 // export type definition of API

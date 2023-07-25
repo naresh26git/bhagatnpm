@@ -828,7 +828,30 @@ const main = async () => {
         })
       )
     );
+    const [] = await Promise.all(
+      [
+        {
+          name: "X",
+          userId: muraliUserId,
+          createdById: muraliUserId,
+          updatedById: muraliUserId,
+        },
 
+        {
+          name: "XII",
+          userId: muraliUserId,
+          createdById: muraliUserId,
+          updatedById: muraliUserId,
+        },
+      ].map((qualification) =>
+        tx.qualification.create({
+          data: qualification,
+          select: {
+            id: true,
+          },
+        })
+      )
+    );
     const [{ id: clubitsCompanyId }, { id: genyusCompanyId }] =
       await Promise.all(
         [

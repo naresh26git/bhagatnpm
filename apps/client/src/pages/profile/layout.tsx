@@ -130,7 +130,7 @@ import PageHeader from "../../components/PageHeader";
 import ContactDataPage from "./contact";
 import FamilyPage from "./family";
 import PersonalInfoPage from "./personal-info";
-import QualificationPage from "./qualification";
+import Qualifications from "./qualification";
 export const Layout = () => {
   return (
     <>
@@ -336,7 +336,7 @@ export const Layout = () => {
             role="tabpanel"
             aria-labelledby="qualification-tab"
           >
-            <QualificationPage />
+            <Qualifications />
           </div>
         </div>
       </Stack>
