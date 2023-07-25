@@ -15,10 +15,10 @@ import { personalInfoRoutes } from "./routes/personal-infos";
 import { qualificationRoutes } from "./routes/qualification";
 import { roleRoutes } from "./routes/roles";
 import { timeSheetRoutes } from "./routes/time-sheets";
-import { uploadRoutes } from "./routes/upload-image";
 import { userRoutes } from "./routes/users";
 import { visitorPassRoutes } from "./routes/visitor-pass";
 import { trpc } from "./trpc";
+
 export const appRouter = trpc.router({
   address: addressRoutes,
   familyDetail: familyDetailRoutes,
@@ -35,7 +35,6 @@ export const appRouter = trpc.router({
   designation: designationRoutes,
   hr: hrRoutes,
   company: companyRoutes,
-  imageUpload: uploadRoutes,
   qualification: qualificationRoutes,
   identification: identificationRoutes,
   identificationTypes: identificationTypeRoutes,
