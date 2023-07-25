@@ -243,6 +243,62 @@ model PersonalInfo {
   @@map("personal_infos")
 }
 
+model Qualification {
+  id     Int    @id @default(autoincrement())
+  name   String @unique @db.VarChar(128)
+  user   User   @relation("QualificationOfUser", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userId Int    @map("user_id")
+
+  // Audit Fields
+  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
+  createdById Int      @map("created_by_id")
+  createdBy   User     @relation("QualificationCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
+  updatedById Int      @map("updated_by_id")
+  updatedBy   User     @relation("QualificationUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("qualifications")
+}
+
+model IdentificationType {
+  id   Int    @id @default(autoincrement())
+  name String @unique @db.VarChar(128)
+
+  identifications Identification[] @relation("IdentificationOfIdentificationType")
+
+  // Audit Fields
+  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
+  createdById Int      @map("created_by_id")
+  createdBy   User     @relation("IdentificationTypeCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
+  updatedById Int      @map("updated_by_id")
+  updatedBy   User     @relation("IdentificationTypeUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("indentification_types")
+}
+
+model Identification {
+  id Int @id @default(autoincrement())
+
+  type   IdentificationType @relation("IdentificationOfIdentificationType", fields: [typeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  typeId Int                @map("type_id")
+
+  number String @unique @db.VarChar(128)
+  user   User   @relation("IdentificationOfUser", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userId Int    @map("user_id")
+
+  // Audit Fields
+  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
+  createdById Int      @map("created_by_id")
+  createdBy   User     @relation("IdentificationCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
+  updatedById Int      @map("updated_by_id")
+  updatedBy   User     @relation("IdentificationUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([typeId, userId])
+  @@map("identifications")
+}
+
 model Role {
   id    Int    @id @default(autoincrement())
   name  String @unique
@@ -523,54 +579,63 @@ model User {
   status   UserStatus? @relation("UserOfUserStatus", fields: [statusId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   statusId Int?        @map("status_id")
 
-  addresses            Address[]      @relation("AddressOfUser")
-  addressesCreated     Address[]      @relation("AddressCreatedByUser")
-  addressesUpdated     Address[]      @relation("AddressUpdatedByUser")
-  departmentsCreated   Department[]   @relation("DepartmentCreatedByUser")
-  departmentsUpdated   Department[]   @relation("DepartmentUpdatedByUser")
-  designationsCreated  Designation[]  @relation("DesignationCreatedByUser")
-  designationsUpdated  Designation[]  @relation("DesignationUpdatedByUser")
-  familyDetails        FamilyDetail[] @relation("FamilyDetailOfUser")
-  familyDetailsCreated FamilyDetail[] @relation("FamilyDetailCreatedByUser")
-  familyDetailsUpdated FamilyDetail[] @relation("FamilyDetailUpdatedByUser")
-  leaveTypesCreated    LeaveType[]    @relation("LeaveTypeCreatedByUser")
-  leaveTypesUpdated    LeaveType[]    @relation("LeaveTypeUpdatedByUser")
-  leaves               Leave[]        @relation("LeaveOfUser")
-  leavesCreated        Leave[]        @relation("LeaveCreatedByUser")
-  leavesUpdated        Leave[]        @relation("LeaveUpdatedByUser")
-  payRolls             PayRoll[]      @relation("PayRollOfUser")
-  payRollsCreated      PayRoll[]      @relation("PayRollCreatedByUser")
-  payRollsUpdated      PayRoll[]      @relation("PayRollUpdatedByUser")
-  task                 Task[]         @relation("TaskOfUser")
-  taskCreated          Task[]         @relation("TaskCreatedByUser")
-  taskUpdated          Task[]         @relation("TaskUpdatedByUser")
-
-  personalInfo             PersonalInfo?      @relation("PersonalInfoOfUser")
-  personalInfosCreated     PersonalInfo[]     @relation("PersonalInfoCreatedByUser")
-  personalInfosUpdated     PersonalInfo[]     @relation("PersonalInfoUpdatedByUser")
-  rolesCreated             Role[]             @relation("RoleCreatedByUser")
-  rolesUpdated             Role[]             @relation("RoleUpdatedByUser")
-  helpDesks                HelpDesk[]         @relation("HelpDeskOfUser")
-  helpDesksCreated         HelpDesk[]         @relation("HelpDeskCreatedByUser")
-  helpDesksUpdated         HelpDesk[]         @relation("HelpDeskUpdatedByUser")
+  addresses                  Address[]            @relation("AddressOfUser")
+  addressesCreated           Address[]            @relation("AddressCreatedByUser")
+  addressesUpdated           Address[]            @relation("AddressUpdatedByUser")
+  departmentsCreated         Department[]         @relation("DepartmentCreatedByUser")
+  departmentsUpdated         Department[]         @relation("DepartmentUpdatedByUser")
+  designationsCreated        Designation[]        @relation("DesignationCreatedByUser")
+  designationsUpdated        Designation[]        @relation("DesignationUpdatedByUser")
+  familyDetails              FamilyDetail[]       @relation("FamilyDetailOfUser")
+  familyDetailsCreated       FamilyDetail[]       @relation("FamilyDetailCreatedByUser")
+  familyDetailsUpdated       FamilyDetail[]       @relation("FamilyDetailUpdatedByUser")
+  leaveTypesCreated          LeaveType[]          @relation("LeaveTypeCreatedByUser")
+  leaveTypesUpdated          LeaveType[]          @relation("LeaveTypeUpdatedByUser")
+  leaves                     Leave[]              @relation("LeaveOfUser")
+  leavesCreated              Leave[]              @relation("LeaveCreatedByUser")
+  leavesUpdated              Leave[]              @relation("LeaveUpdatedByUser")
+  payRolls                   PayRoll[]            @relation("PayRollOfUser")
+  payRollsCreated            PayRoll[]            @relation("PayRollCreatedByUser")
+  payRollsUpdated            PayRoll[]            @relation("PayRollUpdatedByUser")
+  task                       Task[]               @relation("TaskOfUser")
+  taskCreated                Task[]               @relation("TaskCreatedByUser")
+  taskUpdated                Task[]               @relation("TaskUpdatedByUser")
+  personalInfo               PersonalInfo?        @relation("PersonalInfoOfUser")
+  personalInfosCreated       PersonalInfo[]       @relation("PersonalInfoCreatedByUser")
+  personalInfosUpdated       PersonalInfo[]       @relation("PersonalInfoUpdatedByUser")
+  qualifications             Qualification[]      @relation("QualificationOfUser")
+  qualificationsCreated      Qualification[]      @relation("QualificationCreatedByUser")
+  qualificationsUpdated      Qualification[]      @relation("QualificationUpdatedByUser")
+  identificationTypesCreated IdentificationType[] @relation("IdentificationTypeCreatedByUser")
+  identificationTypesUpdated IdentificationType[] @relation("IdentificationTypeUpdatedByUser")
+  identifications            Identification[]     @relation("IdentificationOfUser")
+  identificationsCreated     Identification[]     @relation("IdentificationCreatedByUser")
+  identificationsUpdated     Identification[]     @relation("IdentificationUpdatedByUser")
+  rolesCreated               Role[]               @relation("RoleCreatedByUser")
+  rolesUpdated               Role[]               @relation("RoleUpdatedByUser")
+  helpDesks                  HelpDesk[]           @relation("HelpDeskOfUser")
+  helpDesksCreated           HelpDesk[]           @relation("HelpDeskCreatedByUser")
+  helpDesksUpdated           HelpDesk[]           @relation("HelpDeskUpdatedByUser")
   // sessions             Session[]           @relation("SessionOfUser")
-  salary                   Salary?            @relation("SalaryOfUser")
-  salariesCreated          Salary[]           @relation("SalaryCreatedByUser")
-  salariesUpdated          Salary[]           @relation("SalaryUpdatedByUser")
-  subordinates             PersonalInfo[]     @relation("ReportingManagerOfUser")
-  timeSheets               TimeSheet[]        @relation("TimeSheetOfUser")
-  timeSheetsCreated        TimeSheet[]        @relation("TimeSheetCreatedByUser")
-  timeSheetsUpdated        TimeSheet[]        @relation("TimeSheetUpdatedByUser")
-  usersCreated             User[]             @relation("UserCreatedByUser")
-  usersUpdated             User[]             @relation("UserUpdatedByUser")
-  hr                       Hr[]               @relation("UserOfHr")
+  salary                     Salary?              @relation("SalaryOfUser")
+  salariesCreated            Salary[]             @relation("SalaryCreatedByUser")
+  salariesUpdated            Salary[]             @relation("SalaryUpdatedByUser")
+  subordinates               PersonalInfo[]       @relation("ReportingManagerOfUser")
+  timeSheets                 TimeSheet[]          @relation("TimeSheetOfUser")
+  timeSheetsCreated          TimeSheet[]          @relation("TimeSheetCreatedByUser")
+  timeSheetsUpdated          TimeSheet[]          @relation("TimeSheetUpdatedByUser")
+  usersCreated               User[]               @relation("UserCreatedByUser")
+  usersUpdated               User[]               @relation("UserUpdatedByUser")
+  hr                         Hr[]                 @relation("UserOfHr")
+
   // Audit Fields
-  createdAt                DateTime           @default(now()) @map("created_at") @db.DateTime2
-  createdById              Int?               @map("created_by_id")
-  createdBy                User?              @relation("UserCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedAt                DateTime           @updatedAt @map("updated_at") @db.DateTime2
-  updatedById              Int?               @map("updated_by_id")
-  updatedBy                User?              @relation("UserUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
+  createdById Int?     @map("created_by_id")
+  createdBy   User?    @relation("UserCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
+  updatedById Int?     @map("updated_by_id")
+  updatedBy   User?    @relation("UserUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
   addressTypesCreated      AddressType[]      @relation("AddressTypeCreatedByUser")
   addressTypesUpdated      AddressType[]      @relation("AddressTypeUpdatedByUser")
   relationshipTypesCreated RelationshipType[] @relation("RelationshipTypeCreatedByUser")

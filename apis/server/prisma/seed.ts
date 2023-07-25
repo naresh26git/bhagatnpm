@@ -805,6 +805,30 @@ const main = async () => {
       )
     );
 
+    const [] = await Promise.all(
+      [
+        {
+          name: "Aadhaar",
+          createdById: systemUserId,
+          updatedById: systemUserId,
+        },
+        {
+          name: "PAN",
+          createdById: systemUserId,
+          updatedById: systemUserId,
+        },
+      ].map((identificationType) =>
+        tx.identificationType.upsert({
+          create: identificationType,
+          update: identificationType,
+          where: {
+            name: identificationType.name,
+          },
+          select: { id: true },
+        })
+      )
+    );
+
     const [{ id: clubitsCompanyId }, { id: genyusCompanyId }] =
       await Promise.all(
         [
@@ -829,6 +853,7 @@ const main = async () => {
           })
         )
       );
+
     const [] = await Promise.all(
       [
         {
