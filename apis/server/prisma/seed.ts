@@ -805,7 +805,10 @@ const main = async () => {
       )
     );
 
-    const [] = await Promise.all(
+    const [
+      { id: aadharIdentificationTypeId },
+      { id: panIdentificationTypeId },
+    ] = await Promise.all(
       [
         {
           name: "Aadhaar",
@@ -828,6 +831,7 @@ const main = async () => {
         })
       )
     );
+
     const [] = await Promise.all(
       [
         {
@@ -852,6 +856,33 @@ const main = async () => {
         })
       )
     );
+
+    const [] = await Promise.all(
+      [
+        {
+          typeId: aadharIdentificationTypeId,
+          number: "876323450987",
+          userId: sakthiUserId,
+          createdById: sakthiUserId,
+          updatedById: sakthiUserId,
+        },
+        {
+          typeId: panIdentificationTypeId,
+          number: "HOPSR1236P",
+          userId: muraliUserId,
+          createdById: muraliUserId,
+          updatedById: muraliUserId,
+        },
+      ].map((identification) =>
+        tx.identification.create({
+          data: identification,
+          select: {
+            id: true,
+          },
+        })
+      )
+    );
+
     const [{ id: clubitsCompanyId }, { id: genyusCompanyId }] =
       await Promise.all(
         [
