@@ -103,6 +103,8 @@
     "vstack"
   ],
   "cSpell.enableFiletypes": ["prisma"],
-  "appService.zipIgnorePattern": ["node_modules{,/**}", ".vscode{,/**}"]
+  "appService.zipIgnorePattern": ["node_modules{,/**}", ".vscode{,/**}"],
+  "appService.defaultWebAppToDeploy": "/subscriptions/9ecc8017-a371-49e8-a8e0-ff11577c4d65/resourceGroups/Demo/providers/Microsoft.Web/sites/clubits-hrms-demo",
+  "appService.deploySubpath": "apis/server"
   //?----------------------------------
 }
