@@ -4,6 +4,8 @@ import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
+import IdentificationDialog from "../../components/IdentificationDialog";
+import PageHeader from "../../components/PageHeader";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
@@ -69,10 +71,11 @@ const Identifications = () => {
             <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
           </Link>
         </Stack> */}
-        {/* <PageHeader
+        <PageHeader
           title={<PageHeader.Title></PageHeader.Title>}
-          actions={<CreateVisitorPass />}
-        /> */}
+          actions={<IdentificationDialog />}
+        />
+
         <Card>
           <DataGrid<Identification>
             {...value}
@@ -85,9 +88,11 @@ const Identifications = () => {
               {
                 id: "1",
                 key: "",
-                label: "Id",
+                label: "Emp Name",
                 renderCell: (item) => (
-                  <Typography transform="capitalize">{item.id}</Typography>
+                  <Typography transform="capitalize">
+                    {item.user.name}
+                  </Typography>
                 ),
               },
               {

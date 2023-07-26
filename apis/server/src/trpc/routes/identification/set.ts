@@ -5,67 +5,37 @@ import { getErrorMessage } from "../../../utils/get-error-message";
 import { employeeOnlyProcedure } from "../../trpc";
 
 export const insertIdentificationSchema = z.object({
-  name: z.string(),
-  fromPlace: z.string(),
-  companyId: z.number(),
-  hrId: z.number(),
-  mobileNumber: z.string(),
-  date: z.string(),
-  inTime: z.string(),
-  outTime: z.string(),
-  reason: z.string(),
+  number: z.string(),
+  typeId: z.number(),
 });
 
-export type insertVisitorPass = z.infer<typeof insertIdentificationSchema>;
+export type insertIdentification = z.infer<typeof insertIdentificationSchema>;
 
 export const set = employeeOnlyProcedure
   .input(insertIdentificationSchema)
   .mutation(async ({ ctx, input }) => {
     try {
-      const visitorPass = await prisma.visitorPass.create({
+      const identifications = await prisma.identification.create({
         data: {
-          name: input.name,
-          fromPlace: input.fromPlace,
-          companyId: input.companyId,
-          hrId: input.hrId,
-          mobileNumber: input.mobileNumber,
-          date: new Date(input.date),
-          inTime: new Date(input.inTime),
-          outTime: new Date(input.outTime),
-          reason: input.reason,
+          number: input.number,
+          typeId: input.typeId,
+          userId: ctx.userId,
           createdById: ctx.userId,
           updatedById: ctx.userId,
         },
         select: {
           id: true,
-
-          name: true,
-          fromPlace: true,
-          mobileNumber: true,
-          date: true,
-          inTime: true,
-          outTime: true,
-          reason: true,
-          companies: {
+          userId: true,
+          number: true,
+          type: {
             select: {
               name: true,
-            },
-          },
-          hr: {
-            select: {
-              user: {
-                select: {
-                  id: true,
-                  name: true,
-                },
-              },
-              companyId: true,
             },
           },
         },
       });
 
-      return visitorPass;
+      return identifications;
     } catch (error) {
       console.log(getErrorMessage(error));
 

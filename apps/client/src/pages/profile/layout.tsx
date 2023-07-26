@@ -149,20 +149,6 @@ export const Layout = () => {
               Identification
             </button>
           </li>
-          <li className="nav-item" role="presentation">
-            <button
-              className="nav-link"
-              id="identification-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#identification"
-              type="button"
-              role="tab"
-              aria-controls="identification"
-              aria-selected="false"
-            >
-              Payroll
-            </button>
-          </li>
         </ul>
 
         <div className="tab-content" id="myTabContent">
