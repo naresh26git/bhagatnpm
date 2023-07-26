@@ -16,6 +16,7 @@ export const getMany = protectedProcedure
           id: true,
           user: {
             select: {
+              id: true,
               status: {
                 select: {
                   name: true,

@@ -147,7 +147,7 @@ export const PersonalInfoPage = () => {
               id: "1",
               key: "userId",
               label: "Emp Code",
-              renderCell: (item) => <>{item.id}</>,
+              renderCell: (item) => <>{item.user.id}</>,
             },
             {
               id: "5",
