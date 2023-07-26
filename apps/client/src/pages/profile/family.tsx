@@ -92,6 +92,12 @@ export const FamilyPage = () => {
             {
               id: "1",
               key: "",
+              label: "Emp Code",
+              renderCell: (item) => <>{item.user.id}</>,
+            },
+            {
+              id: "2",
+              key: "",
               label: "Emp Name",
               renderCell: (item) => (
                 <>
@@ -102,7 +108,7 @@ export const FamilyPage = () => {
               ),
             },
             {
-              id: "2",
+              id: "3",
               key: "",
               label: "Relationship Type",
               renderCell: (item) => (
@@ -112,12 +118,12 @@ export const FamilyPage = () => {
               ),
             },
             {
-              id: "3",
+              id: "4",
               key: "name",
               label: "Name",
             },
             {
-              id: "4",
+              id: "5",
               key: "",
               label: "DOB",
               renderCell: (item) => (

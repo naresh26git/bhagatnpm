@@ -143,11 +143,12 @@ export const PersonalInfoPage = () => {
         <DataGrid<PersonalInfo>
           {...value}
           columns={[
-            // {
-            //   id: "1",
-            //   key: "userId",
-            //   label: "ID",
-            // },
+            {
+              id: "1",
+              key: "userId",
+              label: "Emp Code",
+              renderCell: (item) => <>{item.user.id}</>,
+            },
             {
               id: "5",
               key: "",

@@ -245,7 +245,7 @@ model PersonalInfo {
 
 model Qualification {
   id     Int    @id @default(autoincrement())
-  name   String @unique @db.VarChar(128)
+  name   String @db.VarChar(128)
   user   User   @relation("QualificationOfUser", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   userId Int    @map("user_id")
 
@@ -257,6 +257,7 @@ model Qualification {
   updatedById Int      @map("updated_by_id")
   updatedBy   User     @relation("QualificationUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
+  @@unique([name, userId])
   @@map("qualifications")
 }
 
@@ -274,7 +275,7 @@ model IdentificationType {
   updatedById Int      @map("updated_by_id")
   updatedBy   User     @relation("IdentificationTypeUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@map("indentification_types")
+  @@map("identification_types")
 }
 
 model Identification {

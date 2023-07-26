@@ -3,6 +3,7 @@ import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import CreateUserDialog from "../../components/CreateUserDialog";
 import PageHeader from "../../components/PageHeader";
+import ShowIf from "../../components/ShowIf";
 import ContactDataPage from "./contact";
 import FamilyPage from "./family";
 import Identifications from "./identification";
@@ -12,10 +13,13 @@ export const Layout = () => {
   return (
     <>
       <Stack gap="3">
-        <PageHeader
-          title={<PageHeader.Title></PageHeader.Title>}
-          actions={<CreateUserDialog />}
-        />
+        <ShowIf.Admin>
+          <PageHeader
+            title={<PageHeader.Title></PageHeader.Title>}
+            actions={<CreateUserDialog />}
+          />
+        </ShowIf.Admin>
+
         {/* <PageHeader title={<PageHeader.Title>Account</PageHeader.Title>} /> */}
         <Grid.Row>
           <Grid.Col className="py-2" cols={["12", "md-2"]}>
@@ -147,20 +151,6 @@ export const Layout = () => {
               aria-selected="false"
             >
               Identification
-            </button>
-          </li>
-          <li className="nav-item" role="presentation">
-            <button
-              className="nav-link"
-              id="identification-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#identification"
-              type="button"
-              role="tab"
-              aria-controls="identification"
-              aria-selected="false"
-            >
-              Payroll
             </button>
           </li>
         </ul>

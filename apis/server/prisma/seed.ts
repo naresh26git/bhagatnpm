@@ -838,6 +838,38 @@ const main = async () => {
       const [] = await Promise.all(
         [
           {
+            name: "X",
+            userId: muraliUserId,
+            createdById: muraliUserId,
+            updatedById: muraliUserId,
+          },
+
+          {
+            name: "XII",
+            userId: muraliUserId,
+            createdById: muraliUserId,
+            updatedById: muraliUserId,
+          },
+        ].map((qualification) =>
+          tx.qualification.upsert({
+            create: qualification,
+            update: qualification,
+            where: {
+              name_userId: {
+                name: qualification.name,
+                userId: qualification.userId,
+              },
+            },
+            select: {
+              id: true,
+            },
+          })
+        )
+      );
+
+      const [] = await Promise.all(
+        [
+          {
             typeId: aadharIdentificationTypeId,
             number: "876323450987",
             userId: sakthiUserId,
@@ -856,38 +888,7 @@ const main = async () => {
             create: identification,
             update: identification,
             where: {
-              typeId_userId: {
-                typeId: identification.typeId,
-                userId: identification.userId,
-              },
-            },
-            select: {
-              id: true,
-            },
-          })
-        )
-      );
-
-      const [] = await Promise.all(
-        [
-          {
-            name: "X",
-            userId: muraliUserId,
-            createdById: muraliUserId,
-            updatedById: muraliUserId,
-          },
-          {
-            name: "XII",
-            userId: muraliUserId,
-            createdById: muraliUserId,
-            updatedById: muraliUserId,
-          },
-        ].map((qualification) =>
-          tx.qualification.upsert({
-            create: qualification,
-            update: qualification,
-            where: {
-              name: qualification.name,
+              number: identification.number,
             },
             select: {
               id: true,
@@ -1117,6 +1118,5 @@ main()
     process.exit(1);
   })
   .finally(async () => {
-    console.log({ env: process.env });
     await prisma.$disconnect();
   });

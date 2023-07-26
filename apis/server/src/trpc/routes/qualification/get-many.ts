@@ -6,19 +6,26 @@ import { getManyInputParameters } from "../../shared/get-many-input-parameters";
 import { protectedProcedure } from "../../trpc";
 
 export type Qualification =
-  RouterOutput["qualification"]["getMany"]["items"][0];
+  RouterOutput["qualifications"]["getMany"]["items"][0];
 
 export const getMany = protectedProcedure
   .input(getManyInputParameters)
   .mutation(async ({ ctx, input }) => {
     try {
-      const qualification = await prisma.qualification.findMany({
+      const qualifications = await prisma.qualification.findMany({
         select: {
           id: true,
           user: {
             select: {
               id: true,
               name: true,
+              personalInfo: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                },
+              },
             },
           },
           name: true,
@@ -49,7 +56,7 @@ export const getMany = protectedProcedure
               },
       });
       const count = await prisma.qualification.count();
-      return { totalCount: count, items: qualification };
+      return { totalCount: count, items: qualifications };
     } catch (error) {
       console.log(getErrorMessage(error));
 

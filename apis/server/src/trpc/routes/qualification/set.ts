@@ -4,38 +4,31 @@ import { prisma } from "../../../db/prisma";
 import { getErrorMessage } from "../../../utils/get-error-message";
 import { employeeOnlyProcedure } from "../../trpc";
 
-export const insertIdentificationSchema = z.object({
-  number: z.string(),
-  typeId: z.number(),
+export const insertQualificationSchema = z.object({
+  name: z.string(),
 });
 
-export type insertIdentification = z.infer<typeof insertIdentificationSchema>;
+export type InsertQualification = z.infer<typeof insertQualificationSchema>;
 
 export const set = employeeOnlyProcedure
-  .input(insertIdentificationSchema)
+  .input(insertQualificationSchema)
   .mutation(async ({ ctx, input }) => {
     try {
-      const identifications = await prisma.identification.create({
+      const qualifications = await prisma.qualification.create({
         data: {
-          number: input.number,
-          typeId: input.typeId,
+          name: input.name,
           userId: ctx.userId,
           createdById: ctx.userId,
           updatedById: ctx.userId,
         },
         select: {
-          id: true,
           userId: true,
-          number: true,
-          type: {
-            select: {
-              name: true,
-            },
-          },
+          id: true,
+          name: true,
         },
       });
 
-      return identifications;
+      return qualifications;
     } catch (error) {
       console.log(getErrorMessage(error));
 

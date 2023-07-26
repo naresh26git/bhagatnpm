@@ -35,7 +35,7 @@ export const appRouter = trpc.router({
   designation: designationRoutes,
   hr: hrRoutes,
   company: companyRoutes,
-  qualification: qualificationRoutes,
+  qualifications: qualificationRoutes,
   identification: identificationRoutes,
   identificationTypes: identificationTypeRoutes,
 });
