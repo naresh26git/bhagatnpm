@@ -14,10 +14,10 @@ export const set = employeeOnlyProcedure
   .input(insertQualificationSchema)
   .mutation(async ({ ctx, input }) => {
     try {
-      const qualification = await prisma.qualification.create({
+      const qualifications = await prisma.qualification.create({
         data: {
-          userId: ctx.userId,
           name: input.name,
+          userId: ctx.userId,
           createdById: ctx.userId,
           updatedById: ctx.userId,
         },
@@ -28,7 +28,7 @@ export const set = employeeOnlyProcedure
         },
       });
 
-      return qualification;
+      return qualifications;
     } catch (error) {
       console.log(getErrorMessage(error));
 

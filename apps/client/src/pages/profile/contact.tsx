@@ -116,6 +116,12 @@ export const ContactDataPage = () => {
             {
               id: "1",
               key: "",
+              label: "Emp Code ",
+              renderCell: (item) => <>{item.user.id}</>,
+            },
+            {
+              id: "2",
+              key: "",
               label: "Emp Name",
               renderCell: (item) => (
                 <>
@@ -126,7 +132,7 @@ export const ContactDataPage = () => {
               ),
             },
             {
-              id: "2",
+              id: "3",
               key: "",
               label: "Address Type",
               renderCell: (item) => (
@@ -136,27 +142,27 @@ export const ContactDataPage = () => {
               ),
             },
             {
-              id: "3",
+              id: "4",
               key: "street",
               label: "Street",
             },
             {
-              id: "4",
+              id: "5",
               key: "city",
               label: "City",
             },
             {
-              id: "5",
+              id: "6",
               key: "state",
               label: "State",
             },
             {
-              id: "6",
+              id: "7",
               key: "country",
               label: "Country",
             },
             {
-              id: "7",
+              id: "8",
               key: "pincode",
               label: "Pincode",
             },

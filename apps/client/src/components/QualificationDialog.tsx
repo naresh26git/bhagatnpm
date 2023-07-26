@@ -8,7 +8,7 @@ import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
-export const CreateQualification = () => {
+export const QualificationDialog = () => {
   const auth = useAuthContext();
   const [name, setName] = React.useState("");
   // const [categoryId, setCategoryId] = React.useState<number>();
@@ -23,10 +23,10 @@ export const CreateQualification = () => {
 
   // const value = useDialog();
 
-  const create = async () => {
+  const handleSubmit = async () => {
     try {
       // console.log({ categoryId });
-      // if (categoryId === undefined) return;
+      if (name === undefined) return;
       await client.qualifications.set.mutate({
         name,
         // categoryId,
@@ -155,7 +155,7 @@ export const CreateQualification = () => {
             <Button
               variant="primary"
               className="center"
-              onClick={create}
+              onClick={handleSubmit}
               data-bs-toggle="modal"
               data-bs-target={`#${value.id}`}
             >
@@ -168,4 +168,4 @@ export const CreateQualification = () => {
   );
 };
 
-export default CreateQualification;
+export default QualificationDialog;
