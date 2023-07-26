@@ -3,6 +3,9 @@ import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
+import PageHeader from "../../components/PageHeader";
+import QualificationDialog from "../../components/QualificationDialog";
+import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
@@ -12,7 +15,7 @@ const Qualifications = () => {
   const value = useAsyncList<Qualification>({
     load: async (states) => {
       try {
-        const qualification = await client.qualification.getMany.mutate();
+        const qualification = await client.qualifications.getMany.mutate();
         console.log(qualification);
         return {
           items: qualification.items as any,
@@ -30,25 +33,32 @@ const Qualifications = () => {
 
   return (
     <Stack gap="3">
+      <ShowIf.Employee>
+        <PageHeader
+          title={<PageHeader.Title></PageHeader.Title>}
+          actions={<QualificationDialog />}
+        />
+      </ShowIf.Employee>
+
       <Card>
         <DataGrid<Qualification>
           {...value}
           columns={[
             {
               id: "1",
-              key: "empcode",
-              label: "Id",
-              renderCell: (item) => <>{item.id}</>,
+              key: "",
+              label: "Emp code",
+              renderCell: (item) => <>{item.user.id}</>,
             },
             {
               id: "2",
-              key: "first name",
-              label: "Empname",
+              key: "",
+              label: "Emp Name",
               renderCell: (item) => <>{item.user.name}</>,
             },
             {
               id: "3",
-              key: "qualification",
+              key: "",
               label: "Qualification",
               renderCell: (item) => <>{item.name}</>,
             },

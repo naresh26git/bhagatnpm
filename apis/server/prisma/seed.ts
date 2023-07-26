@@ -848,8 +848,12 @@ const main = async () => {
           updatedById: muraliUserId,
         },
       ].map((qualification) =>
-        tx.qualification.create({
-          data: qualification,
+        tx.qualification.upsert({
+          create: qualification,
+          update: qualification,
+          where: {
+            name: qualification.name,
+          },
           select: {
             id: true,
           },
@@ -874,8 +878,12 @@ const main = async () => {
           updatedById: muraliUserId,
         },
       ].map((identification) =>
-        tx.identification.create({
-          data: identification,
+        tx.identification.upsert({
+          create: identification,
+          update: identification,
+          where: {
+            number: identification.number,
+          },
           select: {
             id: true,
           },
