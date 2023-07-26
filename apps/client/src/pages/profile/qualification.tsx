@@ -50,11 +50,23 @@ const Qualifications = () => {
               label: "Emp code",
               renderCell: (item) => <>{item.user.id}</>,
             },
+            // {
+            //   id: "2",
+            //   key: "",
+            //   label: "Emp Name",
+            //   renderCell: (item) => <>{item.user.name}</>,
+            // },
             {
               id: "2",
               key: "",
               label: "Emp Name",
-              renderCell: (item) => <>{item.user.name}</>,
+              renderCell: (item) => (
+                <>
+                  {item.user.personalInfo
+                    ? `${item.user.personalInfo.firstName} ${item.user.personalInfo.lastName}`
+                    : ""}
+                </>
+              ),
             },
             {
               id: "3",

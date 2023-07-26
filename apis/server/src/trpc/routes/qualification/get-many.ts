@@ -19,6 +19,13 @@ export const getMany = protectedProcedure
             select: {
               id: true,
               name: true,
+              personalInfo: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                },
+              },
             },
           },
           name: true,
