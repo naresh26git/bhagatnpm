@@ -852,7 +852,10 @@ const main = async () => {
           create: qualification,
           update: qualification,
           where: {
-            name: qualification.name,
+            name_userId: {
+              name: qualification.name,
+              userId: qualification.userId,
+            },
           },
           select: {
             id: true,

@@ -257,7 +257,7 @@ model Qualification {
   updatedById Int      @map("updated_by_id")
   updatedBy   User     @relation("QualificationUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@unique([userId, name])
+  @@unique([name, userId])
   @@map("qualifications")
 }
 
