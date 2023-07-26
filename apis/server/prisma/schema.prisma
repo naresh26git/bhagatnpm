@@ -274,7 +274,7 @@ model IdentificationType {
   updatedById Int      @map("updated_by_id")
   updatedBy   User     @relation("IdentificationTypeUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@map("indentification_types")
+  @@map("identification_types")
 }
 
 model Identification {

@@ -329,7 +329,7 @@ const main = async () => {
         {
           dateOfBirth: new Date(new Date().setFullYear(1998, 12, 23)),
           dateOfJoining: new Date(new Date().setFullYear(2023, 4, 25)),
-          firstName: "Shiva",
+          firstName: "Siva",
           lastName: "Sakthi",
           departmentId: developmentDepartmentId,
           designationId: JuniorFullstackDeveloperDesignationId,
