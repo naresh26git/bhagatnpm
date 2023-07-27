@@ -1,5 +1,6 @@
 import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 import { addressRoutes } from "./routes/addresses";
+import { helpdeskCategoryRoutes } from "./routes/category";
 import { companyRoutes } from "./routes/company";
 import { departmentRoutes } from "./routes/department";
 import { designationRoutes } from "./routes/designation";
@@ -26,6 +27,7 @@ export const appRouter = trpc.router({
   payRoll: payRollRoutes,
   personalInfo: personalInfoRoutes,
   timeSheet: timeSheetRoutes,
+  helpdeskCategories: helpdeskCategoryRoutes,
   helpDesk: helpDeskRoutes,
   visitorPass: visitorPassRoutes,
   user: userRoutes,

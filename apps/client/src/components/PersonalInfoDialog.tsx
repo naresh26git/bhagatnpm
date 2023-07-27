@@ -12,7 +12,7 @@ export type Department = {
   id: number;
   name: string;
 };
-export const AddPersonalInfoDialog = () => {
+export const PersonalInfoDialog = () => {
   const auth = useAuthContext();
   const [userId, setUserId] = React.useState<number>(0);
   const [firstName, setFirstName] = React.useState("");
@@ -196,4 +196,4 @@ export const AddPersonalInfoDialog = () => {
   );
 };
 
-export default AddPersonalInfoDialog;
+export default PersonalInfoDialog;

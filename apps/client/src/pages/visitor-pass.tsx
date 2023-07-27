@@ -6,8 +6,8 @@ import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
-import CreateVisitorPass from "../components/CreateVisitorPass";
 import PageHeader from "../components/PageHeader";
+import VisitorPassDialog from "../components/VisitorPassDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
@@ -119,7 +119,7 @@ const VisitorPasses = () => {
         </Stack> */}
         <PageHeader
           title={<PageHeader.Title></PageHeader.Title>}
-          actions={<CreateVisitorPass />}
+          actions={<VisitorPassDialog />}
         />
         <Card>
           <DataGrid<VisitorPass>

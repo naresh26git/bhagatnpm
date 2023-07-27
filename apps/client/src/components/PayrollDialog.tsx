@@ -9,19 +9,21 @@ import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
 // export type CreateDialogProps = { variant: "update" | "create" };
-export const AddTimesheetDialog = () => {
+export const PayrollDialog = () => {
   const auth = useAuthContext();
-  const [inTime, setInTime] = React.useState<string>(`${new Date()}`);
-  const [outTime, setOutTime] = React.useState<string>(`${new Date()}`);
+  const [role, setRole] = React.useState<"admin" | "employee">("employee");
+  const [month, setMonth] = React.useState<string>("");
+  const [salaryId, setSalaryId] = React.useState<number>(0);
   const [statusId, setStatusId] = React.useState<number>(1);
+  const [amount, setAmount] = React.useState<number>(0);
   // const value = useDialog();
 
   const createUser = async () => {
     try {
-      await client.timeSheet.set.mutate({
+      await client.payRoll.set.mutate({
         // name,
-        inTime,
-        outTime,
+        month,
+        salaryId,
         statusId,
 
         // email: email || undefined,
@@ -39,15 +41,17 @@ export const AddTimesheetDialog = () => {
   const handleStatus = (e: any) => {
     setStatusId(e.target.value);
   };
-
+  const handleAmount = (e: any) => {
+    setAmount(e.target.value);
+  };
   return (
     <>
       <Dialog.Trigger {...value} variant="primary">
-        Add Timesheet
+        Add Payroll
       </Dialog.Trigger>
 
       <Dialog {...value}>
-        <Dialog.Header title="Add Timesheet" />
+        <Dialog.Header title="Add Payroll" />
         <Dialog.Body>
           <Stack gap="3">
             <Grid.Row gutters="3">
@@ -68,27 +72,13 @@ export const AddTimesheetDialog = () => {
               <Grid.Col cols={["12", "lg-6"]}>
                 <div className="form-floating">
                   <input
-                    type="date-time"
+                    type="date"
                     className="form-control"
-                    value={inTime}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                      setInTime(event.target.value)
-                    }
+                    placeholder="Doe"
+                    value={month}
+                    onChange={(event) => setMonth(event.target.value)}
                   />
-                  <label htmlFor="InTime">InTime</label>
-                </div>
-              </Grid.Col>
-              <Grid.Col cols={["12", "lg-6"]}>
-                <div className="form-floating">
-                  <input
-                    type="date-time"
-                    className="form-control"
-                    value={outTime}
-                    onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                      setOutTime(event.target.value)
-                    }
-                  />
-                  <label htmlFor="OutTime">OutTime</label>
+                  <label htmlFor="Month">Month</label>
                 </div>
               </Grid.Col>
 
@@ -99,8 +89,10 @@ export const AddTimesheetDialog = () => {
                     value={statusId}
                     onChange={(e) => handleStatus(e)}
                   >
-                    <option value={1}>Present</option>
-                    <option value={2}>Absent</option>
+                    <option value={1}>Success</option>
+                    <option value={2}>Pending</option>
+                    <option value={3}>Processing</option>
+                    <option value={4}>Declined</option>
                   </select>
                   <label htmlFor="Status">Status</label>
                 </div>
@@ -118,6 +110,19 @@ export const AddTimesheetDialog = () => {
                   />
                   <label htmlFor="password">Password</label>
                 </div> */}
+              </Grid.Col>
+
+              <Grid.Col cols={["12", "lg-6"]}>
+                <div className="form-floating">
+                  <input
+                    type="number"
+                    className="form-control"
+                    id="amount"
+                    value={amount}
+                    onChange={handleAmount}
+                  />
+                  <label htmlFor="email">Salary</label>
+                </div>
               </Grid.Col>
             </Grid.Row>
 
@@ -161,4 +166,4 @@ export const AddTimesheetDialog = () => {
   );
 };
 
-export default AddTimesheetDialog;
+export default PayrollDialog;

@@ -13,7 +13,7 @@ import { useAuthContext } from "../hooks/UseAuth";
 import { uploadFileToBlob } from "../utils/azure-blob-upload";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
-export const CreateVisitorPass = () => {
+export const VisitorPass = () => {
   const auth = useAuthContext();
   const [photo, setPhoto] = React.useState("");
   const [name, setName] = React.useState("");
@@ -384,4 +384,4 @@ export const CreateVisitorPass = () => {
   );
 };
 
-export default CreateVisitorPass;
+export default VisitorPass;

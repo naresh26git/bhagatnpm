@@ -8,7 +8,7 @@ import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
-export const AddContactDialog = () => {
+export const ContactDialog = () => {
   const auth = useAuthContext();
   const [userId, setUserId] = React.useState<number>(0);
   const [addressTypeId, setAddressTypeId] = React.useState<number>(1);
@@ -155,4 +155,4 @@ export const AddContactDialog = () => {
   );
 };
 
-export default AddContactDialog;
+export default ContactDialog;

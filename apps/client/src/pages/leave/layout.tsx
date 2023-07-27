@@ -1,7 +1,7 @@
 import Button from "ui/Button";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
-import AddLeaveDialog from "../../components/AddLeaveDialog";
+import LeaveDialog from "../../components/LeaveDialog";
 import PageHeader from "../../components/PageHeader";
 import LeaveViewPage from "./leave";
 import LeaveBalancePage from "./leave-balance";
@@ -39,7 +39,7 @@ export const LeaveTabs = () => {
         </Grid.Row>
         <PageHeader
           title={<PageHeader.Title></PageHeader.Title>}
-          actions={<AddLeaveDialog />}
+          actions={<LeaveDialog />}
         />
 
         {/* <PageHeader title={<PageHeader.Title>Account</PageHeader.Title>} /> */}

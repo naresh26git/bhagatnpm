@@ -7,7 +7,7 @@ import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
 import PageHeader from "../components/PageHeader";
-import PayrollCreateDialog from "../components/PayrollCreateDialog";
+import PayrollDialog from "../components/PayrollDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
@@ -134,7 +134,7 @@ export const PayRollPage = () => {
       {/* <PageHeader title={<PageHeader.Title>Pay Roll</PageHeader.Title>} /> */}
       <PageHeader
         title={<PageHeader.Title></PageHeader.Title>}
-        actions={<PayrollCreateDialog />}
+        actions={<PayrollDialog />}
       />
       <Card>
         <DataGrid<PayRoll>

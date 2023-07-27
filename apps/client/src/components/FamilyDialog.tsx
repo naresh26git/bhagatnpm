@@ -8,7 +8,7 @@ import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
-export const AddFamilyDialog = () => {
+export const FamilyDialog = () => {
   const auth = useAuthContext();
   const [userId, setUserId] = React.useState<number>(0);
   const [name, setName] = React.useState("");
@@ -126,4 +126,4 @@ export const AddFamilyDialog = () => {
   );
 };
 
-export default AddFamilyDialog;
+export default FamilyDialog;

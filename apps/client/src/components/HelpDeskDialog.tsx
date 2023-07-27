@@ -5,12 +5,13 @@ import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import { client } from "../main";
 // import { useDialog } from "ui/hooks/UseDialog";
+import { HelpdeskCategories } from "server/src/trpc/routes/category/get-many";
 import { useAuthContext } from "../hooks/UseAuth";
 import { handleTRPCError } from "../utils/handle-trpc-error";
-
-export const CreateHelpDesk = () => {
+export const HelpDeskDialog = () => {
   const auth = useAuthContext();
   const [tittle, setTittle] = React.useState("");
+  const [category, setCategory] = React.useState<HelpdeskCategories[]>([]);
   const [categoryId, setCategoryId] = React.useState<number>();
   const [description, setDescription] = React.useState("");
 
@@ -42,6 +43,17 @@ export const CreateHelpDesk = () => {
 
   const value = { id: "create-helpdesk", labelId: "create-helpdesk-label" };
 
+  React.useEffect(() => {
+    (async () => {
+      const helpDeskCategories =
+        await client.helpdeskCategories.getMany.query();
+      setCategory(helpDeskCategories);
+
+      const [firstCategory] = helpDeskCategories;
+      if (firstCategory === undefined) return;
+      setCategoryId(firstCategory.id);
+    })();
+  }, []);
   return (
     <>
       <Dialog.Trigger {...value} variant="primary">
@@ -113,10 +125,12 @@ export const CreateHelpDesk = () => {
                       value={categoryId}
                       onChange={(e) => setCategoryId(parseInt(e.target.value))}
                     >
-                      <option value={1}>Network</option>
-                      <option value={2}>Health</option>
-                      <option value={3}>Work</option>
-                      <option value={4}>Payment</option>
+                      <option value={undefined}>Select Category</option>
+                      {category.map((category) => {
+                        return (
+                          <option value={category.id}>{category.name}</option>
+                        );
+                      })}
                     </select>
                   </div>
                 </Grid.Col>
@@ -170,4 +184,4 @@ export const CreateHelpDesk = () => {
   );
 };
 
-export default CreateHelpDesk;
+export default HelpDeskDialog;

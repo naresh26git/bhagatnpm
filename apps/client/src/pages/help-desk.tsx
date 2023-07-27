@@ -6,7 +6,7 @@ import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
-import CreateHelpDesk from "../components/CreateHelpDesk";
+import HelpDeskDialog from "../components/HelpDeskDialog";
 import PageHeader from "../components/PageHeader";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
@@ -89,7 +89,7 @@ export const HelpDeskPage = () => {
     <Stack gap="3">
       <PageHeader
         title={<PageHeader.Title></PageHeader.Title>}
-        actions={<CreateHelpDesk />}
+        actions={<HelpDeskDialog />}
       />
       <Grid.Row>
         <Grid.Col className="py-2" cols={["12", "md-2"]}>

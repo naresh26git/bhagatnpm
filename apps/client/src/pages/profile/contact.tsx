@@ -4,7 +4,7 @@ import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
-import AddContactDialog from "../../components/AddContactDialog";
+import ContactDialog from "../../components/ContactDialog";
 import PageHeader from "../../components/PageHeader";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
@@ -107,7 +107,7 @@ export const ContactDataPage = () => {
       </Grid.Row> */}
       <PageHeader
         title={<PageHeader.Title></PageHeader.Title>}
-        actions={<AddContactDialog />}
+        actions={<ContactDialog />}
       />
       <Card>
         <DataGrid<Address>

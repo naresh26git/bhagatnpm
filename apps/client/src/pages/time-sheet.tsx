@@ -6,8 +6,8 @@ import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
-import AddTimesheetDialog from "../components/AddTimesheetDialog";
 import PageHeader from "../components/PageHeader";
+import TimesheetDialog from "../components/TimesheetDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
@@ -114,10 +114,10 @@ export const TimeSheetPage = () => {
         </Grid.Col>
       </Grid.Row>
       <PageHeader title={<PageHeader.Title>Time Sheet</PageHeader.Title>} />
-      {/* <PageHeader actions={<AddTimesheetDialog />} /> */}
+      {/* <PageHeader actions={<TimesheetDialog />} /> */}
       <PageHeader
         title={<PageHeader.Title></PageHeader.Title>}
-        actions={<AddTimesheetDialog />}
+        actions={<TimesheetDialog />}
       />
       <Card>
         <DataGrid<TimeSheet>

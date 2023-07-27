@@ -4,7 +4,7 @@ import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
-import AddFamilyDialog from "../../components/AddFamilyDialog";
+import FamilyDialog from "../../components/FamilyDialog";
 import PageHeader from "../../components/PageHeader";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
@@ -83,7 +83,7 @@ export const FamilyPage = () => {
       </Grid.Row> */}
       <PageHeader
         title={<PageHeader.Title></PageHeader.Title>}
-        actions={<AddFamilyDialog />}
+        actions={<FamilyDialog />}
       />
       <Card>
         <DataGrid<FamilyDetail>
