@@ -1,17 +1,20 @@
 import { inferRouterInputs, inferRouterOutputs } from "@trpc/server";
 import { addressRoutes } from "./routes/addresses";
-import { helpdeskCategoryRoutes } from "./routes/category";
 import { companyRoutes } from "./routes/company";
 import { departmentRoutes } from "./routes/department";
 import { designationRoutes } from "./routes/designation";
 import { familyDetailRoutes } from "./routes/family-details";
 import { helpDeskRoutes } from "./routes/help-desks";
+import { helpDeskCategoryRoutes } from "./routes/helpdesk-category";
+import { helpDeskStatusRoutes } from "./routes/helpdesk-status";
 import { hrRoutes } from "./routes/hr";
 import { identificationRoutes } from "./routes/identification";
 import { identificationTypeRoutes } from "./routes/identification/identificationType";
 import { leaveRoutes } from "./routes/leaves";
 import { leaveTypeRoutes } from "./routes/leaves/leave-types";
 import { payRollRoutes } from "./routes/pay-rolls";
+import { paySlipRoutes } from "./routes/pay-slip";
+import { paySlipComponentRoutes } from "./routes/payslip-component";
 import { personalInfoRoutes } from "./routes/personal-infos";
 import { qualificationRoutes } from "./routes/qualification";
 import { roleRoutes } from "./routes/roles";
@@ -27,7 +30,8 @@ export const appRouter = trpc.router({
   payRoll: payRollRoutes,
   personalInfo: personalInfoRoutes,
   timeSheet: timeSheetRoutes,
-  helpdeskCategories: helpdeskCategoryRoutes,
+  helpDeskCategories: helpDeskCategoryRoutes,
+  helpDeskStatus: helpDeskStatusRoutes,
   helpDesk: helpDeskRoutes,
   visitorPass: visitorPassRoutes,
   user: userRoutes,
@@ -40,6 +44,8 @@ export const appRouter = trpc.router({
   qualifications: qualificationRoutes,
   identification: identificationRoutes,
   identificationTypes: identificationTypeRoutes,
+  paySlipComponent: paySlipComponentRoutes,
+  paySlip: paySlipRoutes,
 });
 
 // export type definition of API

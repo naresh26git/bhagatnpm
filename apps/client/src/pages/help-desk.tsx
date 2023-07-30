@@ -7,6 +7,7 @@ import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
 import HelpDeskDialog from "../components/HelpDeskDialog";
+import HelpDeskStatusDialog from "../components/HelpDeskStatusDialog";
 import PageHeader from "../components/PageHeader";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
@@ -85,6 +86,94 @@ export const HelpDeskPage = () => {
       }
     },
   });
+  const columns = [
+    {
+      id: "1",
+      key: "",
+      label: "Emp Code",
+      renderCell: (item: HelpDesk) => <>{item.user.id}</>,
+    },
+    {
+      id: "2",
+      key: "",
+      label: "Emp Name",
+      renderCell: (item: HelpDesk) => <>{item.user.name}</>,
+    },
+    {
+      id: "3",
+      key: "",
+      label: "Date",
+      renderCell: (item: HelpDesk) => (
+        <>
+          {item.date
+            ? new Intl.DateTimeFormat("en-US", {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+              }).format(new Date(item.date))
+            : ""}
+        </>
+      ),
+    },
+    {
+      id: "4",
+      key: "tittle",
+      label: "Tittle",
+    },
+
+    {
+      id: "5",
+      key: "category",
+      label: "Category",
+      renderCell: (item: HelpDesk) => (
+        <Typography>{item.category.name}</Typography>
+      ),
+    },
+    {
+      id: "6",
+      key: "description",
+      label: "Description",
+    },
+    {
+      id: "7",
+      key: "remarks",
+      label: "Remarks",
+    },
+    {
+      id: "8",
+      key: "status",
+      label: "Status",
+      renderCell: (item: HelpDesk) => (
+        <Typography
+          transform="capitalize"
+          color={
+            item.status.name === "resolved"
+              ? "success"
+              : item.status.name === "cancelled"
+              ? "danger"
+              : "warning"
+          }
+        >
+          {item.status.name}
+        </Typography>
+      ),
+    },
+    {
+      id: "9",
+      key: "",
+      label: "Action",
+      renderCell: (item: HelpDesk) => (
+        <>
+          <HelpDeskStatusDialog
+            variant={
+              auth.state.user?.role.name === "admin" ? "admin" : "employee"
+            }
+            helpDeskId={item.id}
+          />
+        </>
+      ),
+    },
+  ];
   return (
     <Stack gap="3">
       <PageHeader
@@ -139,77 +228,13 @@ export const HelpDeskPage = () => {
       <Card>
         <DataGrid<HelpDesk>
           {...value}
-          columns={[
-            // {
-            //   id: "1",
-            //   key: "empcode",
-            //   label: "Empcode",
-            // },
-            {
-              id: "2",
-              key: "id",
-              label: "ID",
-            },
-            {
-              id: "3",
-              key: "",
-              label: "Date",
-              renderCell: (item) => (
-                <>
-                  {item.date
-                    ? new Intl.DateTimeFormat("en-US", {
-                        year: "numeric",
-                        month: "numeric",
-                        day: "numeric",
-                      }).format(new Date(item.date))
-                    : ""}
-                </>
-              ),
-            },
-            {
-              id: "4",
-              key: "tittle",
-              label: "Tittle",
-            },
+          columns={columns.filter((column) => {
+            console.log({ auth });
+            if (column.label !== "Action") return true;
+            if (auth.state.user?.role.name === "admin") return true;
 
-            {
-              id: "5",
-              key: "category",
-              label: "Category",
-              renderCell: (input) => (
-                <Typography>{input.category.name}</Typography>
-              ),
-            },
-            {
-              id: "6",
-              key: "description",
-              label: "Description",
-            },
-            {
-              id: "7",
-              key: "remarks",
-              label: "Remarks",
-            },
-            {
-              id: "8",
-              key: "status",
-              label: "Status",
-              renderCell: (input) => (
-                <Typography
-                  transform="capitalize"
-                  color={
-                    input.status.name === "resolved"
-                      ? "success"
-                      : input.status.name === "cancelled"
-                      ? "danger"
-                      : "warning"
-                  }
-                >
-                  {input.status.name}
-                </Typography>
-              ),
-            },
-          ]}
+            return false;
+          })}
         />
       </Card>
     </Stack>

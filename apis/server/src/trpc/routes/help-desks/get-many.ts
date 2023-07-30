@@ -33,6 +33,12 @@ export const getMany = protectedProcedure
           tittle: true,
           description: true,
           remarks: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
           category: {
             select: {
               id: true,

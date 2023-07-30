@@ -5,21 +5,20 @@ import { RouterOutput } from "../../router";
 import { getManyInputParameters } from "../../shared/get-many-input-parameters";
 import { protectedProcedure } from "../../trpc";
 
-export type HelpdeskCategories =
-  RouterOutput["helpDeskCategories"]["getMany"][0];
+export type PaySlipComponents = RouterOutput["paySlipComponent"]["getMany"][0];
 
 export const getMany = protectedProcedure
   .input(getManyInputParameters)
   .query(async ({ ctx, input }) => {
     try {
-      const helpDeskCategories = await prisma.helpDeskCategory.findMany({
+      const paySlipComponents = await prisma.paySlipComponent.findMany({
         select: {
           id: true,
           name: true,
         },
       });
 
-      return helpDeskCategories;
+      return paySlipComponents;
     } catch (error) {
       console.log(getErrorMessage(error));
 

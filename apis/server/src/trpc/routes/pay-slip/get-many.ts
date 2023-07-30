@@ -5,21 +5,23 @@ import { RouterOutput } from "../../router";
 import { getManyInputParameters } from "../../shared/get-many-input-parameters";
 import { protectedProcedure } from "../../trpc";
 
-export type HelpdeskCategories =
-  RouterOutput["helpDeskCategories"]["getMany"][0];
+export type PaySlip = RouterOutput["paySlip"]["getMany"]["items"][0];
 
 export const getMany = protectedProcedure
   .input(getManyInputParameters)
-  .query(async ({ ctx, input }) => {
+  .mutation(async ({ ctx, input }) => {
     try {
-      const helpDeskCategories = await prisma.helpDeskCategory.findMany({
-        select: {
-          id: true,
-          name: true,
+      const paySlipFilter = await prisma.paySlip.groupBy({
+        by: ["month", "year", "userId"],
+        _sum: {
+          amount: true,
         },
       });
+      // const paySlips=await prisma.paySlip.getMany
 
-      return helpDeskCategories;
+      console.log({ paySlipFilter });
+      const count = await prisma.paySlip.count();
+      return { totalCount: count, items: paySlipFilter };
     } catch (error) {
       console.log(getErrorMessage(error));
 

@@ -7,6 +7,7 @@ import ShowIf from "../../components/ShowIf";
 import ContactDataPage from "./contact";
 import FamilyPage from "./family";
 import Identifications from "./identification";
+import Payslip from "./payslip";
 import PersonalInfoPage from "./personal-info";
 import Qualifications from "./qualification";
 export const Layout = () => {
@@ -153,6 +154,20 @@ export const Layout = () => {
               Identification
             </button>
           </li>
+          <li className="nav-item" role="presentation">
+            <button
+              className="nav-link"
+              id="payslip-tab"
+              data-bs-toggle="tab"
+              data-bs-target="#payslip"
+              type="button"
+              role="tab"
+              aria-controls="payslip"
+              aria-selected="false"
+            >
+              Payslip
+            </button>
+          </li>
         </ul>
 
         <div className="tab-content" id="myTabContent">
@@ -213,6 +228,14 @@ export const Layout = () => {
             aria-labelledby="identification-tab"
           >
             <Identifications />
+          </div>
+          <div
+            className="tab-pane fade"
+            id="payslip"
+            role="tabpanel"
+            aria-labelledby="payslip-tab"
+          >
+            <Payslip />
           </div>
         </div>
       </Stack>

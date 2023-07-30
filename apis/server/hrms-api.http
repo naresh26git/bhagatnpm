@@ -1,0 +1,72 @@
+### Admin user signIn POST API
+# In a web app the response also sets refresh token in the cookie
+
+POST http://localhost:3000/trpc/user.signIn HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "balaji",
+  "password": "balaji"
+}
+
+### Employee user signIn POST API
+# In a web app the response also sets refresh token in the cookie
+
+POST http://localhost:3000/trpc/user.signIn HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "murali",
+  "password": "murali"
+}
+
+### Admin and Employee user signOut POST API
+# 401 response means the user is signed out and is no longer
+# authorized to access protected resources
+
+POST http://localhost:3000/trpc/user.signOut HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6IkJhbGFqaSIsInVzZXJuYW1lIjoiYmFsYWppIiwicm9sZSI6eyJuYW1lIjoiYWRtaW4ifSwiZW1haWwiOm51bGwsIm1vYmlsZSI6bnVsbCwiaWF0IjoxNjkwNTQ0ODA2LCJleHAiOjE2OTA1NDU0MDZ9.2JRkZtXVktWUOeLJMOrgIrZouAGTM2awcplgdwUfg0g
+# Example
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6IkJhbGFqaSIsInVzZXJuYW1lIjoiYmFsYWppIiwicm9sZSI6eyJuYW1lIjoiYWRtaW4ifSwiZW1haWwiOm51bGwsIm1vYmlsZSI6bnVsbCwiaWF0IjoxNjg5MzU0MTkyLCJleHAiOjE2ODkzNTQ3OTJ9.o0BmXtvVrbE6J2zyOhpr7vNv2zLZkB7pF2gNU6VUL4A
+
+{ }
+
+### Admin and Employee personalInfo getMany POST API
+
+POST http://localhost:3000/trpc/personalInfo.getMany HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6IkJhbGFqaSIsInVzZXJuYW1lIjoiYmFsYWppIiwicm9sZSI6eyJuYW1lIjoiYWRtaW4ifSwiZW1haWwiOm51bGwsIm1vYmlsZSI6bnVsbCwiaWF0IjoxNjkwNTQ0ODA2LCJleHAiOjE2OTA1NDU0MDZ9.2JRkZtXVktWUOeLJMOrgIrZouAGTM2awcplgdwUfg0g
+
+{
+  "limit": 5,
+  "page": 0
+}
+
+### Admin and Employee address getMany GET API
+
+GET http://localhost:3000/trpc/address.getMany HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6IkJhbGFqaSIsInVzZXJuYW1lIjoiYmFsYWppIiwicm9sZSI6eyJuYW1lIjoiYWRtaW4ifSwiZW1haWwiOm51bGwsIm1vYmlsZSI6bnVsbCwiaWF0IjoxNjkwNTQ0ODA2LCJleHAiOjE2OTA1NDU0MDZ9.2JRkZtXVktWUOeLJMOrgIrZouAGTM2awcplgdwUfg0g
+
+### Admin and Employee familyDetail getMany POST API
+
+POST http://localhost:3000/trpc/familyDetail.getMany HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6IkJhbGFqaSIsInVzZXJuYW1lIjoiYmFsYWppIiwicm9sZSI6eyJuYW1lIjoiYWRtaW4ifSwiZW1haWwiOm51bGwsIm1vYmlsZSI6bnVsbCwiaWF0IjoxNjkwNTQ0ODA2LCJleHAiOjE2OTA1NDU0MDZ9.2JRkZtXVktWUOeLJMOrgIrZouAGTM2awcplgdwUfg0g
+
+{
+  "limit": 5,
+  "page": 0
+}
+
+### Admin and Employee familyDetail getMany POST API
+
+POST http://localhost:3000/trpc/paySlip.getMany HTTP/1.1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwibmFtZSI6IkJhbGFqaSIsInVzZXJuYW1lIjoiYmFsYWppIiwicm9sZSI6eyJuYW1lIjoiYWRtaW4ifSwiZW1haWwiOm51bGwsIm1vYmlsZSI6bnVsbCwiaWF0IjoxNjkwNTQ0ODA2LCJleHAiOjE2OTA1NDU0MDZ9.2JRkZtXVktWUOeLJMOrgIrZouAGTM2awcplgdwUfg0g
+
+{
+  "limit": 5,
+  "page": 0
+}

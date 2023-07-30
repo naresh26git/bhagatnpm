@@ -46,7 +46,7 @@ export const HelpDeskDialog = () => {
   React.useEffect(() => {
     (async () => {
       const helpDeskCategories =
-        await client.helpdeskCategories.getMany.query();
+        await client.identificationTypes.getMany.query();
       setCategory(helpDeskCategories);
 
       const [firstCategory] = helpDeskCategories;
@@ -57,7 +57,7 @@ export const HelpDeskDialog = () => {
   return (
     <>
       <Dialog.Trigger {...value} variant="primary">
-        Create
+        Add HeskDesk
       </Dialog.Trigger>
       <Dialog {...value}>
         <Dialog.Header color="primary" title={"HELP DESK"} />
