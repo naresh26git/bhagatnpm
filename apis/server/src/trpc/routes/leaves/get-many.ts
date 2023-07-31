@@ -34,6 +34,7 @@ export const getMany = protectedProcedure
               daysAlloted: true,
             },
           },
+          createdAt: true,
           fromDate: true,
           toDate: true,
           status: {

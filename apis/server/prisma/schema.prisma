@@ -562,11 +562,11 @@ model Hr {
 }
 
 model VisitorPass {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(64)
-
-  hr   Hr  @relation("HrOfVisitorPass", fields: [hrId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  hrId Int @map("hr_name_id")
+  id       Int     @id @default(autoincrement())
+  name     String  @unique @db.VarChar(64)
+  imageUrl String? @db.Text
+  hr       Hr      @relation("HrOfVisitorPass", fields: [hrId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  hrId     Int     @map("hr_name_id")
 
   date         DateTime @map("visitor_date") @db.DateTime2
   // TODO: change this to company (singular form)
