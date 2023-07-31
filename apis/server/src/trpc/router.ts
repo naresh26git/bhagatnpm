@@ -19,6 +19,7 @@ import { personalInfoRoutes } from "./routes/personal-infos";
 import { qualificationRoutes } from "./routes/qualification";
 import { roleRoutes } from "./routes/roles";
 import { timeSheetRoutes } from "./routes/time-sheets";
+import { timeSheetStatusRoutes } from "./routes/timesheet-status";
 import { userRoutes } from "./routes/users";
 import { visitorPassRoutes } from "./routes/visitor-pass";
 import { trpc } from "./trpc";
@@ -30,6 +31,7 @@ export const appRouter = trpc.router({
   payRoll: payRollRoutes,
   personalInfo: personalInfoRoutes,
   timeSheet: timeSheetRoutes,
+  timeSheetStatus: timeSheetStatusRoutes,
   helpDeskCategories: helpDeskCategoryRoutes,
   helpDeskStatus: helpDeskStatusRoutes,
   helpDesk: helpDeskRoutes,

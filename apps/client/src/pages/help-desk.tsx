@@ -90,17 +90,17 @@ export const HelpDeskPage = () => {
     {
       id: "1",
       key: "",
-      label: "Emp Code",
+      label: "Id",
       renderCell: (item: HelpDesk) => <>{item.user.id}</>,
     },
+    // {
+    //   id: "2",
+    //   key: "",
+    //   label: "Emp Name",
+    //   renderCell: (item: HelpDesk) => <>{item.user.name}</>,
+    // },
     {
       id: "2",
-      key: "",
-      label: "Emp Name",
-      renderCell: (item: HelpDesk) => <>{item.user.name}</>,
-    },
-    {
-      id: "3",
       key: "",
       label: "Date",
       renderCell: (item: HelpDesk) => (
@@ -116,13 +116,13 @@ export const HelpDeskPage = () => {
       ),
     },
     {
-      id: "4",
+      id: "3",
       key: "tittle",
       label: "Tittle",
     },
 
     {
-      id: "5",
+      id: "4",
       key: "category",
       label: "Category",
       renderCell: (item: HelpDesk) => (
@@ -130,17 +130,17 @@ export const HelpDeskPage = () => {
       ),
     },
     {
-      id: "6",
+      id: "5",
       key: "description",
       label: "Description",
     },
     {
-      id: "7",
+      id: "6",
       key: "remarks",
       label: "Remarks",
     },
     {
-      id: "8",
+      id: "7",
       key: "status",
       label: "Status",
       renderCell: (item: HelpDesk) => (
@@ -159,7 +159,7 @@ export const HelpDeskPage = () => {
       ),
     },
     {
-      id: "9",
+      id: "8",
       key: "",
       label: "Action",
       renderCell: (item: HelpDesk) => (

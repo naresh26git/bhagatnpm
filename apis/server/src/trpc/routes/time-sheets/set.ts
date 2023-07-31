@@ -2,7 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { prisma } from "../../../db/prisma";
 import { getErrorMessage } from "../../../utils/get-error-message";
-import { adminOnlyProcedure } from "../../trpc";
+import { employeeOnlyProcedure } from "../../trpc";
 
 export const insertTimeSheetSchema = z.object({
   inTime: z.string(),
@@ -12,7 +12,7 @@ export const insertTimeSheetSchema = z.object({
 
 export type InsertTimeSheet = z.infer<typeof insertTimeSheetSchema>;
 
-export const set = adminOnlyProcedure
+export const set = employeeOnlyProcedure
   .input(insertTimeSheetSchema)
   .mutation(async ({ ctx, input }) => {
     try {

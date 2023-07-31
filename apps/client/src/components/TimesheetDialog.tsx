@@ -4,6 +4,7 @@ import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 // import { useDialog } from "ui/hooks/UseDialog";
+import { TimeSheetStatus } from "server/dist/trpc/routes/timesheet-status/get-many";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
@@ -13,11 +14,14 @@ export const TimesheetDialog = () => {
   const auth = useAuthContext();
   const [inTime, setInTime] = React.useState<string>(`${new Date()}`);
   const [outTime, setOutTime] = React.useState<string>(`${new Date()}`);
-  const [statusId, setStatusId] = React.useState<number>(1);
+  const [statusId, setStatusId] = React.useState<number>();
+  const [status, setStatus] = React.useState<TimeSheetStatus[]>([]);
   // const value = useDialog();
 
   const createUser = async () => {
     try {
+      if (statusId === undefined) return;
+
       await client.timeSheet.set.mutate({
         // name,
         inTime,
@@ -39,6 +43,15 @@ export const TimesheetDialog = () => {
   const handleStatus = (e: any) => {
     setStatusId(e.target.value);
   };
+  React.useEffect(() => {
+    (async () => {
+      const status = await client.timeSheetStatus.getMany.query();
+      setStatus(status);
+      const [firstStatus] = status;
+      if (firstStatus === undefined) return;
+      setStatusId(firstStatus.id);
+    })();
+  }, []);
 
   return (
     <>
@@ -75,7 +88,7 @@ export const TimesheetDialog = () => {
                       setInTime(event.target.value)
                     }
                   />
-                  <label htmlFor="InTime">InTime</label>
+                  <label htmlFor="InTime">Check IN</label>
                 </div>
               </Grid.Col>
               <Grid.Col cols={["12", "lg-6"]}>
@@ -88,7 +101,7 @@ export const TimesheetDialog = () => {
                       setOutTime(event.target.value)
                     }
                   />
-                  <label htmlFor="OutTime">OutTime</label>
+                  <label htmlFor="OutTime">Check OUT</label>
                 </div>
               </Grid.Col>
 
@@ -97,10 +110,13 @@ export const TimesheetDialog = () => {
                   <select
                     className="form-control"
                     value={statusId}
-                    onChange={(e) => handleStatus(e)}
+                    onChange={(event) =>
+                      setStatusId(parseInt(event.target.value))
+                    }
                   >
-                    <option value={1}>Present</option>
-                    <option value={2}>Absent</option>
+                    {status.map((status) => {
+                      return <option value={status.id}>{status.name}</option>;
+                    })}
                   </select>
                   <label htmlFor="Status">Status</label>
                 </div>

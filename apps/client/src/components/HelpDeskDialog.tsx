@@ -46,7 +46,7 @@ export const HelpDeskDialog = () => {
   React.useEffect(() => {
     (async () => {
       const helpDeskCategories =
-        await client.identificationTypes.getMany.query();
+        await client.helpDeskCategories.getMany.query();
       setCategory(helpDeskCategories);
 
       const [firstCategory] = helpDeskCategories;
