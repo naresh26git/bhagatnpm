@@ -19,8 +19,8 @@ export const set = employeeOnlyProcedure
       const timeSheet = await prisma.timeSheet.create({
         data: {
           userId: ctx.userId,
-          inTime: input.inTime,
-          outTime: input.outTime,
+          inTime: new Date(input.inTime),
+          outTime: new Date(input.outTime),
           statusId: input.statusId,
           createdById: ctx.userId,
           updatedById: ctx.userId,
