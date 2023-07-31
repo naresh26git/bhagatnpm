@@ -304,12 +304,6 @@ export const VisitorPass = () => {
               <Grid.Col cols={["12", "xl-12"]}>
                 <label htmlFor="floatingTextarea2">
                   {" "}
-                  <textarea
-                    value={reason}
-                    onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) =>
-                      setReason(event.target.value)
-                    }
-                  />
                   <Typography fontWeight="bolder">Reason</Typography>
                 </label>
 
@@ -321,7 +315,11 @@ export const VisitorPass = () => {
                     // placeholder="Leave a comment here"
                     id="floatingTextarea2"
                     rows={2}
-                  ></textarea>
+                    value={reason}
+                    onChange={(event: React.ChangeEvent<HTMLTextAreaElement>) =>
+                      setReason(event.target.value)
+                    }
+                  />
                 </div>
                 {/* <div
 

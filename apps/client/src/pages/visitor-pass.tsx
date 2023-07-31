@@ -125,15 +125,15 @@ const VisitorPasses = () => {
           <DataGrid<VisitorPass>
             {...value}
             columns={[
-              {
-                id: "1",
-                key: "imageUrl",
-                label: "Visitor Image",
-              },
+              // {
+              //   id: "1",
+              //   key: "imageUrl",
+              //   label: "Visitor Image",
+              // },
               {
                 id: "2",
                 key: "name",
-                label: "Visitor Name",
+                label: "Name",
                 renderCell: (item) => (
                   <Typography transform="capitalize">{item.name}</Typography>
                 ),
