@@ -18,6 +18,7 @@ import { paySlipComponentRoutes } from "./routes/payslip-component";
 import { personalInfoRoutes } from "./routes/personal-infos";
 import { qualificationRoutes } from "./routes/qualification";
 import { roleRoutes } from "./routes/roles";
+import { sasTokenRoutes } from "./routes/sas-token";
 import { timeSheetRoutes } from "./routes/time-sheets";
 import { userRoutes } from "./routes/users";
 import { visitorPassRoutes } from "./routes/visitor-pass";
@@ -46,6 +47,7 @@ export const appRouter = trpc.router({
   identificationTypes: identificationTypeRoutes,
   paySlipComponent: paySlipComponentRoutes,
   paySlip: paySlipRoutes,
+  sasToken: sasTokenRoutes,
 });
 
 // export type definition of API

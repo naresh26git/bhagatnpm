@@ -44,9 +44,11 @@ export const VisitorPass = () => {
       console.log({ hrId });
       if (!fileSelected) return;
 
+      const { sasToken } = await client.sasToken.get.query();
+
       setUploading(true);
 
-      await uploadFileToBlob(fileSelected);
+      await uploadFileToBlob(fileSelected, sasToken);
       setFileSelected(undefined);
       setUploading(false);
       if (hrId === undefined) return;
