@@ -22,9 +22,8 @@ export const get = protectedProcedure
             },
           },
           month: true,
-          salary: {
+          paySlipComponents: {
             select: {
-              id: true,
               amount: true,
             },
           },

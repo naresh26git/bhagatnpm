@@ -27,13 +27,13 @@ export const getMany = protectedProcedure
               },
             },
           },
-          month: true,
-          salary: {
+          paySlipComponents: {
             select: {
-              id: true,
               amount: true,
             },
           },
+          year: true,
+          month: true,
           status: {
             select: {
               id: true,

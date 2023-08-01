@@ -670,51 +670,6 @@ const main = async () => {
         )
       );
 
-      const [
-        { id: muraliSalaryId },
-        { id: sakthiSalaryId },
-        { id: danielSalaryId },
-        { id: naveenSalaryId },
-      ] = await Promise.all(
-        [
-          {
-            amount: 20000,
-            userId: muraliUserId,
-            createdById: balajiUserId,
-            updatedById: balajiUserId,
-          },
-          {
-            amount: 20000,
-            userId: sakthiUserId,
-            createdById: balajiUserId,
-            updatedById: balajiUserId,
-          },
-          {
-            amount: 20000,
-            userId: danielUserId,
-            createdById: balajiUserId,
-            updatedById: balajiUserId,
-          },
-          {
-            amount: 20000,
-            userId: naveenUserId,
-            createdById: balajiUserId,
-            updatedById: balajiUserId,
-          },
-        ].map((salary) =>
-          tx.salary.upsert({
-            create: salary,
-            update: salary,
-            where: {
-              userId: salary.userId,
-            },
-            select: {
-              id: true,
-            },
-          })
-        )
-      );
-
       const [{ id: defaultPayRollStatusId }] = await Promise.all(
         [
           {
@@ -949,37 +904,39 @@ const main = async () => {
       );
 
       const [
-        // { id: ryanPayRollId },
-        // { id: davidPayRollId }
+        { id: muraliPayRollId },
+        { id: sakthiPayRollId },
+        { id: danielPayRollId },
+        { id: naveenPayRollId },
       ] = await Promise.all(
         [
           {
-            month: new Date(new Date().setMonth(new Date().getMonth() - 1, 0)),
-            salaryId: muraliSalaryId,
+            year: new Date().getFullYear(),
+            month: new Date().getMonth(),
             userId: muraliUserId,
             createdById: balajiUserId,
             updatedById: balajiUserId,
             statusId: defaultPayRollStatusId,
           },
           {
-            month: new Date(new Date().setMonth(new Date().getMonth() - 1, 0)),
-            salaryId: sakthiSalaryId,
+            year: new Date().getFullYear(),
+            month: new Date().getMonth(),
             userId: sakthiUserId,
             createdById: balajiUserId,
             updatedById: balajiUserId,
             statusId: defaultPayRollStatusId,
           },
           {
-            month: new Date(new Date().setMonth(new Date().getMonth() - 1, 0)),
-            salaryId: danielSalaryId,
+            year: new Date().getFullYear(),
+            month: new Date().getMonth(),
             userId: danielUserId,
             createdById: balajiUserId,
             updatedById: balajiUserId,
             statusId: defaultPayRollStatusId,
           },
           {
-            month: new Date(new Date().setMonth(new Date().getMonth() - 1, 0)),
-            salaryId: naveenSalaryId,
+            year: new Date().getFullYear(),
+            month: new Date().getMonth(),
             userId: naveenUserId,
             createdById: balajiUserId,
             updatedById: balajiUserId,
@@ -988,6 +945,135 @@ const main = async () => {
         ].map((payRoll) =>
           tx.payRoll.create({
             data: payRoll,
+            select: {
+              id: true,
+            },
+          })
+        )
+      );
+
+      const [
+        { id: basicPaySlipComponentTypeId },
+        { id: hraPaySlipComponentTypeId },
+        { id: deductionPaySlipComponentTypeId },
+      ] = await Promise.all(
+        [
+          {
+            name: "Basic",
+            createdById: systemUserId,
+            updatedById: systemUserId,
+          },
+          {
+            name: "HRA",
+            createdById: systemUserId,
+            updatedById: systemUserId,
+          },
+          {
+            name: "Deduction",
+            createdById: systemUserId,
+            updatedById: systemUserId,
+          },
+        ].map((paySlipComponentType) =>
+          tx.paySlipComponentType.upsert({
+            create: paySlipComponentType,
+            update: paySlipComponentType,
+            where: {
+              name: paySlipComponentType.name,
+            },
+            select: { id: true },
+          })
+        )
+      );
+
+      const [] = await Promise.all(
+        [
+          {
+            payRollId: muraliPayRollId,
+            componentTypeId: basicPaySlipComponentTypeId,
+            amount: 10000,
+            createdById: balajiUserId,
+            updatedById: balajiUserId,
+          },
+          {
+            payRollId: muraliPayRollId,
+            componentTypeId: hraPaySlipComponentTypeId,
+            amount: 3000,
+            createdById: balajiUserId,
+            updatedById: balajiUserId,
+          },
+          {
+            payRollId: muraliPayRollId,
+            componentTypeId: deductionPaySlipComponentTypeId,
+            amount: -200,
+            createdById: balajiUserId,
+            updatedById: balajiUserId,
+          },
+          {
+            payRollId: sakthiPayRollId,
+            componentTypeId: basicPaySlipComponentTypeId,
+            amount: 12000,
+            createdById: balajiUserId,
+            updatedById: balajiUserId,
+          },
+          {
+            payRollId: sakthiPayRollId,
+            componentTypeId: hraPaySlipComponentTypeId,
+            amount: 3000,
+            createdById: balajiUserId,
+            updatedById: balajiUserId,
+          },
+          {
+            payRollId: sakthiPayRollId,
+            componentTypeId: deductionPaySlipComponentTypeId,
+            amount: -500,
+            createdById: balajiUserId,
+            updatedById: balajiUserId,
+          },
+          {
+            payRollId: danielPayRollId,
+            componentTypeId: basicPaySlipComponentTypeId,
+            amount: 10000,
+            createdById: balajiUserId,
+            updatedById: balajiUserId,
+          },
+          {
+            payRollId: danielPayRollId,
+            componentTypeId: hraPaySlipComponentTypeId,
+            amount: 4500,
+            createdById: balajiUserId,
+            updatedById: balajiUserId,
+          },
+          {
+            payRollId: danielPayRollId,
+            componentTypeId: deductionPaySlipComponentTypeId,
+            amount: -300,
+            createdById: balajiUserId,
+            updatedById: balajiUserId,
+          },
+          {
+            payRollId: naveenPayRollId,
+            componentTypeId: basicPaySlipComponentTypeId,
+            amount: 10000,
+            createdById: balajiUserId,
+            updatedById: balajiUserId,
+          },
+          {
+            payRollId: naveenPayRollId,
+            componentTypeId: hraPaySlipComponentTypeId,
+            amount: 5000,
+            createdById: balajiUserId,
+            updatedById: balajiUserId,
+          },
+          {
+            payRollId: naveenPayRollId,
+            componentTypeId: deductionPaySlipComponentTypeId,
+            amount: -700,
+            createdById: balajiUserId,
+            updatedById: balajiUserId,
+          },
+        ].map((paySlipComponent) =>
+          tx.paySlipComponent.create({
+            data: paySlipComponent,
             select: {
               id: true,
             },

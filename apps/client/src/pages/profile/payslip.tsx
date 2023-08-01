@@ -1,7 +1,8 @@
-import { PaySlip } from "server/src/trpc/routes/pay-slip/get-many";
+import { PayRoll } from "server/src/trpc/routes/pay-rolls/get-many";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
+import Typography from "ui/Typography";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
@@ -9,14 +10,20 @@ import { handleTRPCError } from "../../utils/handle-trpc-error";
 
 const Payslip = () => {
   const auth = useAuthContext();
-  const value = useAsyncList<PaySlip>({
-    load: async (states) => {
+  const value = useAsyncList<PayRoll>({
+    load: async ({ states }) => {
       try {
-        const payslip = await client.paySlip.getMany.mutate();
-        console.log(payslip);
+        const inputParameters = {
+          sortBy: states.sortState?.sortBy,
+          sortOrder: states.sortState?.sortOrder,
+          limit: states.paginationState.limit,
+          page: states.paginationState.page,
+        };
+        const result = await client.payRoll.getMany.mutate(inputParameters);
+
         return {
-          items: payslip.items as any,
-          totalCount: payslip.totalCount,
+          totalCount: result.totalCount,
+          items: result.items as any,
         };
       } catch (error) {
         handleTRPCError(error, auth);
@@ -27,14 +34,6 @@ const Payslip = () => {
       }
     },
   });
-  const getMonth = (monthName: any) => {
-    new Date().setMonth(monthName);
-
-    const date = new Date();
-    date.setMonth(6);
-
-    return date.toLocaleString("en-US", { month: "short" });
-  };
 
   return (
     <Stack gap="3">
@@ -46,50 +45,82 @@ const Payslip = () => {
       </ShowIf.Employee> */}
 
       <Card>
-        <DataGrid<PaySlip>
+        <DataGrid<PayRoll>
           {...value}
           columns={[
             {
               id: "1",
               key: "",
-              label: "Emp code",
-              renderCell: (item) => <>{item.userId}</>,
+              label: "Emp Code",
+              renderCell: (item) => <>{item.user.id}</>,
             },
-
-            // {
-            //   id: "2",
-            //   key: "",
-            //   label: "Emp Name",
-            //   renderCell: (item) => (
-            //     <>
-            //       {item.user.personalInfo
-            //         ? `${item.user.personalInfo.firstName} ${item.user.personalInfo.lastName}`
-            //         : ""}
-            //     </>
-            //   ),
-            // },
+            {
+              id: "2",
+              key: "",
+              label: "Emp Name",
+              renderCell: (item) => (
+                <>
+                  {item.user.personalInfo
+                    ? `${item.user.personalInfo.firstName} ${item.user.personalInfo.lastName}`
+                    : ""}
+                </>
+              ),
+            },
             {
               id: "3",
-              key: "year",
+              key: "",
               label: "Financial Year",
+              renderCell: (item) => (
+                <>
+                  FY{" "}
+                  {new Intl.DateTimeFormat("en-US", {
+                    year: "2-digit",
+                  }).format(new Date().setFullYear(item.year, item.month, 1))}
+                </>
+              ),
             },
             {
               id: "4",
-              key: "month",
+              key: "",
               label: "Period",
-              renderCell: (item) => <>{getMonth(item.month)}</>,
+              renderCell: (item) => (
+                <>
+                  {new Intl.DateTimeFormat("en-US", {
+                    month: "short",
+                    year: "2-digit",
+                  }).format(new Date().setFullYear(item.year, item.month, 1))}
+                </>
+              ),
             },
             {
               id: "5",
               key: "",
               label: "Gross Pay",
-              renderCell: (item) => <>{item._sum.amount}</>,
+              renderCell: (item) => (
+                <>
+                  {new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "INR",
+                  }).format(
+                    Number(
+                      item.paySlipComponents.reduce((acc, curr) => {
+                        return acc + Number(curr.amount);
+                      }, 0)
+                    )
+                  )}
+                </>
+              ),
             },
-            // {
-            //   id: "6",
-            //   key: "",
-            //   label: "Pay Slip",
-            // },
+            {
+              id: "6",
+              key: "",
+              label: "Status",
+              renderCell: (item) => (
+                <Typography transform="capitalize">
+                  {item.status.name}
+                </Typography>
+              ),
+            },
           ]}
         />
       </Card>

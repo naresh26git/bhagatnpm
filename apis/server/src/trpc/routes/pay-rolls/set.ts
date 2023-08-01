@@ -19,8 +19,8 @@ export const set = adminOnlyProcedure
       const payRoll = await prisma.payRoll.create({
         data: {
           userId: ctx.userId,
-          month: input.month,
-          salaryId: input.salaryId,
+          month: new Date(input.month).getMonth(),
+          year: new Date(input.month).getFullYear(),
           statusId: input.statusId,
           createdById: ctx.userId,
           updatedById: ctx.userId,
@@ -29,7 +29,7 @@ export const set = adminOnlyProcedure
           userId: true,
           id: true,
           month: true,
-          salary: {
+          paySlipComponents: {
             select: {
               amount: true,
             },

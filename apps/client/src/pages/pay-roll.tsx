@@ -7,10 +7,10 @@ import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
 import PageHeader from "../components/PageHeader";
-import PayrollDialog from "../components/PayrollDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
+
 export type PayRollItem = {
   uid: string;
   empid: string;
@@ -59,7 +59,6 @@ export const PayRollPage = () => {
           limit: states.paginationState.limit,
           page: states.paginationState.page,
         };
-        console.log({ inputParameters });
         const result = await client.payRoll.getMany.mutate(inputParameters);
 
         return {
@@ -75,6 +74,7 @@ export const PayRollPage = () => {
       }
     },
   });
+
   return (
     <Stack gap="3">
       <Grid.Row>
@@ -134,17 +134,18 @@ export const PayRollPage = () => {
       {/* <PageHeader title={<PageHeader.Title>Pay Roll</PageHeader.Title>} /> */}
       <PageHeader
         title={<PageHeader.Title></PageHeader.Title>}
-        actions={<PayrollDialog />}
+        // actions={<PayrollDialog />}
       />
       <Card>
         <DataGrid<PayRoll>
           {...value}
           columns={[
-            // {
-            //   id: "1",
-            //   key: "Emp Id",
-            //   label: "Emp Id",
-            // },
+            {
+              id: "1",
+              key: "",
+              label: "Emp Code",
+              renderCell: (item) => <>{item.user.id}</>,
+            },
             {
               id: "2",
               key: "",
@@ -160,30 +161,50 @@ export const PayRollPage = () => {
             {
               id: "3",
               key: "",
-              label: "Month",
+              label: "Financial Year",
               renderCell: (item) => (
                 <>
+                  FY{" "}
                   {new Intl.DateTimeFormat("en-US", {
-                    month: "short",
-                  }).format(new Date(item.month))}
+                    year: "2-digit",
+                  }).format(new Date().setFullYear(item.year, item.month, 1))}
                 </>
               ),
             },
             {
               id: "4",
               key: "",
-              label: "gross pay",
+              label: "Period",
               renderCell: (item) => (
                 <>
-                  {new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "INR",
-                  }).format(Number(item.salary.amount))}
+                  {new Intl.DateTimeFormat("en-US", {
+                    month: "short",
+                    year: "2-digit",
+                  }).format(new Date().setFullYear(item.year, item.month, 1))}
                 </>
               ),
             },
             {
               id: "5",
+              key: "",
+              label: "Gross Pay",
+              renderCell: (item) => (
+                <>
+                  {new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "INR",
+                  }).format(
+                    Number(
+                      item.paySlipComponents.reduce((acc, curr) => {
+                        return acc + Number(curr.amount);
+                      }, 0)
+                    )
+                  )}
+                </>
+              ),
+            },
+            {
+              id: "6",
               key: "",
               label: "Status",
               renderCell: (item) => (
