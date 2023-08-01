@@ -14,8 +14,6 @@ import { leaveStatusRoutes } from "./routes/leave-status";
 import { leaveRoutes } from "./routes/leaves";
 import { leaveTypeRoutes } from "./routes/leaves/leave-types";
 import { payRollRoutes } from "./routes/pay-rolls";
-import { paySlipRoutes } from "./routes/pay-slip";
-import { paySlipComponentRoutes } from "./routes/payslip-component";
 import { personalInfoRoutes } from "./routes/personal-infos";
 import { qualificationRoutes } from "./routes/qualification";
 import { roleRoutes } from "./routes/roles";
@@ -48,8 +46,6 @@ export const appRouter = trpc.router({
   qualifications: qualificationRoutes,
   identification: identificationRoutes,
   identificationTypes: identificationTypeRoutes,
-  paySlipComponent: paySlipComponentRoutes,
-  paySlip: paySlipRoutes,
 });
 
 // export type definition of API
