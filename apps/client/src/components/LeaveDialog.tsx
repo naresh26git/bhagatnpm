@@ -52,7 +52,7 @@ export const LeaveDialog = () => {
   return (
     <>
       <Dialog.Trigger {...value} variant="primary">
-        Add Leave
+        Apply Leave
       </Dialog.Trigger>
 
       <Dialog {...value}>
@@ -110,7 +110,7 @@ export const LeaveDialog = () => {
                     <option value={1}>Sick Leave</option>
                     <option value={2}>Casual Leave</option>
                   </select>
-                  <label htmlFor="Leave Type">Leave Type</label>
+                  <label htmlFor="Leave Type">Leave Type </label>
                 </div>
               </Grid.Col>
               <Grid.Col cols={["12", "lg-6"]}>

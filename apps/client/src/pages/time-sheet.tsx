@@ -11,15 +11,15 @@ import TimesheetDialog from "../components/TimesheetDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
-export type TimeSheetList = {
-  uid: string;
-  empcode: string;
-  empname: string;
-  attendancedate: string;
-  checkin: string;
-  checkout: string;
-  status: string;
-};
+// export type TimeSheetList = {
+//   uid: string;
+//   empcode: string;
+//   empname: string;
+//   attendancedate: string;
+//   checkin: string;
+//   checkout: string;
+//   status: string;
+// };
 
 export const timeSheet = {
   uid: "1",
@@ -64,7 +64,8 @@ export const TimeSheetPage = () => {
 
         console.log({ inputParameters });
 
-        const result = await client.timeSheet.getMany.mutate();
+        const result = await client.timeSheet.getMany.mutate(inputParameters);
+        console.log({ result });
 
         return {
           totalCount: result.totalCount,
@@ -113,7 +114,7 @@ export const TimeSheetPage = () => {
           </Button>
         </Grid.Col>
       </Grid.Row>
-      <PageHeader title={<PageHeader.Title>Time Sheet</PageHeader.Title>} />
+      <PageHeader title={<PageHeader.Title></PageHeader.Title>} />
       {/* <PageHeader actions={<TimesheetDialog />} /> */}
       <PageHeader
         title={<PageHeader.Title></PageHeader.Title>}
@@ -123,15 +124,16 @@ export const TimeSheetPage = () => {
         <DataGrid<TimeSheet>
           {...value}
           columns={[
-            // {
-            //   id: "1",
-            //   key: "userId",
-            //   label: "Empcode",
-            // },
+            {
+              id: "1",
+              key: "userId",
+              label: "Emp code",
+              renderCell: (item) => <>{item.user.id}</>,
+            },
             {
               id: "2",
               key: "",
-              label: "Emp Name",
+              label: "Name",
               renderCell: (item) => (
                 <>
                   {item.user.personalInfo
@@ -159,7 +161,7 @@ export const TimeSheetPage = () => {
             {
               id: "4",
               key: "",
-              label: "In Time",
+              label: "CheckIN",
               renderCell: (item) => (
                 <>
                   {item.inTime
@@ -173,8 +175,8 @@ export const TimeSheetPage = () => {
             },
             {
               id: "5",
-              key: "checkout",
-              label: "Out Time",
+              key: "",
+              label: "CheckOUT",
               renderCell: (item) => (
                 <>
                   {item.outTime

@@ -27,6 +27,7 @@ export const getMany = protectedProcedure
               },
             },
           },
+
           inTime: true,
           outTime: true,
           status: {

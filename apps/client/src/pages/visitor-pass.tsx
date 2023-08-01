@@ -127,13 +127,13 @@ const VisitorPasses = () => {
             columns={[
               // {
               //   id: "1",
-              //   key: "photo",
-              //   label: "Photo",
+              //   key: "imageUrl",
+              //   label: "Visitor Image",
               // },
               {
                 id: "2",
                 key: "name",
-                label: "Visitor Name",
+                label: "Name",
                 renderCell: (item) => (
                   <Typography transform="capitalize">{item.name}</Typography>
                 ),
@@ -222,7 +222,7 @@ const VisitorPasses = () => {
                 key: "reason",
                 label: "Reason",
                 renderCell: (item) => (
-                  <Typography transform="capitalize">{item.name}</Typography>
+                  <Typography transform="capitalize">{item.reason}</Typography>
                 ),
               },
             ]}

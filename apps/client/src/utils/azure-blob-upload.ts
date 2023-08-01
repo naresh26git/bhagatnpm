@@ -2,7 +2,7 @@ import { BlobServiceClient } from "@azure/storage-blob";
 
 const containerName = `upload`;
 const sasToken =
-  "sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2023-07-24T13:58:58Z&st=2023-07-24T05:58:58Z&spr=https&sig=bGvLv526OjCCQFcGGCklLgLLdNd0CbNGRxxqigiY084%3D";
+  "sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2023-07-31T14:43:11Z&st=2023-07-31T06:43:11Z&spr=https&sig=Tr4QqKLlyVegwCbzvhZ6wfy6Dv9musbhJqpu6%2F8Esj0%3D";
 const storageAccountName = "clubitsstoragepoc";
 
 const uploadUrl = `https://${storageAccountName}.blob.core.windows.net/?${sasToken}`;

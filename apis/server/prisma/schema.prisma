@@ -9,41 +9,36 @@ datasource db {
 }
 
 model AddressType {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(64)
-
-  addresses Address[] @relation("AddressOfAddressType")
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User     @relation("AddressTypeCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdById Int      @map("created_by_id")
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy   User     @relation("AddressTypeUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById Int      @map("updated_by_id")
+  id          Int       @id @default(autoincrement())
+  name        String    @unique @db.VarChar(64)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  createdById Int       @map("created_by_id")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  updatedById Int       @map("updated_by_id")
+  createdBy   User      @relation("AddressTypeCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  updatedBy   User      @relation("AddressTypeUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  addresses   Address[] @relation("AddressOfAddressType")
 
   @@map("address_type")
 }
 
 model Address {
   id            Int         @id @default(autoincrement())
-  user          User        @relation("AddressOfUser", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   userId        Int         @map("user_id")
-  addressType   AddressType @relation("AddressOfAddressType", fields: [addressTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   addressTypeId Int         @map("address_type_id")
   street        String
   city          String
   state         String
   country       String
   pincode       String
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User     @relation("AddressCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdById Int      @map("created_by_id")
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy   User     @relation("AddressUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById Int      @map("updated_by_id")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  createdById   Int         @map("created_by_id")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  updatedById   Int         @map("updated_by_id")
+  addressType   AddressType @relation("AddressOfAddressType", fields: [addressTypeId], references: [id], onUpdate: NoAction)
+  createdBy     User        @relation("AddressCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  updatedBy     User        @relation("AddressUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  user          User        @relation("AddressOfUser", fields: [userId], references: [id], onUpdate: NoAction)
 
   @@map("addresses")
 }
@@ -51,146 +46,127 @@ model Address {
 model Department {
   id            Int            @id @default(autoincrement())
   name          String         @unique @db.VarChar(64)
+  createdAt     DateTime       @default(now()) @map("created_at")
+  createdById   Int            @map("created_by_id")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  updatedById   Int            @map("updated_by_id")
+  createdBy     User           @relation("DepartmentCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  updatedBy     User           @relation("DepartmentUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
   designations  Designation[]  @relation("DesignationOfDepartment")
   personalInfos PersonalInfo[] @relation("PersonalInfoOfDepartment")
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User     @relation("DepartmentCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdById Int      @map("created_by_id")
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy   User     @relation("DepartmentUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById Int      @map("updated_by_id")
 
   @@map("departments")
 }
 
 model Designation {
   id            Int            @id @default(autoincrement())
-  department    Department     @relation("DesignationOfDepartment", fields: [departmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   departmentId  Int            @map("department_id")
   name          String         @unique @db.VarChar(64)
+  createdAt     DateTime       @default(now()) @map("created_at")
+  createdById   Int            @map("created_by_id")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  updatedById   Int            @map("updated_by_id")
+  createdBy     User           @relation("DesignationCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  department    Department     @relation("DesignationOfDepartment", fields: [departmentId], references: [id], onUpdate: NoAction)
+  updatedBy     User           @relation("DesignationUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
   personalInfos PersonalInfo[] @relation("PersonalInfoOfDesignation")
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User     @relation("DesignationCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdById Int      @map("created_by_id")
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedById Int      @map("updated_by_id")
-  updatedBy   User     @relation("DesignationUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("designations")
 }
 
 model RelationshipType {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(64)
-
+  id            Int            @id @default(autoincrement())
+  name          String         @unique @db.VarChar(64)
+  createdAt     DateTime       @default(now()) @map("created_at")
+  createdById   Int            @map("created_by_id")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+  updatedById   Int            @map("updated_by_id")
   familyDetails FamilyDetail[] @relation("FamilyDetailOfRelationshipType")
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User     @relation("RelationshipTypeCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdById Int      @map("created_by_id")
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy   User     @relation("RelationshipTypeUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById Int      @map("updated_by_id")
+  createdBy     User           @relation("RelationshipTypeCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  updatedBy     User           @relation("RelationshipTypeUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
 
   @@map("relationship_types")
 }
 
 model FamilyDetail {
   id                 Int              @id @default(autoincrement())
-  user               User             @relation("FamilyDetailOfUser", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   userId             Int              @map("user_id")
-  relationshipType   RelationshipType @relation("FamilyDetailOfRelationshipType", fields: [relationshipTypeId], references: [id])
   relationshipTypeId Int              @map("relationship_type_id")
   name               String
   dateOfBirth        DateTime         @map("date_of_birth") @db.Date
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User     @relation("FamilyDetailCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdById Int      @map("created_by_id")
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy   User     @relation("FamilyDetailUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById Int      @map("updated_by_id")
+  createdAt          DateTime         @default(now()) @map("created_at")
+  createdById        Int              @map("created_by_id")
+  updatedAt          DateTime         @updatedAt @map("updated_at")
+  updatedById        Int              @map("updated_by_id")
+  createdBy          User             @relation("FamilyDetailCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  relationshipType   RelationshipType @relation("FamilyDetailOfRelationshipType", fields: [relationshipTypeId], references: [id])
+  updatedBy          User             @relation("FamilyDetailUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  user               User             @relation("FamilyDetailOfUser", fields: [userId], references: [id], onUpdate: NoAction)
 
   @@map("family_details")
 }
 
 model LeaveType {
-  id          Int     @id @default(autoincrement())
-  name        String  @unique @db.VarChar(64)
-  daysAlloted Int     @map("days_alloted")
-  leaves      Leave[] @relation("LeaveOfLeaveType")
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User     @relation("LeaveTypeCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id          Int      @id @default(autoincrement())
+  name        String   @unique @db.VarChar(64)
+  daysAlloted Int      @map("days_alloted")
+  createdAt   DateTime @default(now()) @map("created_at")
   createdById Int      @map("created_by_id")
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy   User     @relation("LeaveTypeUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedAt   DateTime @updatedAt @map("updated_at")
   updatedById Int      @map("updated_by_id")
+  createdBy   User     @relation("LeaveTypeCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  updatedBy   User     @relation("LeaveTypeUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  leaves      Leave[]  @relation("LeaveOfLeaveType")
 
   @@map("leave_types")
 }
 
 model LeaveStatus {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(64)
-
-  leaves Leave[] @relation("LeaveOfLeaveStatus")
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User     @relation("LeaveStatusCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id          Int      @id @default(autoincrement())
+  name        String   @unique @db.VarChar(64)
+  createdAt   DateTime @default(now()) @map("created_at")
   createdById Int      @map("created_by_id")
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy   User     @relation("LeaveStatusUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedAt   DateTime @updatedAt @map("updated_at")
   updatedById Int      @map("updated_by_id")
+  createdBy   User     @relation("LeaveStatusCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  updatedBy   User     @relation("LeaveStatusUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  leaves      Leave[]  @relation("LeaveOfLeaveStatus")
 
   @@map("leave_statuses")
 }
 
 model Leave {
   id          Int         @id @default(autoincrement())
-  user        User        @relation("LeaveOfUser", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   userId      Int         @map("user_id")
-  leaveType   LeaveType   @relation("LeaveOfLeaveType", fields: [leaveTypeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   leaveTypeId Int         @map("leave_type_id")
-  fromDate    DateTime    @map("from_date") @db.DateTime2
-  toDate      DateTime    @map("to_date") @db.DateTime2
-  noOfDays    Decimal     @map("no_of_days") @db.Decimal
+  fromDate    DateTime    @map("from_date")
+  toDate      DateTime    @map("to_date")
+  noOfDays    Decimal     @map("no_of_days") @db.Decimal(18, 0)
   remarks     String?
-  status      LeaveStatus @relation("LeaveOfLeaveStatus", fields: [statusId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   statusId    Int         @map("status_id")
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User     @relation("LeaveCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdById Int      @map("created_by_id")
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedById Int      @map("updated_by_id")
-  updatedBy   User     @relation("LeaveUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt   DateTime    @default(now()) @map("created_at")
+  createdById Int         @map("created_by_id")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  updatedById Int         @map("updated_by_id")
+  createdBy   User        @relation("LeaveCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  leaveType   LeaveType   @relation("LeaveOfLeaveType", fields: [leaveTypeId], references: [id], onUpdate: NoAction)
+  status      LeaveStatus @relation("LeaveOfLeaveStatus", fields: [statusId], references: [id], onUpdate: NoAction)
+  updatedBy   User        @relation("LeaveUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  user        User        @relation("LeaveOfUser", fields: [userId], references: [id], onUpdate: NoAction)
 
   @@map("leaves")
 }
 
 model PayRollStatus {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(64)
-
-  payRolls PayRoll[] @relation("PayRollOfPayRollStatus")
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User     @relation("PayRollStatusCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdById Int      @map("created_by_id")
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy   User     @relation("PayRollStatusUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById Int      @map("updated_by_id")
+  id          Int       @id @default(autoincrement())
+  name        String    @unique @db.VarChar(64)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  createdById Int       @map("created_by_id")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+  updatedById Int       @map("updated_by_id")
+  createdBy   User      @relation("PayRollStatusCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  updatedBy   User      @relation("PayRollStatusUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  payRolls    PayRoll[] @relation("PayRollOfPayRollStatus")
 
   @@map("pay_roll_statuses")
 }
@@ -218,7 +194,6 @@ model PayRoll {
 
 model PersonalInfo {
   id                     Int         @id @default(autoincrement())
-  user                   User        @relation("PersonalInfoOfUser", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   userId                 Int         @unique @map("user_id")
   firstName              String      @map("first_name") @db.VarChar(32)
   middleName             String?     @map("middle_name") @db.VarChar(32)
@@ -226,36 +201,33 @@ model PersonalInfo {
   dateOfBirth            DateTime    @map("date_of_birth") @db.Date
   dateOfJoining          DateTime    @map("date_of_joining") @db.Date
   departmentId           Int         @map("department_id")
-  department             Department  @relation("PersonalInfoOfDepartment", fields: [departmentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   designationId          Int         @map("designation_id")
-  designation            Designation @relation("PersonalInfoOfDesignation", fields: [designationId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   reportingManagerUserId Int         @map("reporting_manager_user_id")
-  reportingManager       User        @relation("ReportingManagerOfUser", fields: [reportingManagerUserId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdById Int      @map("created_by_id")
-  createdBy   User     @relation("PersonalInfoCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedById Int      @map("updated_by_id")
-  updatedBy   User     @relation("PersonalInfoUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt              DateTime    @default(now()) @map("created_at")
+  createdById            Int         @map("created_by_id")
+  updatedAt              DateTime    @updatedAt @map("updated_at")
+  updatedById            Int         @map("updated_by_id")
+  createdBy              User        @relation("PersonalInfoCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  department             Department  @relation("PersonalInfoOfDepartment", fields: [departmentId], references: [id], onUpdate: NoAction)
+  designation            Designation @relation("PersonalInfoOfDesignation", fields: [designationId], references: [id], onUpdate: NoAction)
+  reportingManager       User        @relation("ReportingManagerOfUser", fields: [reportingManagerUserId], references: [id], onUpdate: NoAction)
+  updatedBy              User        @relation("PersonalInfoUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  user                   User        @relation("PersonalInfoOfUser", fields: [userId], references: [id], onUpdate: NoAction)
 
   @@map("personal_infos")
 }
 
 model Qualification {
-  id     Int    @id @default(autoincrement())
-  name   String @db.VarChar(128)
-  user   User   @relation("QualificationOfUser", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  userId Int    @map("user_id")
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
+  id          Int      @id @default(autoincrement())
+  name        String   @db.VarChar(128)
+  userId      Int      @map("user_id")
+  createdAt   DateTime @default(now()) @map("created_at")
   createdById Int      @map("created_by_id")
-  createdBy   User     @relation("QualificationCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
+  updatedAt   DateTime @updatedAt @map("updated_at")
   updatedById Int      @map("updated_by_id")
-  updatedBy   User     @relation("QualificationUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdBy   User     @relation("QualificationCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  updatedBy   User     @relation("QualificationUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  user        User     @relation("QualificationOfUser", fields: [userId], references: [id], onUpdate: NoAction)
 
   @@unique([name, userId])
   @@map("qualifications")
@@ -299,289 +271,249 @@ model PaySlipComponent {
 }
 
 model IdentificationType {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(128)
-
+  id              Int              @id @default(autoincrement())
+  name            String           @unique @db.VarChar(128)
+  createdAt       DateTime         @default(now()) @map("created_at")
+  createdById     Int              @map("created_by_id")
+  updatedAt       DateTime         @updatedAt @map("updated_at")
+  updatedById     Int              @map("updated_by_id")
+  createdBy       User             @relation("IdentificationTypeCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  updatedBy       User             @relation("IdentificationTypeUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
   identifications Identification[] @relation("IdentificationOfIdentificationType")
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdById Int      @map("created_by_id")
-  createdBy   User     @relation("IdentificationTypeCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedById Int      @map("updated_by_id")
-  updatedBy   User     @relation("IdentificationTypeUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@map("identification_types")
 }
 
 model Identification {
-  id Int @id @default(autoincrement())
-
-  type   IdentificationType @relation("IdentificationOfIdentificationType", fields: [typeId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  typeId Int                @map("type_id")
-
-  number String @unique @db.VarChar(128)
-  user   User   @relation("IdentificationOfUser", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  userId Int    @map("user_id")
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdById Int      @map("created_by_id")
-  createdBy   User     @relation("IdentificationCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedById Int      @map("updated_by_id")
-  updatedBy   User     @relation("IdentificationUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id          Int                @id @default(autoincrement())
+  typeId      Int                @map("type_id")
+  number      String             @unique @db.VarChar(128)
+  userId      Int                @map("user_id")
+  createdAt   DateTime           @default(now()) @map("created_at")
+  createdById Int                @map("created_by_id")
+  updatedAt   DateTime           @updatedAt @map("updated_at")
+  updatedById Int                @map("updated_by_id")
+  createdBy   User               @relation("IdentificationCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  type        IdentificationType @relation("IdentificationOfIdentificationType", fields: [typeId], references: [id], onUpdate: NoAction)
+  updatedBy   User               @relation("IdentificationUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  user        User               @relation("IdentificationOfUser", fields: [userId], references: [id], onUpdate: NoAction)
 
   @@unique([typeId, userId])
   @@map("identifications")
 }
 
 model Role {
-  id    Int    @id @default(autoincrement())
-  name  String @unique
-  users User[] @relation("UserOfRole")
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  createdAt   DateTime @default(now()) @map("created_at")
   createdById Int?     @map("created_by_id")
-  createdBy   User?    @relation("RoleCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
+  updatedAt   DateTime @updatedAt @map("updated_at")
   updatedById Int?     @map("updated_by_id")
+  createdBy   User?    @relation("RoleCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
   updatedBy   User?    @relation("RoleUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users       User[]   @relation("UserOfRole")
 
   @@map("roles")
 }
 
 model HelpDeskCategory {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(64)
-
-  helpDesks HelpDesk[] @relation("HelpDeskOfHelpDeskCategory")
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User     @relation("HelpDeskCategoryCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdById Int      @map("created_by_id")
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy   User     @relation("HelpDeskCategoryUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById Int      @map("updated_by_id")
+  id          Int        @id @default(autoincrement())
+  name        String     @unique @db.VarChar(64)
+  createdAt   DateTime   @default(now()) @map("created_at")
+  createdById Int        @map("created_by_id")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  updatedById Int        @map("updated_by_id")
+  createdBy   User       @relation("HelpDeskCategoryCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  updatedBy   User       @relation("HelpDeskCategoryUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  helpDesks   HelpDesk[] @relation("HelpDeskOfHelpDeskCategory")
 
   @@map("help_desk_categories")
 }
 
 model HelpDeskStatus {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(64)
-
-  helpDesks HelpDesk[] @relation("HelpDeskOfHelpDeskStatus")
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User     @relation("HelpDeskStatusCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdById Int      @map("created_by_id")
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy   User     @relation("HelpDeskStatusUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById Int      @map("updated_by_id")
+  id          Int        @id @default(autoincrement())
+  name        String     @unique @db.VarChar(64)
+  createdAt   DateTime   @default(now()) @map("created_at")
+  createdById Int        @map("created_by_id")
+  updatedAt   DateTime   @updatedAt @map("updated_at")
+  updatedById Int        @map("updated_by_id")
+  createdBy   User       @relation("HelpDeskStatusCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  updatedBy   User       @relation("HelpDeskStatusUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  helpDesks   HelpDesk[] @relation("HelpDeskOfHelpDeskStatus")
 
   @@map("help_desk_statuses")
 }
 
 model HelpDesk {
   id          Int              @id @default(autoincrement())
-  user        User             @relation("HelpDeskOfUser", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   userId      Int              @map("user_id")
   date        DateTime         @map("date") @db.Date
   tittle      String           @map("tittle") @db.VarChar(128)
   description String           @map("description") @db.VarChar(2048)
   remarks     String?          @map("remarks") @db.VarChar(1024)
-  category    HelpDeskCategory @relation("HelpDeskOfHelpDeskCategory", fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   categoryId  Int              @map("category_id")
-
-  status   HelpDeskStatus @relation("HelpDeskOfHelpDeskStatus", fields: [statusId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  statusId Int            @map("status_id")
-
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdById Int      @map("created_by_id")
-  createdBy   User     @relation("HelpDeskCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedById Int      @map("updated_by_id")
-  updatedBy   User     @relation("HelpDeskUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  statusId    Int              @map("status_id")
+  createdAt   DateTime         @default(now()) @map("created_at")
+  createdById Int              @map("created_by_id")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+  updatedById Int              @map("updated_by_id")
+  category    HelpDeskCategory @relation("HelpDeskOfHelpDeskCategory", fields: [categoryId], references: [id], onUpdate: NoAction)
+  createdBy   User             @relation("HelpDeskCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  status      HelpDeskStatus   @relation("HelpDeskOfHelpDeskStatus", fields: [statusId], references: [id], onUpdate: NoAction)
+  updatedBy   User             @relation("HelpDeskUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  user        User             @relation("HelpDeskOfUser", fields: [userId], references: [id], onUpdate: NoAction)
 
   @@map("help_desks")
 }
 
 model TimeSheetStatus {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(64)
-
-  timeSheets TimeSheet[] @relation("TimeSheetOfTimeSheetStatus")
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User     @relation("TimeSheetStatusCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdById Int      @map("created_by_id")
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy   User     @relation("TimeSheetStatusUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById Int      @map("updated_by_id")
+  id          Int         @id @default(autoincrement())
+  name        String      @unique @db.VarChar(64)
+  createdAt   DateTime    @default(now()) @map("created_at")
+  createdById Int         @map("created_by_id")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  updatedById Int         @map("updated_by_id")
+  createdBy   User        @relation("TimeSheetStatusCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  updatedBy   User        @relation("TimeSheetStatusUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  timeSheets  TimeSheet[] @relation("TimeSheetOfTimeSheetStatus")
 
   @@map("time_sheet_statuses")
 }
 
 model TimeSheet {
-  id       Int             @id @default(autoincrement())
-  user     User            @relation("TimeSheetOfUser", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  userId   Int             @map("user_id")
-  inTime   DateTime?       @map("in_time") @db.DateTime2
-  outTime  DateTime?       @map("out_time") @db.DateTime2
-  status   TimeSheetStatus @relation("TimeSheetOfTimeSheetStatus", fields: [statusId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  statusId Int             @map("status_id")
-
-  // Audit fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdById Int      @map("created_by_id")
-  createdBy   User     @relation("TimeSheetCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedById Int      @map("updated_by_id")
-  updatedBy   User     @relation("TimeSheetUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id          Int             @id @default(autoincrement())
+  userId      Int             @map("user_id")
+  inTime      DateTime?       @map("in_time")
+  outTime     DateTime?       @map("out_time")
+  statusId    Int             @map("status_id")
+  createdAt   DateTime        @default(now()) @map("created_at")
+  createdById Int             @map("created_by_id")
+  updatedAt   DateTime        @updatedAt @map("updated_at")
+  updatedById Int             @map("updated_by_id")
+  createdBy   User            @relation("TimeSheetCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  status      TimeSheetStatus @relation("TimeSheetOfTimeSheetStatus", fields: [statusId], references: [id], onUpdate: NoAction)
+  updatedBy   User            @relation("TimeSheetUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  user        User            @relation("TimeSheetOfUser", fields: [userId], references: [id], onUpdate: NoAction)
 
   @@map("time_sheets")
 }
 
 model Team {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(64)
-
-  task        Task[]   @relation("TaskOfTeam")
-  //Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User     @relation("TeamCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id          Int      @id @default(autoincrement())
+  name        String   @unique @db.VarChar(64)
+  createdAt   DateTime @default(now()) @map("created_at")
   createdById Int      @map("created_by_id")
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy   User     @relation("TeamUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedAt   DateTime @updatedAt @map("updated_at")
   updatedById Int      @map("updated_by_id")
+  task        Task[]   @relation("TaskOfTeam")
+  createdBy   User     @relation("TeamCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  updatedBy   User     @relation("TeamUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
 
   @@map("task_billed_team")
 }
 
 model Project {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(64)
-
-  task Task[] @relation("TaskOfProject")
-
-  //Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User     @relation("ProjectCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id          Int      @id @default(autoincrement())
+  name        String   @unique @db.VarChar(64)
+  createdAt   DateTime @default(now()) @map("created_at")
   createdById Int      @map("created_by_id")
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy   User     @relation("ProjectUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedAt   DateTime @updatedAt @map("updated_at")
   updatedById Int      @map("updated_by_id")
+  task        Task[]   @relation("TaskOfProject")
+  createdBy   User     @relation("ProjectCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  updatedBy   User     @relation("ProjectUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
 
   @@map("task_project")
 }
 
 model Task {
   id           Int      @id @default(autoincrement())
-  user         User     @relation("TaskOfUser", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   userId       Int      @map("user_id")
-  project      Project  @relation("TaskOfProject", fields: [projectId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   projectId    Int      @map("project_id")
-  date         DateTime @map("task_date") @db.DateTime2
+  date         DateTime @map("task_date")
   name         String   @map("task_name") @db.VarChar(64)
   description  String   @map("task_description") @db.VarChar(256)
-  noOfHours    Decimal  @map("no_of_hours") @db.Decimal
+  noOfHours    Decimal  @map("no_of_hours") @db.Decimal(18, 0)
   remarks      String   @map("remarks") @db.Text
-  billedTeam   Team     @relation("TaskOfTeam", fields: [billedTeamId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   billedTeamId Int      @map("team_id")
-
-  //Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User     @relation("TaskCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdById Int      @map("created_by_id")
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy   User     @relation("TaskUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById Int      @map("updated_by_id")
+  createdAt    DateTime @default(now()) @map("created_at")
+  createdById  Int      @map("created_by_id")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  updatedById  Int      @map("updated_by_id")
+  createdBy    User     @relation("TaskCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  project      Project  @relation("TaskOfProject", fields: [projectId], references: [id], onUpdate: NoAction)
+  billedTeam   Team     @relation("TaskOfTeam", fields: [billedTeamId], references: [id], onUpdate: NoAction)
+  updatedBy    User     @relation("TaskUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  user         User     @relation("TaskOfUser", fields: [userId], references: [id], onUpdate: NoAction)
 
   @@map("task")
 }
 
 model Company {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(64)
-
+  id            Int           @id @default(autoincrement())
+  name          String        @unique @db.VarChar(64)
+  createdAt     DateTime      @default(now()) @map("created_at")
+  createdById   Int           @map("created_by_id")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+  updatedById   Int           @map("updated_by_id")
+  createdBy     User          @relation("CompanyCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  updatedBy     User          @relation("CompanyUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
   hrs           Hr[]          @relation("CompanyOfHr")
   visitorPasses VisitorPass[] @relation("CompanyOfVisitorPass")
-  //Audit Fields
-  createdAt     DateTime      @default(now()) @map("created_at") @db.DateTime2
-  createdBy     User          @relation("CompanyCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdById   Int           @map("created_by_id")
-  updatedAt     DateTime      @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy     User          @relation("CompanyUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById   Int           @map("updated_by_id")
 
   @@map("companies")
 }
 
 model Hr {
   id            Int           @id @default(autoincrement())
-  user          User          @relation("UserOfHr", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  userId        Int           @unique @map("user_id")
-  companies     Company       @relation("CompanyOfHr", fields: [companyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   companyId     Int           @map("company_id")
-  visitorPasses VisitorPass[] @relation("HrOfVisitorPass")
-  //Audit Fields
-  createdAt     DateTime      @default(now()) @map("created_at") @db.DateTime2
-  createdBy     User          @relation("HrCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  createdAt     DateTime      @default(now()) @map("created_at")
   createdById   Int           @map("created_by_id")
-  updatedAt     DateTime      @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy     User          @relation("HrUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedAt     DateTime      @updatedAt @map("updated_at")
   updatedById   Int           @map("updated_by_id")
+  userId        Int           @unique @map("user_id")
+  companies     Company       @relation("CompanyOfHr", fields: [companyId], references: [id], onUpdate: NoAction)
+  createdBy     User          @relation("HrCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  updatedBy     User          @relation("HrUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  user          User          @relation("UserOfHr", fields: [userId], references: [id], onUpdate: NoAction)
+  visitorPasses VisitorPass[] @relation("HrOfVisitorPass")
 
   @@map("hrs")
 }
 
 model VisitorPass {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(64)
-
-  hr   Hr  @relation("HrOfVisitorPass", fields: [hrId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  hrId Int @map("hr_name_id")
-
-  date         DateTime @map("visitor_date") @db.DateTime2
-  // TODO: change this to company (singular form)
-  companies    Company  @relation("CompanyOfVisitorPass", fields: [companyId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  companyId    Int      @map("hr_company")
-  fromPlace    String   @map("from_place") @db.VarChar(64)
-  mobileNumber String   @map("mobile_number") @db.VarChar(16)
-
-  inTime      DateTime  @map("in_time") @db.DateTime2
-  outTime     DateTime? @map("out_time") @db.DateTime2
-  reason      String    @map("reason") @db.VarChar(1024)
-  //Audit Fields
-  createdAt   DateTime  @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User      @relation("VisitorCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  createdById Int       @map("created_by_id")
-  updatedAt   DateTime  @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy   User      @relation("VisitorUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  updatedById Int       @map("updated_by_id")
+  id           Int       @id @default(autoincrement())
+  name         String    @unique @db.VarChar(64)
+  hrId         Int       @map("hr_name_id")
+  date         DateTime  @map("visitor_date")
+  companyId    Int       @map("hr_company")
+  fromPlace    String    @map("from_place") @db.VarChar(64)
+  inTime       DateTime  @map("in_time")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  createdById  Int       @map("created_by_id")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+  updatedById  Int       @map("updated_by_id")
+  mobileNumber String    @map("mobile_number") @db.VarChar(16)
+  outTime      DateTime? @map("out_time")
+  reason       String    @map("reason") @db.VarChar(1024)
+  createdBy    User      @relation("VisitorCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  companies    Company   @relation("CompanyOfVisitorPass", fields: [companyId], references: [id], onUpdate: NoAction)
+  hr           Hr        @relation("HrOfVisitorPass", fields: [hrId], references: [id], onUpdate: NoAction)
+  updatedBy    User      @relation("VisitorUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
 
   @@map("visitor_passes")
 }
 
 model UserStatus {
-  id   Int    @id @default(autoincrement())
-  name String @unique @db.VarChar(64)
-
-  users User[] @relation("UserOfUserStatus")
-
-  // Audit Fields
-  createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
-  createdBy   User     @relation("UserStatusCreatedByUser", fields: [createdById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  id          Int      @id @default(autoincrement())
+  name        String   @unique @db.VarChar(64)
+  createdAt   DateTime @default(now()) @map("created_at")
   createdById Int      @map("created_by_id")
-  updatedAt   DateTime @updatedAt @map("updated_at") @db.DateTime2
-  updatedBy   User     @relation("UserStatusUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  updatedAt   DateTime @updatedAt @map("updated_at")
   updatedById Int      @map("updated_by_id")
+  createdBy   User     @relation("UserStatusCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
+  updatedBy   User     @relation("UserStatusUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
+  users       User[]   @relation("UserOfUserStatus")
 
   @@map("user_statuses")
 }
@@ -693,17 +625,3 @@ model User {
   @@unique([username, email])
   @@map("users")
 }
-
-// model Session {
-//   id        Int    @id @default(autoincrement())
-//   user      User   @relation("SessionOfUser", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-//   userId    Int    @map("user_id")
-//   sessionId String @unique @map("session_id")
-//   session   String @db.VarChar(2048)
-
-//   // Audit Fields
-//   createdAt DateTime @default(now()) @map("created_at") @db.DateTime2
-//   updatedAt DateTime @updatedAt @map("updated_at") @db.DateTime2
-
-//   @@map("sessions")
-// }

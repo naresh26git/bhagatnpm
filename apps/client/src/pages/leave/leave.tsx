@@ -117,21 +117,49 @@ export const LeaveViewPage = () => {
         <DataGrid<Leave>
           {...value}
           columns={[
-            // {
-            //   id: "1",
-            //   key: "userId",
-            //   label: "Empcode",
-            // },
+            {
+              id: "1",
+              key: "",
+              label: "Empcode",
+              renderCell: (item) => <>{item.user.id}</>,
+            },
             {
               id: "2",
               key: "",
               label: "Emp Name",
-              renderCell: (item) => <>{item.user.name}</>,
+              renderCell: (item) => (
+                <>
+                  {item.user.personalInfo?.firstName}{" "}
+                  {item.user.personalInfo?.lastName}
+                </>
+              ),
             },
             {
               id: "3",
               key: "",
-              label: "From Date",
+              label: "Requested On",
+              renderCell: (item) => (
+                <>
+                  {" "}
+                  {new Intl.DateTimeFormat("en-US", {
+                    month: "numeric",
+                    year: "numeric",
+                    day: "numeric",
+                  }).format(new Date(item.createdAt))}
+                </>
+              ),
+            },
+            {
+              id: "4",
+              key: "",
+              label: "Leave Type",
+              renderCell: (item) => <>{item.leaveType.name}</>,
+            },
+
+            {
+              id: "5",
+              key: "",
+              label: "From",
               renderCell: (item) => (
                 <>
                   {new Intl.DateTimeFormat("en-US", {
@@ -143,9 +171,9 @@ export const LeaveViewPage = () => {
               ),
             },
             {
-              id: "4",
+              id: "6",
               key: "todate",
-              label: "To Date",
+              label: "To",
               renderCell: (item) => (
                 <>
                   {new Intl.DateTimeFormat("en-US", {
@@ -157,18 +185,12 @@ export const LeaveViewPage = () => {
               ),
             },
             {
-              id: "5",
-              key: "",
-              label: "Category",
-              renderCell: (item) => <>{item.leaveType.name}</>,
-            },
-            {
-              id: "6",
-              key: "remarks",
-              label: "Remarks",
-            },
-            {
               id: "7",
+              key: "noOfDays",
+              label: "Days",
+            },
+            {
+              id: "8",
               key: "",
               label: "Status",
               renderCell: (item) => (
