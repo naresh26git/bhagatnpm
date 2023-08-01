@@ -10,6 +10,7 @@ import { helpDeskStatusRoutes } from "./routes/helpdesk-status";
 import { hrRoutes } from "./routes/hr";
 import { identificationRoutes } from "./routes/identification";
 import { identificationTypeRoutes } from "./routes/identification/identificationType";
+import { leaveStatusRoutes } from "./routes/leave-status";
 import { leaveRoutes } from "./routes/leaves";
 import { leaveTypeRoutes } from "./routes/leaves/leave-types";
 import { payRollRoutes } from "./routes/pay-rolls";
@@ -25,7 +26,6 @@ import { trpc } from "./trpc";
 export const appRouter = trpc.router({
   address: addressRoutes,
   familyDetail: familyDetailRoutes,
-  leave: leaveRoutes,
   payRoll: payRollRoutes,
   personalInfo: personalInfoRoutes,
   timeSheet: timeSheetRoutes,
@@ -36,7 +36,9 @@ export const appRouter = trpc.router({
   visitorPass: visitorPassRoutes,
   user: userRoutes,
   role: roleRoutes,
+  leave: leaveRoutes,
   leaveType: leaveTypeRoutes,
+  leaveStatus: leaveStatusRoutes,
   department: departmentRoutes,
   designation: designationRoutes,
   hr: hrRoutes,
