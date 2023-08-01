@@ -8,8 +8,6 @@ export const insertLeaveSchema = z.object({
   fromDate: z.string(),
   toDate: z.string(),
   noOfDays: z.number(),
-  remarks: z.string(),
-  statusId: z.number(),
   leaveTypeId: z.number(),
 });
 
@@ -19,14 +17,22 @@ export const set = employeeOnlyProcedure
   .input(insertLeaveSchema)
   .mutation(async ({ ctx, input }) => {
     try {
+      const status = await prisma.leaveStatus.findUniqueOrThrow({
+        select: {
+          id: true,
+        },
+        where: {
+          name: "pending",
+        },
+      });
       const leave = await prisma.leave.create({
         data: {
           userId: ctx.userId,
-          fromDate: input.fromDate,
-          toDate: input.toDate,
-          remarks: input.remarks,
+          fromDate: new Date(input.fromDate),
+          toDate: new Date(input.toDate),
+          remarks: "",
           noOfDays: input.noOfDays,
-          statusId: input.statusId,
+          statusId: status.id,
           leaveTypeId: input.leaveTypeId,
           createdById: ctx.userId,
           updatedById: ctx.userId,

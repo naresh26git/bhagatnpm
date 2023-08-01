@@ -4,6 +4,7 @@ import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
+import LeaveStatusDialog from "../../components/LeaveStatusDialog";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
@@ -82,6 +83,119 @@ export const LeaveViewPage = () => {
       }
     },
   });
+  const columns = [
+    {
+      id: "1",
+      key: "",
+      label: "Empcode",
+      renderCell: (item: Leave) => <>{item.user.id}</>,
+    },
+    {
+      id: "2",
+      key: "",
+      label: "Emp Name",
+      renderCell: (item: Leave) => (
+        <>
+          {item.user.personalInfo?.firstName} {item.user.personalInfo?.lastName}
+        </>
+      ),
+    },
+    {
+      id: "3",
+      key: "",
+      label: "Requested On",
+      renderCell: (item: Leave) => (
+        <>
+          {" "}
+          {new Intl.DateTimeFormat("en-US", {
+            month: "numeric",
+            year: "numeric",
+            day: "numeric",
+          }).format(new Date(item.createdAt))}
+        </>
+      ),
+    },
+    {
+      id: "4",
+      key: "",
+      label: "Leave Type",
+      renderCell: (item: Leave) => <>{item.leaveType.name}</>,
+    },
+
+    {
+      id: "5",
+      key: "",
+      label: "From",
+      renderCell: (item: Leave) => (
+        <>
+          {new Intl.DateTimeFormat("en-US", {
+            month: "numeric",
+            year: "numeric",
+            day: "numeric",
+          }).format(new Date(item.fromDate))}
+        </>
+      ),
+    },
+    {
+      id: "6",
+      key: "",
+      label: "To",
+      renderCell: (item: Leave) => (
+        <>
+          {new Intl.DateTimeFormat("en-US", {
+            month: "numeric",
+            year: "numeric",
+            day: "numeric",
+          }).format(new Date(item.toDate))}
+        </>
+      ),
+    },
+    {
+      id: "7",
+      key: "noOfDays",
+      label: "Days",
+      renderCell: (item: Leave) => <>{item.noOfDays}</>,
+    },
+    {
+      id: "8",
+      key: "remarks",
+      label: "Remarks",
+    },
+    {
+      id: "8",
+      key: "",
+      label: "Status",
+      renderCell: (item: Leave) => (
+        <Typography
+          transform="capitalize"
+          color={
+            item.status.name === "accepted"
+              ? "success"
+              : item.status.name === "rejected"
+              ? "danger"
+              : "warning"
+          }
+        >
+          {item.status.name}
+        </Typography>
+      ),
+    },
+    {
+      id: "9",
+      key: "",
+      label: "Action",
+      renderCell: (item: Leave) => (
+        <>
+          <LeaveStatusDialog
+            variant={
+              auth.state.user?.role.name === "admin" ? "admin" : "employee"
+            }
+            leaveId={item.id}
+          />
+        </>
+      ),
+    },
+  ];
   return (
     <Stack gap="3">
       {/* <Grid.Row>
@@ -116,136 +230,13 @@ export const LeaveViewPage = () => {
       <Card>
         <DataGrid<Leave>
           {...value}
-          columns={[
-            {
-              id: "1",
-              key: "",
-              label: "Empcode",
-              renderCell: (item) => <>{item.user.id}</>,
-            },
-            {
-              id: "2",
-              key: "",
-              label: "Emp Name",
-              renderCell: (item) => (
-                <>
-                  {item.user.personalInfo?.firstName}{" "}
-                  {item.user.personalInfo?.lastName}
-                </>
-              ),
-            },
-            {
-              id: "3",
-              key: "",
-              label: "Requested On",
-              renderCell: (item) => (
-                <>
-                  {" "}
-                  {new Intl.DateTimeFormat("en-US", {
-                    month: "numeric",
-                    year: "numeric",
-                    day: "numeric",
-                  }).format(new Date(item.createdAt))}
-                </>
-              ),
-            },
-            {
-              id: "4",
-              key: "",
-              label: "Leave Type",
-              renderCell: (item) => <>{item.leaveType.name}</>,
-            },
+          columns={columns.filter((column) => {
+            console.log({ auth });
+            if (column.label !== "Action") return true;
+            if (auth.state.user?.role.name === "admin") return true;
 
-            {
-              id: "5",
-              key: "",
-              label: "From",
-              renderCell: (item) => (
-                <>
-                  {new Intl.DateTimeFormat("en-US", {
-                    month: "numeric",
-                    year: "numeric",
-                    day: "numeric",
-                  }).format(new Date(item.fromDate))}
-                </>
-              ),
-            },
-            {
-              id: "6",
-              key: "todate",
-              label: "To",
-              renderCell: (item) => (
-                <>
-                  {new Intl.DateTimeFormat("en-US", {
-                    month: "numeric",
-                    year: "numeric",
-                    day: "numeric",
-                  }).format(new Date(item.toDate))}
-                </>
-              ),
-            },
-            {
-              id: "7",
-              key: "noOfDays",
-              label: "Days",
-            },
-            {
-              id: "8",
-              key: "",
-              label: "Status",
-              renderCell: (item) => (
-                <Typography
-                  transform="capitalize"
-                  color={
-                    item.status.name === "accepted"
-                      ? "success"
-                      : item.status.name === "rejected"
-                      ? "danger"
-                      : "warning"
-                  }
-                >
-                  {item.status.name}
-                </Typography>
-              ),
-              sortOrder:
-                value.states.sortState?.sortBy === "statusId" &&
-                value.states.sortState.sortOrder
-                  ? value.states.sortState.sortOrder
-                  : undefined,
-              options: [
-                {
-                  id: "1",
-                  as: "button",
-                  icon: "↑",
-                  label: "Sort by ASC",
-                  disabled:
-                    value.states.sortState?.sortBy === "statusId" &&
-                    value.states.sortState.sortOrder === "asc",
-                  onClick: () => {
-                    value.dispatchers.sortDispatcher({
-                      type: "sort",
-                      payload: { sortBy: "statusId", sortOrder: "asc" },
-                    });
-                  },
-                },
-                {
-                  id: "2",
-                  as: "button",
-                  icon: "↓",
-                  label: "Sort by DESC",
-                  disabled:
-                    value.states.sortState?.sortBy === "status" &&
-                    value.states.sortState.sortOrder === "desc",
-                  onClick: () => {
-                    value.dispatchers.sortDispatcher({
-                      type: "sort",
-                      payload: { sortBy: "status", sortOrder: "desc" },
-                    });
-                  },
-                },
-              ],
-            },
-          ]}
+            return false;
+          })}
         />
       </Card>
     </Stack>

@@ -210,10 +210,12 @@ const VisitorPasses = () => {
                 label: "OutTime",
                 renderCell: (item) => (
                   <>
-                    {new Intl.DateTimeFormat("en-US", {
-                      hour: "numeric",
-                      minute: "numeric",
-                    }).format(new Date(item.inTime))}
+                    {item.outTime !== null
+                      ? new Intl.DateTimeFormat("en-US", {
+                          hour: "numeric",
+                          minute: "numeric",
+                        }).format(new Date(item.outTime))
+                      : ""}
                   </>
                 ),
               },

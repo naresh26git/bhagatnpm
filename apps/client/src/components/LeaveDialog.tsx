@@ -4,6 +4,7 @@ import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 // import { useDialog } from "ui/hooks/UseDialog";
+import { LeaveType } from "server/src/trpc/routes/leaves/leave-types/get-many";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
@@ -13,22 +14,19 @@ export const LeaveDialog = () => {
   const auth = useAuthContext();
   const [fromDate, setFromDate] = React.useState(`${new Date()}`);
   const [toDate, setToDate] = React.useState(`${new Date()}`);
-  const [leaveTypeId, setLeaveTypeId] = React.useState<number>(1);
-  const [statusId, setStatusId] = React.useState<number>(1);
+  const [leaveType, setLeaveType] = React.useState<LeaveType[]>([]);
+  const [leaveTypeId, setLeaveTypeId] = React.useState<number>();
   const [noOfDays, setNoOfDays] = React.useState<number>(0);
-  const [remarks, setRemarks] = React.useState<string>("");
-  // const value = useDialog();
-  console.log(fromDate);
-  const addLeaves = async () => {
+
+  const handleSubmit = async () => {
     try {
+      if (leaveTypeId === undefined) return;
       await client.leave.set.mutate({
         // name,
         noOfDays,
         fromDate,
         toDate,
         leaveTypeId,
-        remarks,
-        statusId,
 
         // email: email || undefined,
         // mobile: mobile || undefined,
@@ -42,13 +40,20 @@ export const LeaveDialog = () => {
     id: "create-leave",
     labelId: "create-leave-label",
   };
-  const handleStatus = (e: any) => {
-    setStatusId(e.target.value);
-  };
-  const handleLeaveType = (e: any) => {
-    setLeaveTypeId(e.target.value);
-  };
+  // const handleStatus = (e: any) => {
+  //   setStatusId(e.target.value);
+  // };
 
+  React.useEffect(() => {
+    (async () => {
+      const leaveTypes = await client.leaveType.getMany.query();
+      setLeaveType(leaveTypes);
+
+      const [firstLeaveType] = leaveTypes;
+      if (firstLeaveType === undefined) return;
+      setLeaveTypeId(firstLeaveType.id);
+    })();
+  }, []);
   return (
     <>
       <Dialog.Trigger {...value} variant="primary">
@@ -104,38 +109,17 @@ export const LeaveDialog = () => {
                 <div className="form-floating">
                   <select
                     className="form-control"
-                    value={statusId}
-                    onChange={(e) => handleLeaveType(e)}
+                    value={leaveTypeId}
+                    onChange={(e) => setLeaveTypeId(parseInt(e.target.value))}
                   >
-                    <option value={1}>Sick Leave</option>
-                    <option value={2}>Casual Leave</option>
+                    <option value={undefined}>Select Leave Type</option>
+                    {leaveType.map((leaveType) => {
+                      return (
+                        <option value={leaveType.id}>{leaveType.name}</option>
+                      );
+                    })}
                   </select>
-                  <label htmlFor="Leave Type">Leave Type </label>
-                </div>
-              </Grid.Col>
-              <Grid.Col cols={["12", "lg-6"]}>
-                <div className="form-floating">
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={remarks}
-                    onChange={(event) => setRemarks(event.target.value)}
-                  />
-                  <label htmlFor="Remarks">Remarks</label>
-                </div>
-              </Grid.Col>
-              <Grid.Col cols={["12", "lg-6"]}>
-                <div className="form-floating">
-                  <select
-                    className="form-control"
-                    value={statusId}
-                    onChange={(e) => handleStatus(e)}
-                  >
-                    <option value={1}>Pending</option>
-                    <option value={2}>Accepted</option>
-                    <option value={3}>Rejected</option>
-                  </select>
-                  <label htmlFor="Status">Status</label>
+                  <label htmlFor="Leave Type">Leave Type</label>
                 </div>
               </Grid.Col>
             </Grid.Row>
@@ -152,7 +136,7 @@ export const LeaveDialog = () => {
 
           <Button
             variant="primary"
-            onClick={addLeaves}
+            onClick={handleSubmit}
             data-bs-toggle="modal"
             data-bs-target={`#${value.id}`}
           >
