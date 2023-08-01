@@ -18,6 +18,7 @@ const main = async () => {
       await tx.familyDetail.deleteMany();
       await tx.leave.deleteMany();
       await tx.payRoll.deleteMany();
+      await tx.paySlipComponent.deleteMany();
 
       const { id: systemRoleId } = await tx.role.upsert({
         create: {
