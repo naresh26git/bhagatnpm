@@ -123,12 +123,12 @@ const Payslip = () => {
                 </Typography>
               ),
             },
-            // {
-            //   id: "7",
-            //   key: "",
-            //   label: "Action",
-            //   renderCell: (item) => <PayRollDetailsDialog />,
-            // },
+            {
+              id: "7",
+              key: "",
+              label: "Action",
+              renderCell: (item) => <PayRollDetailsDialog />,
+            },
           ]}
         />
       </Card>

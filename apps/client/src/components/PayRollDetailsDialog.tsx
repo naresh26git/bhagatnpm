@@ -1,3 +1,5 @@
+import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Card from "ui/Card";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
@@ -11,8 +13,10 @@ const PayRollDetailsDialog = () => {
   };
   return (
     <>
-      <Dialog.Trigger {...value} variant="primary">
-        Pay Roll Details
+      <Dialog.Trigger {...value} color="primary">
+        <Typography color="primary">
+          <FontAwesomeIcon icon={faCircleInfo} />
+        </Typography>
       </Dialog.Trigger>
       <Dialog {...value}>
         <Dialog.Header title="" className="border-0"></Dialog.Header>
