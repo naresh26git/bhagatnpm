@@ -1,0 +1,1 @@
+import{b as t,S as a,j as n,T as r}from"./index-e20a6fbb.js";const s=e=>t(a,{orientation:"horizontal",justifyContent:"between",alignItems:"center",children:[e.title,e.actions||null]}),i=e=>n(r,{as:"h5",...e});s.Title=i;export{s as P};
