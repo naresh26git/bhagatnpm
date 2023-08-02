@@ -29,6 +29,11 @@ export const getMany = protectedProcedure
           },
           paySlipComponents: {
             select: {
+              componentType: {
+                select: {
+                  name: true,
+                },
+              },
               amount: true,
             },
           },

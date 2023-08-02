@@ -2,7 +2,7 @@ import { BlobServiceClient } from "@azure/storage-blob";
 
 const containerName = `upload`;
 const sasToken =
-  "sv=2022-11-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2023-07-31T14:43:11Z&st=2023-07-31T06:43:11Z&spr=https&sig=Tr4QqKLlyVegwCbzvhZ6wfy6Dv9musbhJqpu6%2F8Esj0%3D";
+  "sv=2022-11-02&ss=btqf&srt=sco&spr=https&st=2023-08-02T11:29:45Z&se=2023-08-02T14:36:11Z&sp=rwdxftlacupiy&sig=dHqwUbU/yIBeT8FOUlZcX1PE2M6mNigtsxO6dC83KKw=";
 const storageAccountName = "clubitsstoragepoc";
 
 const uploadUrl = `https://${storageAccountName}.blob.core.windows.net/?${sasToken}`;
@@ -25,11 +25,13 @@ const createBlobInContainer = async (file: File) => {
 
   // upload file
   await blobClient.uploadData(file, options);
+  return blobClient.url;
 };
 
 export const uploadFileToBlob = async (file: File) => {
   if (!file) return;
 
   // upload file
-  await createBlobInContainer(file);
+
+  return await createBlobInContainer(file);
 };

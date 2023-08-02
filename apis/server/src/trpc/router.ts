@@ -17,6 +17,7 @@ import { payRollRoutes } from "./routes/pay-rolls";
 import { personalInfoRoutes } from "./routes/personal-infos";
 import { qualificationRoutes } from "./routes/qualification";
 import { roleRoutes } from "./routes/roles";
+import { sasTokenRoutes } from "./routes/sas-token";
 import { timeSheetRoutes } from "./routes/time-sheets";
 import { timeSheetStatusRoutes } from "./routes/timesheet-status";
 import { userRoutes } from "./routes/users";
@@ -46,6 +47,7 @@ export const appRouter = trpc.router({
   qualifications: qualificationRoutes,
   identification: identificationRoutes,
   identificationTypes: identificationTypeRoutes,
+  sasToken: sasTokenRoutes,
 });
 
 // export type definition of API

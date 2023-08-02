@@ -10,6 +10,7 @@ import { Hr } from "server/dist/trpc/routes/hr/get-many";
 import { DialogHeader } from "ui/Dialog";
 import Typography from "ui/Typography";
 import { useAuthContext } from "../hooks/UseAuth";
+import { uploadFileToBlob } from "../utils/azure-blob-upload";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
 export const VisitorPass = () => {
@@ -41,13 +42,14 @@ export const VisitorPass = () => {
   const handleSubmit = async () => {
     try {
       console.log({ hrId });
-      // if (!fileSelected) return;
+      if (!fileSelected) return;
 
-      // setUploading(true);
+      setUploading(true);
 
-      // await uploadFileToBlob(fileSelected);
-      // setFileSelected(undefined);
-      // setUploading(false);
+      const url = await uploadFileToBlob(fileSelected);
+      console.log(url);
+      setFileSelected(undefined);
+      setUploading(false);
       if (hrId === undefined) return;
       console.log({ companyId });
       if (companyId === undefined) return;
@@ -66,7 +68,7 @@ export const VisitorPass = () => {
         // email: email || undefined,,
         // mobile: mobile || undefined,
       });
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       handleTRPCError(error, auth);
     }

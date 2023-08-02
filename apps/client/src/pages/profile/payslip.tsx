@@ -4,6 +4,7 @@ import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
+import PayRollDetailsDialog from "../../components/PayRollDetailsDialog";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
@@ -47,6 +48,7 @@ const Payslip = () => {
       <Card>
         <DataGrid<PayRoll>
           {...value}
+          onRowClick={() => <PayRollDetailsDialog />}
           columns={[
             {
               id: "1",
@@ -121,6 +123,12 @@ const Payslip = () => {
                 </Typography>
               ),
             },
+            // {
+            //   id: "7",
+            //   key: "",
+            //   label: "Action",
+            //   renderCell: (item) => <PayRollDetailsDialog />,
+            // },
           ]}
         />
       </Card>
