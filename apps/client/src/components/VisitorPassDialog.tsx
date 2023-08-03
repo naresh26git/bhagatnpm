@@ -41,20 +41,22 @@ export const VisitorPass = () => {
   };
   const handleSubmit = async () => {
     try {
-      console.log({ hrId });
       if (!fileSelected) return;
+
+      const { sasToken } = await client.sasToken.get.query();
 
       setUploading(true);
 
-      const url = await uploadFileToBlob(fileSelected);
-      console.log(url);
+      const imageUrl = await uploadFileToBlob(fileSelected, sasToken);
+
       setFileSelected(undefined);
       setUploading(false);
       if (hrId === undefined) return;
-      console.log({ companyId });
+
       if (companyId === undefined) return;
 
       await client.visitorPass.set.mutate({
+        imageUrl,
         name,
         fromPlace,
         mobileNumber,
@@ -64,9 +66,6 @@ export const VisitorPass = () => {
         inTime,
         outTime,
         reason,
-
-        // email: email || undefined,,
-        // mobile: mobile || undefined,
       });
       // window.location.reload();
     } catch (error) {

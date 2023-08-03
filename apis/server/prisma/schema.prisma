@@ -484,6 +484,7 @@ model Hr {
 model VisitorPass {
   id           Int       @id @default(autoincrement())
   name         String    @unique @db.VarChar(64)
+  imageUrl     String?   @map("image_url")
   hrId         Int       @map("hr_name_id")
   date         DateTime  @map("visitor_date")
   companyId    Int       @map("hr_company")

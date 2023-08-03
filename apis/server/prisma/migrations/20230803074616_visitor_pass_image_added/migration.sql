@@ -5,6 +5,9 @@ BEGIN TRAN;
 -- AlterTable
 ALTER TABLE [dbo].[pay_slip_components] ALTER COLUMN [amount] DECIMAL NOT NULL;
 
+-- AlterTable
+ALTER TABLE [dbo].[visitor_passes] ADD [image_url] NVARCHAR(1000);
+
 COMMIT TRAN;
 
 END TRY

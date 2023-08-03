@@ -1,4 +1,5 @@
 import { VisitorPass } from "server/dist/trpc/routes/visitor-pass/get-many";
+import Avatar from "ui/Avatar";
 import Button from "ui/Button";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
@@ -125,11 +126,12 @@ const VisitorPasses = () => {
           <DataGrid<VisitorPass>
             {...value}
             columns={[
-              // {
-              //   id: "1",
-              //   key: "imageUrl",
-              //   label: "Visitor Image",
-              // },
+              {
+                id: "1",
+                key: "",
+                label: "Visitor Image",
+                renderCell: (item) => <Avatar src={item.imageUrl as string} />,
+              },
               {
                 id: "2",
                 key: "name",

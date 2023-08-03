@@ -5,6 +5,7 @@ import { getErrorMessage } from "../../../utils/get-error-message";
 import { employeeOnlyProcedure } from "../../trpc";
 
 export const insertVisitorPassSchema = z.object({
+  imageUrl: z.string().optional(),
   name: z.string(),
   fromPlace: z.string(),
   companyId: z.number(),
@@ -24,6 +25,7 @@ export const set = employeeOnlyProcedure
     try {
       const visitorPass = await prisma.visitorPass.create({
         data: {
+          imageUrl: input.imageUrl,
           name: input.name,
           fromPlace: input.fromPlace,
           companyId: input.companyId,
