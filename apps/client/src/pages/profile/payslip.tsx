@@ -21,7 +21,7 @@ const Payslip = () => {
           page: states.paginationState.page,
         };
         const result = await client.payRoll.getMany.mutate(inputParameters);
-
+        console.log(result.items);
         return {
           totalCount: result.totalCount,
           items: result.items as any,
@@ -48,7 +48,6 @@ const Payslip = () => {
       <Card>
         <DataGrid<PayRoll>
           {...value}
-          onRowClick={() => <PayRollDetailsDialog />}
           columns={[
             {
               id: "1",
@@ -127,7 +126,9 @@ const Payslip = () => {
               id: "7",
               key: "",
               label: "Action",
-              renderCell: (item) => <PayRollDetailsDialog />,
+              renderCell: (item) => (
+                <PayRollDetailsDialog payRollDetails={item} />
+              ),
             },
           ]}
         />

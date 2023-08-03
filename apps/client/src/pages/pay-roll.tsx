@@ -7,6 +7,7 @@ import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
 import PageHeader from "../components/PageHeader";
+import PayRollDetailsDialog from "../components/PayRollDetailsDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
@@ -211,6 +212,14 @@ export const PayRollPage = () => {
                 <Typography transform="capitalize">
                   {item.status.name}
                 </Typography>
+              ),
+            },
+            {
+              id: "7",
+              key: "",
+              label: "Action",
+              renderCell: (item) => (
+                <PayRollDetailsDialog payRollDetails={item} />
               ),
             },
           ]}

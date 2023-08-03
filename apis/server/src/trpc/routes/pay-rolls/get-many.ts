@@ -23,6 +23,16 @@ export const getMany = protectedProcedure
                   id: true,
                   firstName: true,
                   lastName: true,
+                  designation: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                  department: {
+                    select: {
+                      name: true,
+                    },
+                  },
                 },
               },
             },

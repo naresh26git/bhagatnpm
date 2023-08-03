@@ -1,22 +1,24 @@
-import { faCircleInfo } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { PayRoll } from "server/src/trpc/routes/pay-rolls/get-many";
 import Card from "ui/Card";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
+import Link from "ui/Link";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 
-const PayRollDetailsDialog = () => {
+export type PayRollDetailsProps = {
+  payRollDetails: PayRoll;
+};
+
+const PayRollDetailsDialog = (props: PayRollDetailsProps) => {
   const value = {
     id: "payroll-details",
     labelId: "payroll-details-label",
   };
   return (
     <>
-      <Dialog.Trigger {...value} color="primary">
-        <Typography color="primary">
-          <FontAwesomeIcon icon={faCircleInfo} />
-        </Typography>
+      <Dialog.Trigger {...value} color="primary" className="border-0">
+        <Link>Payslip</Link>
       </Dialog.Trigger>
       <Dialog {...value}>
         <Dialog.Header title="" className="border-0"></Dialog.Header>
@@ -24,36 +26,52 @@ const PayRollDetailsDialog = () => {
           <Grid.Row>
             <Grid.Col cols="4">
               <Stack orientation="horizontal">
-                <Typography color="secondary">Emp Code :</Typography>
-                <Typography fontStyles="normal" fontSize="6">
-                  001
+                <Typography color="secondary">Emp Code:&nbsp;</Typography>
+                <Typography fontSize="6">
+                  {props.payRollDetails.user.id}
                 </Typography>
               </Stack>
             </Grid.Col>
             <Grid.Col cols="4">
               <Stack orientation="horizontal">
-                <Typography color="secondary">Name :</Typography>
-                <Typography fontStyles="normal" fontSize="6">
-                  Naveen
+                <Typography color="secondary">Name:&nbsp;</Typography>
+                <Typography fontSize="6">
+                  {props.payRollDetails.user.personalInfo?.firstName}{" "}
+                  {props.payRollDetails.user.personalInfo?.lastName}
                 </Typography>
               </Stack>
             </Grid.Col>
             <Grid.Col cols="4">
               <Stack orientation="horizontal">
-                <Typography color="secondary">Period :</Typography>
-                <Typography fontStyles="normal">March 2023</Typography>
+                <Typography color="secondary">Period:&nbsp;</Typography>
+                <Typography>
+                  {new Intl.DateTimeFormat("en-US", {
+                    month: "short",
+                    year: "2-digit",
+                  }).format(
+                    new Date().setFullYear(
+                      props.payRollDetails.year,
+                      props.payRollDetails.month,
+                      1
+                    )
+                  )}
+                </Typography>
               </Stack>
             </Grid.Col>
-            <Grid.Col cols="4">
+            <Grid.Col cols="5">
               <Stack orientation="horizontal">
-                <Typography color="secondary">Department :</Typography>
-                <Typography fontStyles="normal">Design</Typography>
+                <Typography color="secondary">Department:&nbsp;</Typography>
+                <Typography>
+                  {props.payRollDetails.user.personalInfo?.department.name}
+                </Typography>
               </Stack>
             </Grid.Col>
-            <Grid.Col>
+            <Grid.Col cols="12">
               <Stack orientation="horizontal">
-                <Typography color="secondary">Designation :</Typography>
-                <Typography>Product Design</Typography>
+                <Typography color="secondary">Designation:&nbsp;</Typography>
+                <Typography>
+                  {props.payRollDetails.user.personalInfo?.designation.name}
+                </Typography>
               </Stack>
             </Grid.Col>
           </Grid.Row>
@@ -69,11 +87,29 @@ const PayRollDetailsDialog = () => {
                       </Typography>
                       <Stack justifyContent="between" orientation="horizontal">
                         <Typography fontWeight="bold">Basic</Typography>
-                        <Typography>$2700</Typography>
+                        <Typography>
+                          {new Intl.NumberFormat("en-US", {
+                            style: "currency",
+                            currency: "INR",
+                          }).format(
+                            Number(
+                              props.payRollDetails.paySlipComponents[0].amount
+                            )
+                          )}
+                        </Typography>
                       </Stack>
                       <Stack justifyContent="between" orientation="horizontal">
                         <Typography fontWeight="bold">HRA</Typography>
-                        <Typography>$200</Typography>
+                        <Typography>
+                          {new Intl.NumberFormat("en-US", {
+                            style: "currency",
+                            currency: "INR",
+                          }).format(
+                            Number(
+                              props.payRollDetails.paySlipComponents[1].amount
+                            )
+                          )}
+                        </Typography>
                       </Stack>
                     </Stack>
                   </Grid.Col>
@@ -84,7 +120,17 @@ const PayRollDetailsDialog = () => {
                       </Typography>
                       <Stack justifyContent="between" orientation="horizontal">
                         <Typography fontWeight="bold">Deductions</Typography>
-                        <Typography>$100</Typography>
+                        <Typography>
+                          {new Intl.NumberFormat("en-US", {
+                            style: "currency",
+                            currency: "INR",
+                            signDisplay: "never",
+                          }).format(
+                            Number(
+                              props.payRollDetails.paySlipComponents[2].amount
+                            )
+                          )}
+                        </Typography>
                       </Stack>
                     </Stack>
                   </Grid.Col>
@@ -93,13 +139,38 @@ const PayRollDetailsDialog = () => {
                   <Grid.Col cols="7">
                     <Stack justifyContent="between" orientation="horizontal">
                       <Typography fontWeight="bold">Total</Typography>
-                      <Typography>$2900</Typography>
+                      <Typography>
+                        {" "}
+                        {new Intl.NumberFormat("en-US", {
+                          style: "currency",
+                          currency: "INR",
+                          signDisplay: "never",
+                        }).format(
+                          parseInt(
+                            props.payRollDetails.paySlipComponents[0].amount
+                          ) +
+                            parseInt(
+                              props.payRollDetails.paySlipComponents[1].amount
+                            )
+                        )}
+                      </Typography>
                     </Stack>
                   </Grid.Col>
                   <Grid.Col cols="5">
                     <Stack justifyContent="between" orientation="horizontal">
                       <Typography fontWeight="bold">Total</Typography>
-                      <Typography>$100</Typography>
+                      <Typography>
+                        {" "}
+                        {new Intl.NumberFormat("en-US", {
+                          style: "currency",
+                          currency: "INR",
+                          signDisplay: "never",
+                        }).format(
+                          Number(
+                            props.payRollDetails.paySlipComponents[2].amount
+                          )
+                        )}
+                      </Typography>
                     </Stack>
                   </Grid.Col>
                 </Grid.Row>
@@ -110,7 +181,22 @@ const PayRollDetailsDialog = () => {
                       <Typography fontWeight="bold" color="primary">
                         Net Pay
                       </Typography>
-                      <Typography>$2900</Typography>
+                      <Typography>
+                        {" "}
+                        {new Intl.NumberFormat("en-US", {
+                          style: "currency",
+                          currency: "INR",
+                        }).format(
+                          Number(
+                            props.payRollDetails.paySlipComponents.reduce(
+                              (acc, curr) => {
+                                return acc + Number(curr.amount);
+                              },
+                              0
+                            )
+                          )
+                        )}
+                      </Typography>
                     </Stack>
                   </Grid.Col>
                 </Grid.Row>
