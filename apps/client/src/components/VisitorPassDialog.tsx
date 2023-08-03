@@ -46,8 +46,6 @@ export const VisitorPass = () => {
 
       const { sasToken } = await client.sasToken.get.query();
 
-      console.log(sasToken);
-
       if (!sasToken) return;
 
       setUploading(true);
