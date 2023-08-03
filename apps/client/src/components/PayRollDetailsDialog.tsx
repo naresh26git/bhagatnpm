@@ -12,9 +12,13 @@ export type PayRollDetailsProps = {
 
 const PayRollDetailsDialog = (props: PayRollDetailsProps) => {
   const value = {
-    id: "payroll-details",
-    labelId: "payroll-details-label",
+    id: `payroll-details${props.payRollDetails.id}`,
+    labelId: `payroll-details-label${props.payRollDetails.id}`,
   };
+  // React.useEffect(() => {
+  //   setPayRoll(props.payRollDetails);
+  // }, [props.payRollDetails]);
+  // console.log(payRoll);
   return (
     <>
       <Dialog.Trigger {...value} color="primary" className="border-0">
@@ -42,21 +46,17 @@ const PayRollDetailsDialog = (props: PayRollDetailsProps) => {
               </Stack>
             </Grid.Col>
             <Grid.Col cols="4">
-              <Stack orientation="horizontal">
+              {/* <Stack orientation="horizontal">
                 <Typography color="secondary">Period:&nbsp;</Typography>
                 <Typography>
                   {new Intl.DateTimeFormat("en-US", {
                     month: "short",
                     year: "2-digit",
                   }).format(
-                    new Date().setFullYear(
-                      props.payRollDetails.year,
-                      props.payRollDetails.month,
-                      1
-                    )
+                    new Date().setFullYear(props.payRollDetails.year, props.payRollDetails.month, 1)
                   )}
                 </Typography>
-              </Stack>
+              </Stack> */}
             </Grid.Col>
             <Grid.Col cols="5">
               <Stack orientation="horizontal">
