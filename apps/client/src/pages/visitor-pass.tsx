@@ -130,7 +130,15 @@ const VisitorPasses = () => {
                 id: "1",
                 key: "",
                 label: "Visitor Image",
-                renderCell: (item) => <Avatar src={item.imageUrl as string} />,
+                renderCell: (item) => (
+                  <Stack alignItems="center">
+                    <Avatar
+                      src={item.imageUrl as string}
+                      variant="circle"
+                      className="overflow-hidden"
+                    />
+                  </Stack>
+                ),
               },
               {
                 id: "2",
