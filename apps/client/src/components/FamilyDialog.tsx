@@ -106,7 +106,7 @@ export const FamilyDialog = () => {
                       return <option value={dept.id}>{dept.name}</option>;
                     })} */}
                   </select>
-                  <label htmlFor="Status">Status</label>
+                  <label htmlFor="Relation">Relation</label>
                 </div>
               </Grid.Col>
             </Grid.Row>
