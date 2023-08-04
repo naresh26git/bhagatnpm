@@ -1,0 +1,36 @@
+# Things to do
+
+- [ ] Frontend component library
+  - [ ] Navigation / Navbar - more variants and features
+  - [ ] Menu - more variants and features
+  - [ ] Table - infinite scrolling
+  - [ ] Input fields
+    - [ ] Autocomplete
+    - [x] Checkbox and Checkbox Group
+    - [ ] DatePicker
+    - [ ] DateTimePicker
+    - [x] Radio and Radio Group
+    - [x] Select
+    - [x] Switch
+    - [x] TextField
+    - [ ] Input Group
+    - [ ] TimePicker
+  - [x] Tabs
+  - [ ] Stepper
+  - [x] Drawer
+  - [x] Badge
+  - [x] Alert
+  - [x] Tooltip
+  - [x] ToggleButton
+  - [ ] BottomNavigation
+  - [x] List
+  - [ ] Floating Action Button
+  - [x] Skeleton
+- [ ] Frontend widgets
+  - [ ] CalendarView
+- [ ] Backend feature sets
+  - [ ] Subscription based authorization
+  - [ ] SMS integration - 3rd party
+  - [ ] Email integration - 3rd party or SMTP server
+  - [ ] Notifications - WebPush
+  - [ ] Transcriptions using AWS

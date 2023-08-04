@@ -1,5 +1,6 @@
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useNavigate } from "react-router-dom";
 import { PersonalInfo } from "server/dist/trpc/routes/personal-infos/get-many";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
@@ -84,6 +85,7 @@ export const PersonalInfoPage = () => {
       return { error: new Error("Something went wrong") };
     }
   };
+  const navigate = useNavigate();
   return (
     <Stack gap="3">
       {/* <PageHeader
@@ -142,6 +144,13 @@ export const PersonalInfoPage = () => {
       <Card>
         <DataGrid<PersonalInfo>
           {...value}
+          // allowSelection
+          onRowClick={(item) =>
+            navigate("../profile-page", {
+              state: item,
+              replace: true,
+            })
+          }
           columns={[
             {
               id: "1",
