@@ -1,6 +1,18 @@
+import React from "react";
 import Box from "./Box";
 
 export const baseClasses = "btn";
+
+export const outlineVariantsClassesMap = {
+  "outline-primary": "btn-outline-primary",
+  "outline-secondary": "btn-outline-secondary",
+  "outline-success": "btn-outline-success",
+  "outline-danger": "btn-outline-danger",
+  "outline-warning": "btn-outline-warning",
+  "outline-info": "btn-outline-info",
+  "outline-light": "btn-outline-light",
+  "outline-dark": "btn-outline-dark",
+} as const;
 
 export const variantsClassesMap = {
   primary: "btn-primary",
@@ -12,14 +24,7 @@ export const variantsClassesMap = {
   light: "btn-light",
   dark: "btn-dark",
   link: "btn-link",
-  "outline-primary": "btn-outline-primary",
-  "outline-secondary": "btn-outline-secondary",
-  "outline-success": "btn-outline-success",
-  "outline-danger": "btn-outline-danger",
-  "outline-warning": "btn-outline-warning",
-  "outline-info": "btn-outline-info",
-  "outline-light": "btn-outline-light",
-  "outline-dark": "btn-outline-dark",
+  ...outlineVariantsClassesMap,
 } as const;
 
 export const sizesClassesMap = {
@@ -45,5 +50,39 @@ export const Button = (props: ButtonProps) => {
 
   return <Box as="button" {...domProps} className={getClasses(props)} />;
 };
+
+export type ToggleButtonProps = ButtonProps &
+  JSX.IntrinsicElements["label"] & {
+    variant?: keyof typeof outlineVariantsClassesMap;
+  };
+
+export const ToggleButton = (props: ToggleButtonProps) => {
+  const id = React.useId();
+
+  const domProps = { ...props };
+  delete domProps.size;
+  delete domProps.variant;
+
+  return (
+    <>
+      <Box
+        as="input"
+        type="checkbox"
+        className="btn-check"
+        id={id}
+        autoComplete="off"
+      ></Box>
+      <Box
+        as="label"
+        className={getClasses({ variant: "outline-primary", ...props })}
+        htmlFor={id}
+        {...domProps}
+      />
+      <Box as="br" />
+    </>
+  );
+};
+
+Button.ToggleButton = ToggleButton;
 
 export default Button;

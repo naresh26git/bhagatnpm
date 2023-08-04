@@ -71,8 +71,6 @@ export const Check = React.forwardRef<CheckboxIndeterminateHandle, CheckProps>(
         {...domProps}
         ref={domRef}
         type="checkbox"
-        value=""
-        readOnly
         className={getClasses(props)}
       />
     );

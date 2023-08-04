@@ -248,7 +248,7 @@ export const GridRow = (props: GridRowProps) => {
 
 export const colBaseClasses = "col";
 
-export const colsClassesMap = {
+export const basicColsClassesMap = {
   "1": "col-1",
   "2": "col-2",
   "3": "col-3",
@@ -261,6 +261,10 @@ export const colsClassesMap = {
   "10": "col-10",
   "11": "col-11",
   "12": "col-12",
+} as const;
+
+export const colsClassesMap = {
+  ...basicColsClassesMap,
   auto: "col-auto",
   "sm-1": "col-sm-1",
   "sm-2": "col-sm-2",
