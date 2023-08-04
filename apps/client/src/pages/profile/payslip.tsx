@@ -4,6 +4,7 @@ import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
+import PayRollDetailsDialog from "../../components/PayRollDetailsDialog";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
@@ -20,7 +21,7 @@ const Payslip = () => {
           page: states.paginationState.page,
         };
         const result = await client.payRoll.getMany.mutate(inputParameters);
-
+        console.log(result.items);
         return {
           totalCount: result.totalCount,
           items: result.items as any,
@@ -119,6 +120,14 @@ const Payslip = () => {
                 <Typography transform="capitalize">
                   {item.status.name}
                 </Typography>
+              ),
+            },
+            {
+              id: "7",
+              key: "",
+              label: "Action",
+              renderCell: (item) => (
+                <PayRollDetailsDialog payRollDetails={item} />
               ),
             },
           ]}

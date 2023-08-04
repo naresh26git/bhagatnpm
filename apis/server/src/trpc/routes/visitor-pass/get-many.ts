@@ -15,7 +15,7 @@ export const getMany = protectedProcedure
         select: {
           id: true,
           name: true,
-
+          imageUrl: true,
           fromPlace: true,
           mobileNumber: true,
           date: true,

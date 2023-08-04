@@ -23,12 +23,27 @@ export const getMany = protectedProcedure
                   id: true,
                   firstName: true,
                   lastName: true,
+                  designation: {
+                    select: {
+                      name: true,
+                    },
+                  },
+                  department: {
+                    select: {
+                      name: true,
+                    },
+                  },
                 },
               },
             },
           },
           paySlipComponents: {
             select: {
+              componentType: {
+                select: {
+                  name: true,
+                },
+              },
               amount: true,
             },
           },
