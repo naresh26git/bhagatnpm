@@ -18,6 +18,9 @@ const LazyLeavePage = React.lazy(() => import("../pages/leave/layout"));
 const LazyUnderMaintainancePage = React.lazy(
   () => import("../pages/under-maintainance")
 );
+const LazyprofilePage = React.lazy(
+  () => import("../pages/profile/profile-page")
+);
 // const LazyLeaveBalancePage = React.lazy(
 //   () => import("../pages/leave/leave-balance")
 // );
@@ -59,6 +62,15 @@ const LazyLeavePageWithFallback = () => (
     <ProtectedRoute>
       {/* <ShowIf.Admin> */}
       <LazyLeavePage />
+      {/* </ShowIf.Admin> */}
+    </ProtectedRoute>
+  </React.Suspense>
+);
+const LazyProfilePageWithFallback = () => (
+  <React.Suspense fallback={"Loading..."}>
+    <ProtectedRoute>
+      {/* <ShowIf.Admin> */}
+      <LazyprofilePage />
       {/* </ShowIf.Admin> */}
     </ProtectedRoute>
   </React.Suspense>
@@ -211,6 +223,7 @@ export const router = createBrowserRouter([
         path: "",
         element: <Navigate to="account" />,
       },
+
       {
         path: "account/*",
         element: <Outlet />,
@@ -243,6 +256,16 @@ export const router = createBrowserRouter([
           //   path: "balance",
           //   element: <LazyLeaveBalancePageWithFallback />,
           // },
+        ],
+      },
+      {
+        path: "profile-page/*",
+        element: <Outlet />,
+        children: [
+          {
+            path: "",
+            element: <LazyProfilePageWithFallback />,
+          },
         ],
       },
       {
