@@ -8,6 +8,7 @@ import Stack from "ui/Stack";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
 import PageHeader from "../../components/PageHeader";
 import PersonalInfoDialog from "../../components/PersonalInfoDialog";
+import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
@@ -137,10 +138,12 @@ export const PersonalInfoPage = () => {
         </Grid.Row>
       </Grid.Row> */}
       {/* <PageHeader title={<PageHeader.Title>Personal Info</PageHeader.Title>} /> */}
-      <PageHeader
-        title={<PageHeader.Title></PageHeader.Title>}
-        actions={<PersonalInfoDialog />}
-      />
+      <ShowIf.Employee>
+        <PageHeader
+          title={<PageHeader.Title></PageHeader.Title>}
+          actions={<PersonalInfoDialog />}
+        />
+      </ShowIf.Employee>
       <Card>
         <DataGrid<PersonalInfo>
           {...value}

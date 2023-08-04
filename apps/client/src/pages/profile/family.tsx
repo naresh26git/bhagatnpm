@@ -6,6 +6,7 @@ import Typography from "ui/Typography";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
 import FamilyDialog from "../../components/FamilyDialog";
 import PageHeader from "../../components/PageHeader";
+import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
@@ -81,10 +82,13 @@ export const FamilyPage = () => {
           </Button>
         </Grid.Col>
       </Grid.Row> */}
-      <PageHeader
-        title={<PageHeader.Title></PageHeader.Title>}
-        actions={<FamilyDialog />}
-      />
+      <ShowIf.Employee>
+        <PageHeader
+          title={<PageHeader.Title></PageHeader.Title>}
+          actions={<FamilyDialog />}
+        />{" "}
+      </ShowIf.Employee>
+
       <Card>
         <DataGrid<FamilyDetail>
           {...value}

@@ -45,7 +45,7 @@ export const QualificationDialog = () => {
   return (
     <>
       <Dialog.Trigger {...value} variant="primary">
-        Create
+        Add Qualification
       </Dialog.Trigger>
       <Dialog {...value}>
         <Dialog.Header color="primary" title={"Qualification"} />

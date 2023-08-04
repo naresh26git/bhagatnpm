@@ -112,7 +112,7 @@ export const VisitorPass = () => {
   return (
     <>
       <Dialog.Trigger {...value} variant="primary">
-        Create VisitorPass
+        Apply VisitorPass
       </Dialog.Trigger>
 
       <Dialog {...value}>

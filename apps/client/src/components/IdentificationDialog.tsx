@@ -59,7 +59,7 @@ export const IdentificationDialog = () => {
   return (
     <>
       <Dialog.Trigger {...value} variant="primary">
-        Create Identification
+        Add Identification
       </Dialog.Trigger>
 
       <Dialog {...value}>

@@ -6,6 +6,7 @@ import Typography from "ui/Typography";
 import { useAsyncList } from "ui/hooks/UseAsyncList";
 import ContactDialog from "../../components/ContactDialog";
 import PageHeader from "../../components/PageHeader";
+import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
@@ -105,10 +106,13 @@ export const ContactDataPage = () => {
           </Button>
         </Grid.Col>
       </Grid.Row> */}
-      <PageHeader
-        title={<PageHeader.Title></PageHeader.Title>}
-        actions={<ContactDialog />}
-      />
+      <ShowIf.Employee>
+        <PageHeader
+          title={<PageHeader.Title></PageHeader.Title>}
+          actions={<ContactDialog />}
+        />
+      </ShowIf.Employee>
+
       <Card>
         <DataGrid<Address>
           {...value}
