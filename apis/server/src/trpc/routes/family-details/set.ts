@@ -5,7 +5,6 @@ import { getErrorMessage } from "../../../utils/get-error-message";
 import { employeeOnlyProcedure } from "../../trpc";
 
 export const insertFamilyDetailSchema = z.object({
-  userId: z.number(),
   relationshipTypeId: z.number(),
   name: z.string(),
   dateOfBirth: z.string(),
@@ -22,7 +21,7 @@ export const set = employeeOnlyProcedure
           userId: ctx.userId,
           relationshipTypeId: input.relationshipTypeId,
           name: input.name,
-          dateOfBirth: input.dateOfBirth,
+          dateOfBirth: new Date(input.dateOfBirth),
           createdById: ctx.userId,
           updatedById: ctx.userId,
         },

@@ -4,21 +4,22 @@ import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 // import { useDialog } from "ui/hooks/UseDialog";
+import { RelationShip } from "server/src/trpc/routes/relationship/get-many";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
 export const FamilyDialog = () => {
   const auth = useAuthContext();
-  const [userId, setUserId] = React.useState<number>(0);
   const [name, setName] = React.useState("");
   const [dateOfBirth, setDateOfBirth] = React.useState(`${new Date()}`);
-  const [relationshipTypeId, setRelationShipId] = React.useState<number>(1);
+  const [relationShip, setRelation] = React.useState<RelationShip[]>([]);
+  const [relationshipTypeId, setRelationShipTypeId] = React.useState<number>();
 
   const addFamilyDetails = async () => {
     try {
+      if (relationshipTypeId === undefined) return;
       await client.familyDetail.set.mutate({
-        userId,
         name,
         dateOfBirth,
         relationshipTypeId,
@@ -37,7 +38,16 @@ export const FamilyDialog = () => {
     id: "create-family-info",
     labelId: "create-family-info-label",
   };
+  React.useEffect(() => {
+    (async () => {
+      const relationShip = await client.relationShip.getMany.query();
+      setRelation(relationShip);
 
+      const [firstCategory] = relationShip;
+      if (firstCategory === undefined) return;
+      setRelationShipTypeId(firstCategory.id);
+    })();
+  }, []);
   return (
     <>
       <Dialog.Trigger {...value} variant="primary">
@@ -81,18 +91,17 @@ export const FamilyDialog = () => {
                   <select
                     className="form-control"
                     value={relationshipTypeId}
-                    onChange={(e: any) =>
-                      setRelationShipId(parseInt(e.target.value))
+                    onChange={(event) =>
+                      setRelationShipTypeId(parseInt(event.target.value))
                     }
                   >
-                    <option value={1}>Father</option>
-                    <option value={2}>Mother</option>
-                    <option value={3}>Gaurdian</option>
-                    <option value={4}>Brother</option>
-                    <option value={5}>Sister</option>
-                    <option value={6}>Spouse</option>
-                    <option value={7}>Son</option>
-                    <option value={8}>Daughter</option>
+                    <option value={undefined}>Select a Relation</option>
+                    {relationShip.map((relation) => {
+                      return (
+                        <option value={relation.id}>{relation.name} </option>
+                      );
+                    })}
+
                     {/* {departmentType.map((dept) => {
                       return <option value={dept.id}>{dept.name}</option>;
                     })} */}

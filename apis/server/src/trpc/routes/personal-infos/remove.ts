@@ -2,19 +2,19 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { prisma } from "../../../db/prisma";
 import { getErrorMessage } from "../../../utils/get-error-message";
-import { adminOnlyProcedure } from "../../trpc";
+import { employeeOnlyProcedure } from "../../trpc";
 
-export const remove = adminOnlyProcedure
+export const remove = employeeOnlyProcedure
   .input(z.number())
   .mutation(async ({ ctx, input }) => {
     try {
-      const deletedUser = await prisma.user.delete({
+      const deletePersonalInfo = await prisma.personalInfo.delete({
         where: {
           id: input,
         },
       });
 
-      return deletedUser;
+      return deletePersonalInfo;
     } catch (error) {
       console.error(getErrorMessage(error));
 

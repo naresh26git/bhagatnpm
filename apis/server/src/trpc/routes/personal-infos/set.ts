@@ -5,9 +5,8 @@ import { getErrorMessage } from "../../../utils/get-error-message";
 import { employeeOnlyProcedure } from "../../trpc";
 
 export const insertPersonalInfoSchema = z.object({
-  userId: z.number(),
   firstName: z.string(),
-  middleName: z.string(),
+  middleName: z.string().optional(),
   lastName: z.string(),
   dateOfBirth: z.string(),
   dateOfJoining: z.string(),
@@ -28,8 +27,8 @@ export const set = employeeOnlyProcedure
           firstName: input.firstName,
           middleName: input.middleName,
           lastName: input.lastName,
-          dateOfBirth: input.dateOfBirth,
-          dateOfJoining: input.dateOfJoining,
+          dateOfBirth: new Date(input.dateOfBirth),
+          dateOfJoining: new Date(input.dateOfJoining),
           createdById: ctx.userId,
           updatedById: ctx.userId,
           departmentId: input.departmentId,
