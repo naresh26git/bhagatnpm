@@ -7,7 +7,7 @@
 - [X] Seed for visitor pass and help desk - vishnupriya
 - [ ] Add image url to the identification tab - sakthi
 - [ ] Remove delete from profile info-murali
-- [ ] Add icon buttons for leave approval and rejection in the leave page -vignesh
+- [ ] Add icon buttons for leave approval and rejection in the leave page - vignesh
 - [ ] Add upload profile picture to personal info form - vignesh
 
 ## Things to figure out
