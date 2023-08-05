@@ -21,6 +21,9 @@ import { NavLink, NavLinkProps, useMatch } from "react-router-dom";
 import Link from "ui/Link";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
+import { useAuthContext } from "../hooks/UseAuth";
+import { client, resetToken } from "../main";
+import { handleTRPCError } from "../utils/handle-trpc-error";
 
 export const _baseStyles: CSSProperties = {
   color: "var(--bs-secondary)",
@@ -44,7 +47,26 @@ export const _inActiveStyles: CSSProperties = {
 export const getActiveStyles: NavLinkProps["style"] = ({ isActive }) =>
   isActive ? _activeStyles : _inActiveStyles;
 
+
+
+
 export const SideNavbar = () => {
+
+  const auth = useAuthContext();
+
+
+  const logout = async () => {
+    try {
+      await client.user.signOut.mutate();
+      resetToken();
+      auth.dispatcher({ type: "reset-user" });
+    } catch (error) {
+      handleTRPCError(error, auth);
+
+      console.log(error);
+    }
+  };
+
   return (
     <Stack
       gap="5"
@@ -133,7 +155,7 @@ export const SideNavbar = () => {
                 <FontAwesomeIcon icon={faUser} /> Admin
               </Stack>
             </Link>
-            <Link to="logout" component={NavLink} style={getActiveStyles}>
+            <Link to="login" component={NavLink} onClick={logout} style={getActiveStyles}>
               <Stack gap="2" orientation="horizontal">
                 <FontAwesomeIcon icon={faRightFromBracket} /> Logout
               </Stack>

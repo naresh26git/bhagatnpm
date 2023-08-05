@@ -6,6 +6,8 @@ import Stack from "ui/Stack";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCheck, faPencil, faRightLong, faXmark } from "@fortawesome/free-solid-svg-icons";
 // import { useDialog } from "ui/hooks/UseDialog";
 interface leaveStatusProps {
   leaveId: number;
@@ -60,9 +62,13 @@ const LeaveStatusDialog = (props: leaveStatusProps) => {
   }, []);
   return (
     <>
-      <Dialog.Trigger {...value} variant="primary">
-        {props.variant === "admin" ? "AddLeaveStatus" : "Edit"}
+      <Dialog.Trigger {...value} variant="success">
+        {props.variant === "admin" ? <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>  : <FontAwesomeIcon icon={faPencil}></FontAwesomeIcon>}
       </Dialog.Trigger>
+      <Dialog.Trigger {...value} variant="danger">
+        {props.variant === "admin" ? <FontAwesomeIcon icon={faXmark}></FontAwesomeIcon>  : <FontAwesomeIcon icon={faPencil}></FontAwesomeIcon>}
+      </Dialog.Trigger>
+
 
       <Dialog {...value}>
         <form onSubmit={handleSubmit} className="was-validated">
