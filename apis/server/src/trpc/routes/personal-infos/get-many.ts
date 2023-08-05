@@ -23,6 +23,7 @@ export const getMany = protectedProcedure
               },
             },
           },
+          imageUrl: true,
           firstName: true,
           lastName: true,
           dateOfBirth: true,

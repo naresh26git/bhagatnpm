@@ -5,6 +5,7 @@ import { getErrorMessage } from "../../../utils/get-error-message";
 import { employeeOnlyProcedure } from "../../trpc";
 
 export const insertPersonalInfoSchema = z.object({
+  imageUrl: z.string().optional(),
   firstName: z.string(),
   middleName: z.string().optional(),
   lastName: z.string(),
@@ -24,6 +25,7 @@ export const set = employeeOnlyProcedure
       const personalInfo = await prisma.personalInfo.create({
         data: {
           userId: ctx.userId,
+          imageUrl: input.imageUrl,
           firstName: input.firstName,
           middleName: input.middleName,
           lastName: input.lastName,

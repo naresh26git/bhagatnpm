@@ -319,6 +319,7 @@ const main = async () => {
       ] = await Promise.all(
         [
           {
+            imageUrl: "",
             dateOfBirth: new Date(new Date().setFullYear(1995, 5, 25)),
             dateOfJoining: new Date(new Date().setFullYear(2023, 4, 28)),
             firstName: "Murali",
@@ -331,6 +332,7 @@ const main = async () => {
             updatedById: muraliUserId,
           },
           {
+            imageUrl: "",
             dateOfBirth: new Date(new Date().setFullYear(1998, 12, 23)),
             dateOfJoining: new Date(new Date().setFullYear(2023, 4, 25)),
             firstName: "Shiva",
@@ -343,6 +345,7 @@ const main = async () => {
             updatedById: sakthiUserId,
           },
           {
+            imageUrl: "",
             dateOfBirth: new Date(new Date().setFullYear(2000, 4, 4)),
             dateOfJoining: new Date(new Date().setFullYear(2023, 5, 22)),
             firstName: "Daniel",
@@ -355,6 +358,7 @@ const main = async () => {
             updatedById: danielUserId,
           },
           {
+            imageUrl: "",
             dateOfBirth: new Date(new Date().setFullYear(2001, 10, 24)),
             dateOfJoining: new Date(new Date().setFullYear(2023, 2, 22)),
             firstName: "Naveen",
