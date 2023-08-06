@@ -65,9 +65,8 @@ export const getMany = protectedProcedure
         where,
       });
 
-      console.log({ helpDesks });
-
       const count = await prisma.helpDesk.count({ where });
+
       return { totalCount: count, items: helpDesks };
     } catch (error) {
       console.log(getErrorMessage(error));

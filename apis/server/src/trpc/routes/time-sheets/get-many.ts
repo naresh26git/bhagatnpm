@@ -11,6 +11,19 @@ export const getMany = protectedProcedure
   .input(getManyInputParameters)
   .mutation(async ({ ctx, input }) => {
     try {
+      const where =
+        ctx.role === "admin"
+          ? {
+              user: {
+                role: {
+                  name: "employee",
+                },
+              },
+            }
+          : {
+              userId: ctx.userId,
+            };
+
       const timeSheets = await prisma.timeSheet.findMany({
         select: {
           id: true,
@@ -43,21 +56,11 @@ export const getMany = protectedProcedure
           input?.sortBy && input?.sortOrder
             ? { [input.sortBy]: input.sortOrder }
             : { createdAt: "desc" },
-        where:
-          ctx.role === "admin"
-            ? {
-                user: {
-                  role: {
-                    name: "employee",
-                  },
-                },
-              }
-            : {
-                userId: ctx.userId,
-              },
+        where,
       });
 
-      const count = await prisma.timeSheet.count();
+      const count = await prisma.timeSheet.count({ where });
+
       return { totalCount: count, items: timeSheets };
     } catch (error) {
       console.error(getErrorMessage(error));

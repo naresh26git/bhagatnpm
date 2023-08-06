@@ -8,6 +8,13 @@ export type User = RouterOutput["user"]["getMany"][0];
 
 export const getMany = protectedProcedure.query(async ({ ctx }) => {
   try {
+    const where =
+      ctx.role === "admin"
+        ? { role: { name: "employee" } }
+        : {
+            id: ctx.userId,
+          };
+
     const employees = await prisma.user.findMany({
       select: {
         id: true,
@@ -22,12 +29,7 @@ export const getMany = protectedProcedure.query(async ({ ctx }) => {
         email: true,
         mobile: true,
       },
-      where:
-        ctx.role === "admin"
-          ? { role: { name: "employee" } }
-          : {
-              id: ctx.userId,
-            },
+      where,
     });
 
     return employees;

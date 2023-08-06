@@ -11,7 +11,7 @@ export const getMany = protectedProcedure
   .input(getManyInputParameters)
   .mutation(async ({ ctx, input }) => {
     try {
-      const visitorPass = await prisma.visitorPass.findMany({
+      const visitorPasses = await prisma.visitorPass.findMany({
         select: {
           id: true,
           name: true,
@@ -22,7 +22,6 @@ export const getMany = protectedProcedure
           inTime: true,
           outTime: true,
           reason: true,
-
           companies: {
             select: {
               id: true,
@@ -40,12 +39,6 @@ export const getMany = protectedProcedure
               companyId: true,
             },
           },
-          // status: {
-          //   select: {
-          //     id: true,
-          //     name: true,
-          //   },
-          // },
         },
         take: input?.limit ?? 5,
         skip: (input?.page ?? 0) * (input?.limit ?? 5),
@@ -58,8 +51,10 @@ export const getMany = protectedProcedure
                 createdAt: "desc",
               },
       });
+
       const count = await prisma.visitorPass.count();
-      return { totalCount: count, items: visitorPass };
+
+      return { totalCount: count, items: visitorPasses };
     } catch (error) {
       console.log(getErrorMessage(error));
 

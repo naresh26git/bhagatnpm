@@ -5,12 +5,25 @@ import { RouterOutput } from "../../router";
 import { getManyInputParameters } from "../../shared/get-many-input-parameters";
 import { protectedProcedure } from "../../trpc";
 
-export type Address = RouterOutput["address"]["getMany"][0];
+export type Address = RouterOutput["address"]["getMany"]["items"][0];
 
 export const getMany = protectedProcedure
   .input(getManyInputParameters)
-  .query(async ({ ctx, input }) => {
+  .mutation(async ({ ctx, input }) => {
     try {
+      const where =
+        ctx.role === "admin"
+          ? {
+              user: {
+                role: {
+                  name: "employee",
+                },
+              },
+            }
+          : {
+              userId: ctx.userId,
+            };
+
       const addresses = await prisma.address.findMany({
         select: {
           id: true,
@@ -49,21 +62,12 @@ export const getMany = protectedProcedure
             : {
                 createdAt: "desc",
               },
-        where:
-          ctx.role === "admin"
-            ? {
-                user: {
-                  role: {
-                    name: "employee",
-                  },
-                },
-              }
-            : {
-                userId: ctx.userId,
-              },
+        where,
       });
 
-      return addresses;
+      const count = await prisma.address.count({ where });
+
+      return { totalCount: count, items: addresses };
     } catch (error) {
       console.log(getErrorMessage(error));
 

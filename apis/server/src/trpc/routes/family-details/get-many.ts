@@ -11,6 +11,19 @@ export const getMany = protectedProcedure
   .input(getManyInputParameters)
   .mutation(async ({ ctx, input }) => {
     try {
+      const where =
+        ctx.role === "admin"
+          ? {
+              user: {
+                role: {
+                  name: "employee",
+                },
+              },
+            }
+          : {
+              userId: ctx.userId,
+            };
+
       const familyDetails = await prisma.familyDetail.findMany({
         select: {
           id: true,
@@ -46,21 +59,11 @@ export const getMany = protectedProcedure
             : {
                 createdAt: "desc",
               },
-        where:
-          ctx.role === "admin"
-            ? {
-                user: {
-                  role: {
-                    name: "employee",
-                  },
-                },
-              }
-            : {
-                userId: ctx.userId,
-              },
+        where,
       });
 
-      const count = await prisma.familyDetail.count();
+      const count = await prisma.familyDetail.count({ where });
+
       return { totalCount: count, items: familyDetails };
     } catch (error) {
       console.log(getErrorMessage(error));

@@ -11,6 +11,19 @@ export const getMany = protectedProcedure
   .input(getManyInputParameters)
   .mutation(async ({ ctx, input }) => {
     try {
+      const where =
+        ctx.role === "admin"
+          ? {
+              user: {
+                role: {
+                  name: "employee",
+                },
+              },
+            }
+          : {
+              userId: ctx.userId,
+            };
+
       const leaves = await prisma.leave.findMany({
         select: {
           id: true,
@@ -52,21 +65,12 @@ export const getMany = protectedProcedure
           input?.sortBy && input?.sortOrder
             ? { [input.sortBy]: input.sortOrder }
             : { createdAt: "desc" },
-        where:
-          ctx.role === "admin"
-            ? {
-                user: {
-                  role: {
-                    name: "employee",
-                  },
-                },
-              }
-            : {
-                userId: ctx.userId,
-              },
+
+        where,
       });
 
-      const count = await prisma.leave.count();
+      const count = await prisma.leave.count({ where });
+
       return { totalCount: count, items: leaves };
     } catch (error) {
       console.log(getErrorMessage(error));

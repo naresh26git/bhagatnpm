@@ -5,7 +5,7 @@ import { getErrorMessage } from "../../../utils/get-error-message";
 import { RouterOutput } from "../../router";
 import { protectedProcedure } from "../../trpc";
 
-export type Address = RouterOutput["address"]["getMany"][0];
+export type Address = RouterOutput["address"]["get"];
 
 export const get = protectedProcedure
   .input(z.number())
