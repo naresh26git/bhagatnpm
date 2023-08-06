@@ -71,7 +71,7 @@ export const ProfilePage = () => {
           <Grid.Row>
             <Grid.Col>
               <Image
-                src="/images/users.png"
+                src="/images/profile.png"
                 // className="w-50"
                 className=" h-75"
                 // variant="fluid"

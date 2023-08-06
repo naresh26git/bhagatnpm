@@ -1,10 +1,10 @@
 # Things to do final
 
 - [ ] Re-arrange the menu items according to the completeness - Sakthi
-- [X] Logout from the side menu bar - vignesh
-- [ ] Change the status appearance of time management according to the designs - vishnupriya
+- [ ] Logout from the side menu bar - vignesh
+- [X] Change the status appearance of time management according to the designs - vishnupriya
 - [ ] Remove status from leave balance table-murali
-- [ ] Seed for visitor pass and help desk - vishnupriya
+- [X] Seed for visitor pass and help desk - vishnupriya
 - [ ] Add image url to the identification tab - sakthi
 - [ ] Remove delete from profile info-murali
 - [ ] Add icon buttons for leave approval and rejection in the leave page - vignesh

@@ -210,25 +210,25 @@ export const LeaveBalancePage = () => {
                 </>
               ),
             },
-            {
-              id: "6",
-              key: "",
-              label: "Status",
-              renderCell: (item) => (
-                <Typography
-                  transform="capitalize"
-                  color={
-                    item.status.name === "accepted"
-                      ? "success"
-                      : item.status.name === "rejected"
-                      ? "danger"
-                      : "warning"
-                  }
-                >
-                  {item.status.name}
-                </Typography>
-              ),
-            },
+            // {
+            //   id: "6",
+            //   key: "",
+            //   label: "Status",
+            //   renderCell: (item) => (
+            //     <Typography
+            //       transform="capitalize"
+            //       color={
+            //         item.status.name === "accepted"
+            //           ? "success"
+            //           : item.status.name === "rejected"
+            //           ? "danger"
+            //           : "warning"
+            //       }
+            //     >
+            //       {item.status.name}
+            //     </Typography>
+            //   ),
+            // },
           ]}
         />
       </Card>

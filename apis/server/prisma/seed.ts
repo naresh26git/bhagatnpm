@@ -19,6 +19,8 @@ const main = async () => {
       await tx.leave.deleteMany();
       await tx.paySlipComponent.deleteMany();
       await tx.payRoll.deleteMany();
+      await tx.visitorPass.deleteMany();
+      await tx.helpDesk.deleteMany();
 
       const { id: systemRoleId } = await tx.role.upsert({
         create: {
@@ -125,6 +127,33 @@ const main = async () => {
         },
         where: {
           username: "balaji",
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      const { id: sathishUserId } = await tx.user.upsert({
+        create: {
+          name: "Sathish",
+          password: "sathish",
+          username: "sathish",
+          roleId: adminRoleId,
+          createdById: systemUserId,
+          updatedById: systemUserId,
+          statusId: defaultUserStatusId,
+        },
+        update: {
+          name: "Sathish",
+          password: "sathish",
+          username: "sathish",
+          roleId: adminRoleId,
+          createdById: systemUserId,
+          updatedById: systemUserId,
+          statusId: defaultUserStatusId,
+        },
+        where: {
+          username: "sathish",
         },
         select: {
           id: true,
@@ -707,7 +736,7 @@ const main = async () => {
         )
       );
 
-      const [] = await Promise.all(
+      const [{ id: defaultHelpDeskCategory }] = await Promise.all(
         [
           {
             name: "it",
@@ -741,7 +770,7 @@ const main = async () => {
         )
       );
 
-      const [] = await Promise.all(
+      const [{ id: defaultHelpDeskStatus }] = await Promise.all(
         [
           {
             name: "cancelled",
@@ -882,10 +911,10 @@ const main = async () => {
           )
         );
 
-      const [] = await Promise.all(
+      const [{ id: sathishHrId }, { id: balajiHrId }] = await Promise.all(
         [
           {
-            userId: balajiUserId,
+            userId: sathishUserId,
             companyId: clubitsCompanyId,
             createdById: systemUserId,
             updatedById: systemUserId,
@@ -904,6 +933,69 @@ const main = async () => {
               userId: hr.userId,
             },
             select: { id: true },
+          })
+        )
+      );
+
+      const [] = await Promise.all(
+        [
+          {
+            userId: sakthiUserId,
+            date: new Date(),
+            tittle: "title sample",
+            description: "sample description",
+            categoryId: defaultHelpDeskCategory,
+            statusId: defaultHelpDeskStatus,
+            remarks: "remarks",
+            createdById: balajiUserId,
+            updatedById: balajiUserId,
+          },
+        ].map((helpDesk) =>
+          tx.helpDesk.create({
+            data: helpDesk,
+            select: {
+              id: true,
+            },
+          })
+        )
+      );
+
+      const [] = await Promise.all(
+        [
+          {
+            imageUrl: "",
+            date: new Date(new Date().setFullYear(2023, 12, 23)),
+            name: "Shiva",
+            fromPlace: "Chennai",
+            hrId: balajiHrId,
+            companyId: genyusCompanyId,
+            inTime: new Date(new Date().setHours(9, 0)),
+            outTime: new Date(new Date().setHours(9, 0)),
+            reason: "sample reason",
+            mobileNumber: "987654310",
+            createdById: sakthiUserId,
+            updatedById: sakthiUserId,
+          },
+          {
+            imageUrl: "",
+            date: new Date(new Date().setFullYear(2023, 12, 23)),
+            name: "Vidhyuth",
+            fromPlace: "Pondicherry",
+            hrId: sathishHrId,
+            companyId: clubitsCompanyId,
+            inTime: new Date(new Date().setHours(9, 0)),
+            outTime: new Date(new Date().setHours(9, 0)),
+            reason: "sample reason",
+            mobileNumber: "987654310",
+            createdById: sakthiUserId,
+            updatedById: sakthiUserId,
+          },
+        ].map((visitorPass) =>
+          tx.visitorPass.create({
+            data: visitorPass,
+            select: {
+              id: true,
+            },
           })
         )
       );

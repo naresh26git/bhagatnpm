@@ -1,11 +1,12 @@
 import { TimeSheet } from "server/dist/trpc/routes/time-sheets/get-many";
+import Badge from "ui/Badge";
 import Button from "ui/Button";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Grid from "ui/Grid";
+import { useAsyncList } from "ui/hooks/UseAsyncList";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
-import { useAsyncList } from "ui/hooks/UseAsyncList";
 import PageHeader from "../components/PageHeader";
 import TimesheetDialog from "../components/TimesheetDialog";
 import { useAuthContext } from "../hooks/UseAuth";
@@ -193,23 +194,19 @@ export const TimeSheetPage = () => {
               key: "",
               label: "Status",
               renderCell: (item) => (
-                <Typography
-                  transform="capitalize"
-                  color={
+                <Badge
+                  textBackground={
                     item.status.name === "present"
                       ? "success"
                       : item.status.name === "absent"
                       ? "danger"
                       : "warning"
                   }
-                  // className="alert alert-present"
-                  // role="alert"
-                  // itemType="button"
-                  // className="alert alert-success"
-                  // role="alert"
                 >
-                  {item.status.name}
-                </Typography>
+                  <Typography transform="capitalize" as="span">
+                    {item.status.name}
+                  </Typography>
+                </Badge>
               ),
             },
           ]}
