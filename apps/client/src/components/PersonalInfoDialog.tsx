@@ -8,6 +8,7 @@ import { Designation } from "server/src/trpc/routes/designation/get-many";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
+import { uploadFileToBlob } from "../utils/azure-blob-upload";
 
 export type Department = {
   id: number;
@@ -27,10 +28,34 @@ export const PersonalInfoDialog = () => {
   const [designation, setDesignation] = React.useState<Designation[]>([]);
   const [designationId, setDesignationId] = React.useState<number>();
   const [reportingManagerId, setReportingManagerId] = React.useState<number>(2);
+  const [fileSelected, setFileSelected] = React.useState<File>();
+  const [uploading, setUploading] = React.useState(false);
+
   // const value = useDialog();
+
+  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+
+    const [file] = event.target.files;
+
+    if (!file) return;
+
+    setFileSelected(file);
+  };
 
   const AddPersonalInfo = async () => {
     try {
+      if (!fileSelected) return;
+
+      const { sasToken } = await client.sasToken.get.query();
+
+      setUploading(true);
+
+      const imageUrl = await uploadFileToBlob(fileSelected, sasToken);
+
+      setFileSelected(undefined);
+      setUploading(false);
+
       if (departmentId === undefined) return;
       if (designationId === undefined) return;
       await client.personalInfo.set.mutate({
@@ -44,6 +69,7 @@ export const PersonalInfoDialog = () => {
         departmentId,
         designationId,
         reportingManagerId,
+        imageUrl,
 
         // email: email || undefined,,
         // mobile: mobile || undefined,
@@ -94,6 +120,39 @@ export const PersonalInfoDialog = () => {
         <Dialog.Body>
           <Stack gap="3">
             <Grid.Row gutters="3">
+              <Grid.Col cols={["12", "lg-12"]}>
+                <label
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-evenly",
+                    alignItems: "center",
+                  }}
+                  className="form-control"
+                  htmlFor="customFile"
+                >
+                  <input
+                    type="file"
+                    className="form-control"
+                    onChange={onFileChange}
+                  />
+                  {/* <Button type="submit" onClick={onFileUpload}>
+          Upload
+        </Button> */}
+                  {/* <FontAwesomeIcon
+                        icon={faPlus}
+                        style={{ height: "30px", width: "30px" }}
+                      /> */}
+                </label>
+
+                <input
+                  type="file"
+                  style={{
+                    display: "none",
+                  }}
+                  className="form-control"
+                  id="customFile"
+                />
+              </Grid.Col>
               <Grid.Col cols={["12", "lg-6"]}>
                 <div className="form-floating">
                   <input
