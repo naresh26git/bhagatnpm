@@ -10,6 +10,7 @@ export type Hr = RouterOutput["hr"]["getMany"][0];
 export const getManyHrParameters = z
   .object({ companyId: z.number() })
   .optional();
+
 export type GetManyHrParameters = z.infer<typeof getManyHrParameters>;
 export const getMany = protectedProcedure
   .input(getManyHrParameters)

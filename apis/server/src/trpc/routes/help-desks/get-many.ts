@@ -1,14 +1,20 @@
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 import { prisma } from "../../../db/prisma";
 import { getErrorMessage } from "../../../utils/get-error-message";
 import { RouterOutput } from "../../router";
-import { getManyInputParameters } from "../../shared/get-many-input-parameters";
+import { baseGetManyInputParameters } from "../../shared/base-get-many-input-parameters";
 import { protectedProcedure } from "../../trpc";
-
 export type HelpDesk = RouterOutput["helpDesk"]["getMany"]["items"][0];
 
+const sortBys = ["date", "tittle", "description", "remarks"] as const;
+
+const inputParameters = baseGetManyInputParameters
+  .merge(z.object({ sortBy: z.enum(sortBys).optional() }))
+  .optional();
+
 export const getMany = protectedProcedure
-  .input(getManyInputParameters)
+  .input(inputParameters)
   .mutation(async ({ ctx, input }) => {
     console.log({ role: ctx.role, userId: ctx.userId });
 
