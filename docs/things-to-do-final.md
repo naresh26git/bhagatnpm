@@ -2,13 +2,10 @@
 
 - [ ] Page reload after submit should be improved - **Mithunish**
 - [ ] Print and export to excel feature needs to be implemented - **Mithunish**
-- [ ] Improve the sorting integration between client and server - **Mithunish**
-
 - [ ] Add image url to the identification tab - **Sakthi**
 - [ ] Add passport to the identification type - **Sakthi**
 - [ ] Add upload profile picture to personal info form - **Sakthi&Vignesh**
 - [ ] Add icon buttons for leave approval and rejection in the leave page - **Vignesh**
-- [ ] Re-arrange the menu items according to the completeness - **Murali**
 
 ## Things to figure out
 
@@ -39,9 +36,11 @@
 ### Things that are done
 
 - [x] Fix all count for get many apis - **Team**
+- [x] Improve the sorting integration between client and server - **Team**
 - [x] Change the status appearance of time management according to the designs - **Vishnupriya**
 - [x] Seed for visitor pass and help desk - **Vishnupriya**
 - [x] Remove status from leave balance table - **Murali**
+- [x] Re-arrange the menu items according to the completeness - **Murali**
 - [x] Logout from the side menu bar - **Vignesh**
 - [x] Remove delete from profile info - **Sakthi**
 - [x] Change the get-many of addresses to mutation - **Sakthi**
