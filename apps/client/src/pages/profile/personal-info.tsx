@@ -1,16 +1,20 @@
 import { useNavigate } from "react-router-dom";
-import { PersonalInfo } from "server/dist/trpc/routes/personal-infos/get-many";
+import {
+  InputParameters,
+  PersonalInfo,
+} from "server/dist/trpc/routes/personal-infos/get-many";
 import Avatar from "ui/Avatar";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
-import { useAsyncList } from "ui/hooks/UseAsyncList";
+import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import PageHeader from "../../components/PageHeader";
 import PersonalInfoDialog from "../../components/PersonalInfoDialog";
 import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
+
 export const personalInfo = {
   uid: "1",
   userId: "1210",
@@ -49,7 +53,7 @@ export type PersonalInfoPageProps = {};
 export const PersonalInfoPage = () => {
   const auth = useAuthContext();
 
-  const value = useAsyncList<PersonalInfo>({
+  const value = useAsyncList<PersonalInfo, InputParameters["sortBy"]>({
     load: async ({ states }) => {
       try {
         const inputParameters = {
@@ -58,8 +62,6 @@ export const PersonalInfoPage = () => {
           limit: states.paginationState.limit,
           page: states.paginationState.page,
         };
-
-        console.log({ inputParameters });
 
         const result = await client.personalInfo.getMany.mutate(
           inputParameters
@@ -76,6 +78,7 @@ export const PersonalInfoPage = () => {
       }
     },
   });
+
   const deleteUser = async (id: number) => {
     try {
       // await client.user.remove.mutate(id);
@@ -85,7 +88,9 @@ export const PersonalInfoPage = () => {
       return { error: new Error("Something went wrong") };
     }
   };
+
   const navigate = useNavigate();
+
   return (
     <Stack gap="3">
       <ShowIf.Employee>
@@ -96,8 +101,7 @@ export const PersonalInfoPage = () => {
       </ShowIf.Employee>
       <Card>
         <DataGrid<PersonalInfo>
-          {...value}
-          // allowSelection
+          {...(value as AsyncListContextValue<PersonalInfo>)}
           onRowClick={(item) =>
             navigate("../profile-page", {
               state: item,
@@ -122,6 +126,7 @@ export const PersonalInfoPage = () => {
                   {item.lastName}
                 </>
               ),
+              ...value.sort("firstName"),
             },
             {
               id: "3",
@@ -177,6 +182,7 @@ export const PersonalInfoPage = () => {
                   }).format(new Date(item.dateOfJoining))}
                 </>
               ),
+              ...value.sort("dateOfJoining"),
             },
             {
               id: "7",
@@ -191,6 +197,7 @@ export const PersonalInfoPage = () => {
                   }).format(new Date(item.dateOfBirth))}
                 </>
               ),
+              ...value.sort("dateOfBirth"),
             },
             {
               id: "8",

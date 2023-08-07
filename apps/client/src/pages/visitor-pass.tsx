@@ -1,4 +1,7 @@
-import { VisitorPass } from "server/dist/trpc/routes/visitor-pass/get-many";
+import {
+  InputParameters,
+  VisitorPass,
+} from "server/dist/trpc/routes/visitor-pass/get-many";
 import Avatar from "ui/Avatar";
 import Button from "ui/Button";
 import Card from "ui/Card";
@@ -6,23 +9,34 @@ import DataGrid from "ui/DataGrid";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
-import { useAsyncList } from "ui/hooks/UseAsyncList";
+import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import PageHeader from "../components/PageHeader";
 import VisitorPassDialog from "../components/VisitorPassDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
+export type TimeSheetPageProps = {};
+
 const VisitorPasses = () => {
   const auth = useAuthContext();
-  const value = useAsyncList<VisitorPass>({
-    load: async (states) => {
+
+  const value = useAsyncList<VisitorPass, InputParameters["sortBy"]>({
+    load: async ({ states }) => {
       try {
-        const visitorpass = await client.visitorPass.getMany.mutate();
-        console.log(visitorpass);
+        const inputParameters = {
+          sortBy: states.sortState?.sortBy,
+          sortOrder: states.sortState?.sortOrder,
+          limit: states.paginationState.limit,
+          page: states.paginationState.page,
+        };
+
+        const result = await client.visitorPass.getMany.mutate(inputParameters);
+        console.log(result);
+
         return {
-          items: visitorpass.items as any,
-          totalCount: visitorpass.totalCount,
+          items: result.items as any,
+          totalCount: result.totalCount,
         };
       } catch (error) {
         handleTRPCError(error, auth);
@@ -124,7 +138,7 @@ const VisitorPasses = () => {
         />
         <Card>
           <DataGrid<VisitorPass>
-            {...value}
+            {...(value as AsyncListContextValue<VisitorPass>)}
             columns={[
               {
                 id: "1",
@@ -147,6 +161,7 @@ const VisitorPasses = () => {
                 renderCell: (item) => (
                   <Typography transform="capitalize">{item.name}</Typography>
                 ),
+                ...value.sort("name"),
               },
               {
                 id: "3",
@@ -157,6 +172,7 @@ const VisitorPasses = () => {
                     {item.fromPlace}
                   </Typography>
                 ),
+                ...value.sort("fromPlace"),
               },
               {
                 id: "4",
@@ -183,6 +199,7 @@ const VisitorPasses = () => {
                 id: "6",
                 key: "mobileNumber",
                 label: "Mobile Number",
+                ...value.sort("mobileNumber"),
               },
               {
                 id: "7",
@@ -199,6 +216,7 @@ const VisitorPasses = () => {
                       : ""}
                   </>
                 ),
+                ...value.sort("date"),
               },
 
               {
@@ -213,6 +231,7 @@ const VisitorPasses = () => {
                     }).format(new Date(item.inTime))}
                   </>
                 ),
+                ...value.sort("inTime"),
               },
               {
                 id: "9",
@@ -228,6 +247,7 @@ const VisitorPasses = () => {
                       : ""}
                   </>
                 ),
+                ...value.sort("outTime"),
               },
               {
                 id: "10",
@@ -236,6 +256,7 @@ const VisitorPasses = () => {
                 renderCell: (item) => (
                   <Typography transform="capitalize">{item.reason}</Typography>
                 ),
+                ...value.sort("reason"),
               },
             ]}
           />

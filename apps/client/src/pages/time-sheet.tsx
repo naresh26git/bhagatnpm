@@ -1,12 +1,16 @@
-import { TimeSheet } from "server/dist/trpc/routes/time-sheets/get-many";
+import {
+  InputParameters,
+  TimeSheet,
+} from "server/dist/trpc/routes/time-sheets/get-many";
 import Badge from "ui/Badge";
 import Button from "ui/Button";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Grid from "ui/Grid";
-import { useAsyncList } from "ui/hooks/UseAsyncList";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
+import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
+
 import PageHeader from "../components/PageHeader";
 import TimesheetDialog from "../components/TimesheetDialog";
 import { useAuthContext } from "../hooks/UseAuth";
@@ -53,7 +57,7 @@ export type TimeSheetPageProps = {};
 export const TimeSheetPage = () => {
   const auth = useAuthContext();
 
-  const value = useAsyncList<TimeSheet>({
+  const value = useAsyncList<TimeSheet, InputParameters["sortBy"]>({
     load: async ({ states }) => {
       try {
         const inputParameters = {
@@ -123,7 +127,7 @@ export const TimeSheetPage = () => {
       />
       <Card>
         <DataGrid<TimeSheet>
-          {...value}
+          {...(value as AsyncListContextValue<TimeSheet>)}
           columns={[
             {
               id: "1",
@@ -173,6 +177,7 @@ export const TimeSheetPage = () => {
                     : ""}
                 </>
               ),
+              ...value.sort("inTime"),
             },
             {
               id: "5",
@@ -188,6 +193,7 @@ export const TimeSheetPage = () => {
                     : ""}
                 </>
               ),
+              ...value.sort("outTime"),
             },
             {
               id: "6",

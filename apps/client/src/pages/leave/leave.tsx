@@ -1,9 +1,12 @@
-import { Leave } from "server/dist/trpc/routes/leaves/get-many";
+import {
+  InputParameters,
+  Leave,
+} from "server/dist/trpc/routes/leaves/get-many";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
-import { useAsyncList } from "ui/hooks/UseAsyncList";
+import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import LeaveStatusDialog from "../../components/LeaveStatusDialog";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
@@ -51,7 +54,7 @@ export type LeaveViewPageProps = {};
 export const LeaveViewPage = () => {
   const auth = useAuthContext();
 
-  const value = useAsyncList<Leave>({
+  const value = useAsyncList<Leave, InputParameters["sortBy"]>({
     load: async ({ states }) => {
       try {
         // const result = await client.leave.getMany.mutate({
@@ -114,6 +117,7 @@ export const LeaveViewPage = () => {
           }).format(new Date(item.createdAt))}
         </>
       ),
+      ...value.sort("createdAt"),
     },
     {
       id: "4",
@@ -135,6 +139,7 @@ export const LeaveViewPage = () => {
           }).format(new Date(item.fromDate))}
         </>
       ),
+      ...value.sort("fromDate"),
     },
     {
       id: "6",
@@ -149,17 +154,20 @@ export const LeaveViewPage = () => {
           }).format(new Date(item.toDate))}
         </>
       ),
+      ...value.sort("toDate"),
     },
     {
       id: "7",
       key: "noOfDays",
       label: "Days",
       renderCell: (item: Leave) => <>{item.noOfDays}</>,
+      ...value.sort("noOfDays"),
     },
     {
       id: "8",
       key: "remarks",
       label: "Remarks",
+      ...value.sort("remarks"),
     },
     {
       id: "8",
@@ -229,7 +237,7 @@ export const LeaveViewPage = () => {
       {/* <PageHeader title={<PageHeader.Title>Leaves</PageHeader.Title>} /> */}
       <Card>
         <DataGrid<Leave>
-          {...value}
+          {...(value as AsyncListContextValue<Leave>)}
           columns={columns.filter((column) => {
             console.log({ auth });
             if (column.label !== "Action") return true;

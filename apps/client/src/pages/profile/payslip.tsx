@@ -1,9 +1,12 @@
-import { PayRoll } from "server/src/trpc/routes/pay-rolls/get-many";
+import {
+  InputParameters,
+  PayRoll,
+} from "server/src/trpc/routes/pay-rolls/get-many";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
-import { useAsyncList } from "ui/hooks/UseAsyncList";
+import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import PayRollDetailsDialog from "../../components/PayRollDetailsDialog";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
@@ -11,7 +14,7 @@ import { handleTRPCError } from "../../utils/handle-trpc-error";
 
 const Payslip = () => {
   const auth = useAuthContext();
-  const value = useAsyncList<PayRoll>({
+  const value = useAsyncList<PayRoll, InputParameters["sortBy"]>({
     load: async ({ states }) => {
       try {
         const inputParameters = {
@@ -47,7 +50,7 @@ const Payslip = () => {
 
       <Card>
         <DataGrid<PayRoll>
-          {...value}
+          {...(value as AsyncListContextValue<PayRoll>)}
           columns={[
             {
               id: "1",
@@ -79,6 +82,7 @@ const Payslip = () => {
                   }).format(new Date().setFullYear(item.year, item.month, 1))}
                 </>
               ),
+              ...value.sort("year"),
             },
             {
               id: "4",
@@ -92,6 +96,7 @@ const Payslip = () => {
                   }).format(new Date().setFullYear(item.year, item.month, 1))}
                 </>
               ),
+              ...value.sort("month"),
             },
             {
               id: "5",

@@ -8,14 +8,15 @@ import { protectedProcedure } from "../../trpc";
 
 const sortBys = ["street", "city", "state", "country", "pincode"] as const;
 
-const inputParameters = baseGetManyInputParameters
-  .merge(z.object({ sortBy: z.enum(sortBys).optional() }))
-  .optional();
-
+const inputParameters = baseGetManyInputParameters.merge(
+  z.object({ sortBy: z.enum(sortBys).optional() })
+);
 export type Address = RouterOutput["address"]["getMany"]["items"][0];
 
+export type InputParameters = z.infer<typeof inputParameters>;
+
 export const getMany = protectedProcedure
-  .input(inputParameters)
+  .input(inputParameters.optional())
   .mutation(async ({ ctx, input }) => {
     try {
       const where =

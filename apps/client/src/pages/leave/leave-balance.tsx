@@ -1,9 +1,11 @@
-import { Leave } from "server/dist/trpc/routes/leaves/get-many";
+import {
+  InputParameters,
+  Leave,
+} from "server/dist/trpc/routes/leaves/get-many";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
-import Typography from "ui/Typography";
-import { useAsyncList } from "ui/hooks/UseAsyncList";
+import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
@@ -47,7 +49,7 @@ export type LeaveBalancePageProps = {};
 export const LeaveBalancePage = () => {
   const auth = useAuthContext();
 
-  const value = useAsyncList<Leave>({
+  const value = useAsyncList<Leave, InputParameters["sortBy"]>({
     load: async ({ states }) => {
       try {
         const inputParameters = {
@@ -95,7 +97,7 @@ export const LeaveBalancePage = () => {
       {/* <PageHeader title={<PageHeader.Title>Balance</PageHeader.Title>} /> */}
       <Card>
         <DataGrid<Leave>
-          {...value}
+          {...(value as AsyncListContextValue<Leave>)}
           columns={[
             // {
             //   id: "1",
@@ -150,43 +152,6 @@ export const LeaveBalancePage = () => {
                     : ""}
                 </>
               ),
-              sortOrder:
-                value.states.sortState?.sortBy === "status" &&
-                value.states.sortState.sortOrder
-                  ? value.states.sortState.sortOrder
-                  : undefined,
-              options: [
-                {
-                  id: "1",
-                  as: "button",
-                  icon: "↑",
-                  label: "Sort by ASC",
-                  disabled:
-                    value.states.sortState?.sortBy === "status" &&
-                    value.states.sortState.sortOrder === "asc",
-                  onClick: () => {
-                    value.dispatchers.sortDispatcher({
-                      type: "sort",
-                      payload: { sortBy: "status", sortOrder: "asc" },
-                    });
-                  },
-                },
-                {
-                  id: "2",
-                  as: "button",
-                  icon: "↓",
-                  label: "Sort by DESC",
-                  disabled:
-                    value.states.sortState?.sortBy === "status" &&
-                    value.states.sortState.sortOrder === "desc",
-                  onClick: () => {
-                    value.dispatchers.sortDispatcher({
-                      type: "sort",
-                      payload: { sortBy: "status", sortOrder: "desc" },
-                    });
-                  },
-                },
-              ],
             },
             {
               id: "3",

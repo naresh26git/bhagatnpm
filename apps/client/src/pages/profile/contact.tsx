@@ -1,9 +1,12 @@
-import { Address } from "server/dist/trpc/routes/addresses/get-many";
+import {
+  Address,
+  InputParameters,
+} from "server/dist/trpc/routes/addresses/get-many";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
-import { useAsyncList } from "ui/hooks/UseAsyncList";
+import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import ContactDialog from "../../components/ContactDialog";
 import PageHeader from "../../components/PageHeader";
 import ShowIf from "../../components/ShowIf";
@@ -16,10 +19,17 @@ export type contactDataPageProps = {};
 export const ContactDataPage = () => {
   const auth = useAuthContext();
 
-  const value = useAsyncList<Address>({
+  const value = useAsyncList<Address, InputParameters["sortBy"]>({
     load: async ({ states }) => {
       try {
-        const result = await client.address.getMany.mutate();
+        const inputParameters = {
+          sortBy: states.sortState?.sortBy,
+          sortOrder: states.sortState?.sortOrder,
+          limit: states.paginationState.limit,
+          page: states.paginationState.page,
+        };
+
+        const result = await client.address.getMany.mutate(inputParameters);
 
         return {
           totalCount: result.totalCount,
@@ -46,7 +56,7 @@ export const ContactDataPage = () => {
 
       <Card>
         <DataGrid<Address>
-          {...value}
+          {...(value as AsyncListContextValue<Address>)}
           columns={[
             {
               id: "1",
@@ -80,26 +90,36 @@ export const ContactDataPage = () => {
               id: "4",
               key: "street",
               label: "Street",
+              renderCell: (item) => <>{item.street}</>,
+              ...value.sort("street"),
             },
             {
               id: "5",
               key: "city",
               label: "City",
+              renderCell: (item) => <>{item.city}</>,
+              ...value.sort("city"),
             },
             {
               id: "6",
               key: "state",
               label: "State",
+              renderCell: (item) => <>{item.state}</>,
+              ...value.sort("state"),
             },
             {
               id: "7",
               key: "country",
               label: "Country",
+              renderCell: (item) => <>{item.country}</>,
+              ...value.sort("country"),
             },
             {
               id: "8",
               key: "pincode",
               label: "Pincode",
+              renderCell: (item) => <>{item.pincode}</>,
+              ...value.sort("pincode"),
             },
           ]}
         />

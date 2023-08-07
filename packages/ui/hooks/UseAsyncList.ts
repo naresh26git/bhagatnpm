@@ -184,22 +184,24 @@ export const selectionReducer = (
   }
 };
 
-export type SORT_ACTION = {
+export type SORT_ACTION<SortByType extends unknown = unknown> = {
   type: "sort";
-  payload: Sorted;
+  payload: Sorted<SortByType>;
 };
 
 export type Unsorted = undefined;
-export type Sorted = {
-  sortBy: string;
+export type Sorted<SortByType extends unknown = unknown> = {
+  sortBy: SortByType;
   sortOrder: "asc" | "desc";
 };
-export type SortState = Unsorted | Sorted;
+export type SortState<SortByType extends unknown = unknown> =
+  | Unsorted
+  | Sorted<SortByType>;
 
-export const sortReducer = (
-  state: SortState,
-  action: SORT_ACTION
-): SortState => {
+export const sortReducer = <SortByType extends unknown = unknown>(
+  state: SortState<SortByType>,
+  action: SORT_ACTION<SortByType>
+): SortState<SortByType> => {
   switch (action.type) {
     case "sort": {
       return { ...action.payload };
@@ -214,19 +216,24 @@ export const sortReducer = (
 
 export type AsyncListContextValue<
   InjectedProps extends unknown = unknown,
+  SortByType extends unknown = unknown,
   ListItemType extends object = {}
 > = InjectedProps & {
   states: {
     listState: ListState<ListItemType>;
     paginationState: PaginationState;
     selectionState: SelectionState;
-    sortState: SortState;
+    sortState: SortState<SortByType>;
   };
   dispatchers: {
     listDispatcher: React.Dispatch<LIST_ACTIONS<ListItemType>>;
     paginationDispatcher: React.Dispatch<PAGINATION_ACTION>;
     selectionDispatcher: React.Dispatch<SELECTION_ACTION>;
-    sortDispatcher: React.Dispatch<SORT_ACTION>;
+    sortDispatcher: React.Dispatch<SORT_ACTION<SortByType>>;
+  };
+  sort: (sortBy: SortByType) => {
+    sortOrder: Sorted["sortOrder"];
+    options: [];
   };
 };
 
@@ -235,11 +242,12 @@ export const AsyncListContext =
 
 export const useAsyncListContext = <
   InjectedProps extends unknown = unknown,
+  SortByType extends unknown = unknown,
   ListItemType extends object = {}
 >() => {
   const context = React.useContext(
     AsyncListContext as unknown as React.Context<
-      AsyncListContextValue<InjectedProps, ListItemType>
+      AsyncListContextValue<InjectedProps, SortByType, ListItemType>
     >
   );
 
@@ -266,10 +274,11 @@ const _defaultPaginationState = {
 
 export type UseAsyncListProps<
   InjectedProps extends unknown = unknown,
+  SortByType extends unknown = unknown,
   ListItemType extends object = {}
 > = {
   load: (
-    context: AsyncListContextValue<InjectedProps, ListItemType>
+    context: AsyncListContextValue<InjectedProps, SortByType, ListItemType>
   ) => Promise<
     | Omit<ListState<ListItemType>, "isLoading" | "error">
     | Required<Pick<ListState<ListItemType>, "error">>
@@ -280,16 +289,18 @@ export type UseAsyncListProps<
 
 export const useAsyncList = <
   InjectedProps extends unknown = unknown,
+  SortByType extends unknown = unknown,
   ListItemType extends object = {}
 >({
   load,
   defaultListState = _defaultListState,
   defaultPaginationState = _defaultPaginationState,
   ...injectedProps
-}: UseAsyncListProps<InjectedProps, ListItemType>): AsyncListContextValue<
+}: UseAsyncListProps<
   InjectedProps,
+  SortByType,
   ListItemType
-> => {
+>): AsyncListContextValue<InjectedProps, SortByType, ListItemType> => {
   const [listState, listDispatcher] = React.useReducer(
     listReducer<ListItemType>,
     defaultListState
@@ -302,7 +313,10 @@ export const useAsyncList = <
     selectionReducer,
     undefined
   );
-  const [sortState, sortDispatcher] = React.useReducer(sortReducer, undefined);
+  const [sortState, sortDispatcher] = React.useReducer(
+    sortReducer<SortByType>,
+    undefined
+  );
 
   const context = {
     states: {
@@ -317,8 +331,46 @@ export const useAsyncList = <
       selectionDispatcher,
       sortDispatcher,
     },
+    sort: (sortBy: SortByType) => {
+      return {
+        sortOrder:
+          sortState?.sortBy === sortBy && sortState.sortOrder
+            ? sortState.sortOrder
+            : undefined,
+        options: [
+          {
+            id: "1",
+            as: "button",
+            icon: "↑",
+            label: "Sort by ASC",
+            disabled:
+              sortState?.sortBy === sortBy && sortState.sortOrder === "asc",
+            onClick: () => {
+              sortDispatcher({
+                type: "sort",
+                payload: { sortBy, sortOrder: "asc" },
+              });
+            },
+          },
+          {
+            id: "2",
+            as: "button",
+            icon: "↓",
+            label: "Sort by DESC",
+            disabled:
+              sortState?.sortBy === sortBy && sortState.sortOrder === "desc",
+            onClick: () => {
+              sortDispatcher({
+                type: "sort",
+                payload: { sortBy, sortOrder: "desc" },
+              });
+            },
+          },
+        ],
+      };
+    },
     ...injectedProps,
-  } as AsyncListContextValue<InjectedProps, ListItemType>;
+  } as AsyncListContextValue<InjectedProps, SortByType, ListItemType>;
 
   const getListItems = React.useCallback(async () => {
     listDispatcher({ type: "loading" });

@@ -1,57 +1,24 @@
-import { PayRoll } from "server/dist/trpc/routes/pay-rolls/get-many";
+import {
+  InputParameters,
+  PayRoll,
+} from "server/dist/trpc/routes/pay-rolls/get-many";
 import Button from "ui/Button";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
-import { useAsyncList } from "ui/hooks/UseAsyncList";
+import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import PageHeader from "../components/PageHeader";
 import PayRollDetailsDialog from "../components/PayRollDetailsDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
-export type PayRollItem = {
-  uid: string;
-  empid: string;
-  name: string;
-  month: string;
-  grosspay: string;
-  status: string;
-};
-
-export const payRoll = {
-  uid: "1",
-  empid: "1210",
-  name: "Vignesh S",
-  month: "Jan/2023",
-  grosspay: "30000",
-  status: "Recived",
-};
-
-export const payRolls = [
-  payRoll,
-
-  { ...payRoll, uid: "2", month: "Feb/2023" },
-  { ...payRoll, uid: "3", month: "Mar/2023" },
-  { ...payRoll, uid: "4", month: "Apr/2023" },
-  { ...payRoll, uid: "5", month: "May/2023" },
-  { ...payRoll, uid: "6", month: "Jun/2023" },
-  { ...payRoll, uid: "7", month: "Jul/2023" },
-  { ...payRoll, uid: "8", month: "Aug/2023" },
-  { ...payRoll, uid: "9", month: "Sep/2023" },
-  { ...payRoll, uid: "10", month: "Oct/2023" },
-  { ...payRoll, uid: "11", month: "Nov/2023" },
-  { ...payRoll, uid: "12", month: "Dec/2023" },
-];
-
-export type PayRollPageProps = {};
-
 export const PayRollPage = () => {
   const auth = useAuthContext();
 
-  const value = useAsyncList<PayRoll>({
+  const value = useAsyncList<PayRoll, InputParameters["sortBy"]>({
     load: async ({ states }) => {
       try {
         const inputParameters = {
@@ -139,7 +106,7 @@ export const PayRollPage = () => {
       />
       <Card>
         <DataGrid<PayRoll>
-          {...value}
+          {...(value as AsyncListContextValue<PayRoll>)}
           columns={[
             {
               id: "1",
@@ -171,6 +138,7 @@ export const PayRollPage = () => {
                   }).format(new Date().setFullYear(item.year, item.month, 1))}
                 </>
               ),
+              ...value.sort("year"),
             },
             {
               id: "4",
@@ -184,6 +152,7 @@ export const PayRollPage = () => {
                   }).format(new Date().setFullYear(item.year, item.month, 1))}
                 </>
               ),
+              ...value.sort("month"),
             },
             {
               id: "5",

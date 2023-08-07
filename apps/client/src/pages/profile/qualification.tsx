@@ -1,8 +1,11 @@
-import { Qualification } from "server/src/trpc/routes/qualification/get-many";
+import {
+  InputParameters,
+  Qualification,
+} from "server/src/trpc/routes/qualification/get-many";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
-import { useAsyncList } from "ui/hooks/UseAsyncList";
+import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import PageHeader from "../../components/PageHeader";
 import QualificationDialog from "../../components/QualificationDialog";
 import ShowIf from "../../components/ShowIf";
@@ -12,11 +15,21 @@ import { handleTRPCError } from "../../utils/handle-trpc-error";
 
 const Qualifications = () => {
   const auth = useAuthContext();
-  const value = useAsyncList<Qualification>({
-    load: async (states) => {
+
+  const value = useAsyncList<Qualification, InputParameters["sortBy"]>({
+    load: async ({ states }) => {
       try {
-        const qualification = await client.qualifications.getMany.mutate();
-        console.log(qualification);
+        const inputParameters = {
+          sortBy: states.sortState?.sortBy,
+          sortOrder: states.sortState?.sortOrder,
+          limit: states.paginationState.limit,
+          page: states.paginationState.page,
+        };
+
+        const qualification = await client.qualifications.getMany.mutate(
+          inputParameters
+        );
+
         return {
           items: qualification.items as any,
           totalCount: qualification.totalCount,
@@ -42,7 +55,7 @@ const Qualifications = () => {
 
       <Card>
         <DataGrid<Qualification>
-          {...value}
+          {...(value as AsyncListContextValue<Qualification>)}
           columns={[
             {
               id: "1",
@@ -73,6 +86,7 @@ const Qualifications = () => {
               key: "",
               label: "Qualification",
               renderCell: (item) => <>{item.name}</>,
+              ...value.sort("name"),
             },
           ]}
         />

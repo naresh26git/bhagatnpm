@@ -1,11 +1,14 @@
-import { HelpDesk } from "server/dist/trpc/routes/help-desks/get-many";
+import {
+  HelpDesk,
+  InputParameters,
+} from "server/dist/trpc/routes/help-desks/get-many";
 import Button from "ui/Button";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
-import { useAsyncList } from "ui/hooks/UseAsyncList";
+import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import HelpDeskDialog from "../components/HelpDeskDialog";
 import HelpDeskStatusDialog from "../components/HelpDeskStatusDialog";
 import PageHeader from "../components/PageHeader";
@@ -57,7 +60,7 @@ export type HelpDeskPageProps = {};
 
 export const HelpDeskPage = () => {
   const auth = useAuthContext();
-  const value = useAsyncList<HelpDesk>({
+  const value = useAsyncList<HelpDesk, InputParameters["sortBy"]>({
     load: async ({ states }) => {
       try {
         const inputParameters = {
@@ -114,11 +117,14 @@ export const HelpDeskPage = () => {
             : ""}
         </>
       ),
+      ...value.sort("date"),
     },
     {
       id: "3",
       key: "tittle",
       label: "Tittle",
+      renderCell: (item: HelpDesk) => <>{item.tittle}</>,
+      ...value.sort("tittle"),
     },
 
     {
@@ -133,11 +139,15 @@ export const HelpDeskPage = () => {
       id: "5",
       key: "description",
       label: "Description",
+      renderCell: (item: HelpDesk) => <>{item.description}</>,
+      ...value.sort("description"),
     },
     {
       id: "6",
       key: "remarks",
       label: "Remarks",
+      renderCell: (item: HelpDesk) => <>{item.remarks}</>,
+      ...value.sort("remarks"),
     },
     {
       id: "7",
@@ -227,7 +237,7 @@ export const HelpDeskPage = () => {
 
       <Card>
         <DataGrid<HelpDesk>
-          {...value}
+          {...(value as AsyncListContextValue<HelpDesk>)}
           columns={columns.filter((column) => {
             console.log({ auth });
             if (column.label !== "Action") return true;

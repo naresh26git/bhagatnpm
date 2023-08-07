@@ -1,9 +1,13 @@
-import { FamilyDetail } from "server/dist/trpc/routes/family-details/get-many";
+import {
+  FamilyDetail,
+  InputParameters,
+} from "server/dist/trpc/routes/family-details/get-many";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
-import { useAsyncList } from "ui/hooks/UseAsyncList";
+import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
+
 import FamilyDialog from "../../components/FamilyDialog";
 import PageHeader from "../../components/PageHeader";
 import ShowIf from "../../components/ShowIf";
@@ -46,10 +50,18 @@ export type FamilyPageProps = {};
 export const FamilyPage = () => {
   const auth = useAuthContext();
 
-  const value = useAsyncList<FamilyDetail>({
+  const value = useAsyncList<FamilyDetail, InputParameters["sortBy"]>({
     load: async ({ states }) => {
       try {
-        const result = await client.familyDetail.getMany.mutate();
+        const inputParameters = {
+          sortBy: states.sortState?.sortBy,
+          sortOrder: states.sortState?.sortOrder,
+          limit: states.paginationState.limit,
+          page: states.paginationState.page,
+        };
+        const result = await client.familyDetail.getMany.mutate(
+          inputParameters
+        );
 
         return {
           totalCount: result.totalCount,
@@ -91,7 +103,7 @@ export const FamilyPage = () => {
 
       <Card>
         <DataGrid<FamilyDetail>
-          {...value}
+          {...(value as AsyncListContextValue<FamilyDetail>)}
           columns={[
             {
               id: "1",
@@ -125,6 +137,7 @@ export const FamilyPage = () => {
               id: "4",
               key: "name",
               label: "Name",
+              ...value.sort("name"),
             },
             {
               id: "5",
@@ -139,6 +152,7 @@ export const FamilyPage = () => {
                   }).format(new Date(item.dateOfBirth))}
                 </>
               ),
+              ...value.sort("dateOfBirth"),
             },
           ]}
         />
