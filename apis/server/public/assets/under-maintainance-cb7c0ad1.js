@@ -1,1 +1,0 @@
-import{b as n,F as e,j as a,I as s,T as r}from"./index-72af6e03.js";const t=()=>n(e,{children:[a(s,{variant:"fluid",src:"images/under-maintenance.png",className:"rounded mx-auto d-block h-75"}),a(r,{as:"h1",align:"center",children:"This page is under maintainance"})]});export{t as default};
