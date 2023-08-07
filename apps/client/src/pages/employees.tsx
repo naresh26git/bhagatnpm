@@ -1,4 +1,4 @@
-import { User } from "server/dist/plugins/session";
+import { User } from "server/dist/trpc/routes/users/get-many";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
