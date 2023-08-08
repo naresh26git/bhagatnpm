@@ -24,7 +24,7 @@ const Payslip = () => {
           page: states.paginationState.page,
         };
         const result = await client.payRoll.getMany.mutate(inputParameters);
-        console.log(result.items);
+
         return {
           totalCount: result.totalCount,
           items: result.items as any,

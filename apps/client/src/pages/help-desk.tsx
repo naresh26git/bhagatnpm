@@ -70,11 +70,7 @@ export const HelpDeskPage = () => {
           page: states.paginationState.page,
         };
 
-        console.log({ inputParameters });
-
         const result = await client.helpDesk.getMany.mutate(inputParameters);
-
-        console.log({ result });
 
         return {
           totalCount: result.totalCount,
@@ -239,7 +235,6 @@ export const HelpDeskPage = () => {
         <DataGrid<HelpDesk>
           {...(value as AsyncListContextValue<HelpDesk>)}
           columns={columns.filter((column) => {
-            console.log({ auth });
             if (column.label !== "Action") return true;
             if (auth.state.user?.role.name === "admin") return true;
 

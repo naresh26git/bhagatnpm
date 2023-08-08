@@ -19,8 +19,6 @@ export type InputParameters = z.infer<typeof inputParameters>;
 export const getMany = protectedProcedure
   .input(inputParameters.optional())
   .mutation(async ({ ctx, input }) => {
-    console.log({ role: ctx.role, userId: ctx.userId });
-
     try {
       const where =
         ctx.role === "admin"

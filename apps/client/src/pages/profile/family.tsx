@@ -218,11 +218,6 @@ export default FamilyPage;
 //           page: states.paginationState.page,
 //         };
 
-//         console.log({ inputParameters });
-//         const result = await client.familyDetail.getMany.mutate(
-//           inputParameters
-//         );
-
 //         return {
 //           totalCount: result.totalCount,
 //           items: result.items as any,

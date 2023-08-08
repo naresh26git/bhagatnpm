@@ -25,7 +25,6 @@ export const QualificationDialog = () => {
 
   const handleSubmit = async () => {
     try {
-      // console.log({ categoryId });
       if (name === undefined) return;
       await client.qualifications.set.mutate({
         name,
@@ -33,7 +32,6 @@ export const QualificationDialog = () => {
       });
     } catch (error) {
       handleTRPCError(error, auth);
-      console.log(error);
     }
   };
 

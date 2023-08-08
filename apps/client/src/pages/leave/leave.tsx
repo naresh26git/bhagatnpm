@@ -70,11 +70,8 @@ export const LeaveViewPage = () => {
           page: states.paginationState.page,
         };
 
-        console.log({ inputParameters });
-
         const result = await client.leave.getMany.mutate(inputParameters);
 
-        console.log({ result });
         return {
           totalCount: result.totalCount,
           items: result.items as any,
@@ -239,7 +236,6 @@ export const LeaveViewPage = () => {
         <DataGrid<Leave>
           {...(value as AsyncListContextValue<Leave>)}
           columns={columns.filter((column) => {
-            console.log({ auth });
             if (column.label !== "Action") return true;
             if (auth.state.user?.role.name === "admin") return true;
 

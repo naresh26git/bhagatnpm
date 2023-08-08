@@ -67,10 +67,7 @@ export const TimeSheetPage = () => {
           page: states.paginationState.page,
         };
 
-        console.log({ inputParameters });
-
         const result = await client.timeSheet.getMany.mutate(inputParameters);
-        console.log({ result });
 
         return {
           totalCount: result.totalCount,

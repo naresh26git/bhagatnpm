@@ -100,7 +100,6 @@ export const VisitorPass = () => {
         const hr = await client.hr.getMany.mutate({ companyId });
         // API call successfully done
         // window.location.reload();
-        console.log(companyId);
         setHr(hr);
       } catch (error) {
         // API call failed

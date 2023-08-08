@@ -18,7 +18,7 @@ const PayRollDetailsDialog = (props: PayRollDetailsProps) => {
   // React.useEffect(() => {
   //   setPayRoll(props.payRollDetails);
   // }, [props.payRollDetails]);
-  // console.log(payRoll);
+
   return (
     <>
       <Dialog.Trigger {...value} color="primary" className="border-0">

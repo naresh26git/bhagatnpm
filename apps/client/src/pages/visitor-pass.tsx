@@ -32,7 +32,6 @@ const VisitorPasses = () => {
         };
 
         const result = await client.visitorPass.getMany.mutate(inputParameters);
-        console.log(result);
 
         return {
           items: result.items as any,

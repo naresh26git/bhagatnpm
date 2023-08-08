@@ -26,8 +26,6 @@ export const HelpDeskDialog = () => {
 
   const create = async () => {
     try {
-      console.log({ categoryId });
-
       if (categoryId === undefined) return;
 
       await client.helpDesk.set.mutate({
@@ -37,7 +35,6 @@ export const HelpDeskDialog = () => {
       });
     } catch (error) {
       handleTRPCError(error, auth);
-      console.log(error);
     }
   };
 

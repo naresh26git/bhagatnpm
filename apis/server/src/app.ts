@@ -20,14 +20,12 @@ const app: FastifyPluginAsync<AppOptions> = async (
   // Place here your custom code!
   void fastify.register(cors, {
     // origin: (origin, cb) => {
-    //   console.log({ origin });
     //   if (!origin) {
     //     cb(new Error("Not allowed"), false);
     //     return;
     //   }
 
     //   const hostname = new URL(origin).hostname;
-    //   console.log({ hostname });
     //   if (hostname === "localhost" || hostname === "127.0.0.1") {
     //     //  Request from localhost will pass
     //     cb(null, true);

@@ -57,8 +57,6 @@ export const SideNavbar = () => {
       auth.dispatcher({ type: "reset-user" });
     } catch (error) {
       handleTRPCError(error, auth);
-
-      console.log(error);
     }
   };
 

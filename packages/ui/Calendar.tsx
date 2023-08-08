@@ -33,10 +33,6 @@ export const Calendar = (props: CalendarProps) => {
     };
   }, []);
 
-  // React.useEffect(() => {
-  //   console.log({ state });
-  // }, [state]);
-
   return (
     <CalendarContext.Provider value={props}>
       <table

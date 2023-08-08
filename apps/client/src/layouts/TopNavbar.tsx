@@ -23,8 +23,6 @@ export const TopNavbar = () => {
       auth.dispatcher({ type: "reset-user" });
     } catch (error) {
       handleTRPCError(error, auth);
-
-      console.log(error);
     }
   };
 

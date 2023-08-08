@@ -59,19 +59,13 @@ export const LeaveBalancePage = () => {
           page: states.paginationState.page,
         };
 
-        console.log({ inputParameters });
-
         const result = await client.leave.getMany.mutate(inputParameters);
-
-        console.log({ result });
 
         return {
           totalCount: result.totalCount,
           items: result.items as any,
         };
       } catch (error) {
-        console.log(error);
-
         handleTRPCError(error, auth);
 
         return { error: new Error("Something went wrong") };
@@ -262,8 +256,6 @@ export default LeaveBalancePage;
 //           page: states.paginationState.page,
 //         };
 
-//         console.log({ inputParameters });
-
 //         const result = await client.leave.getMany.mutate(inputParameters);
 
 //         return {
@@ -272,8 +264,6 @@ export default LeaveBalancePage;
 //           items: result.items as any,
 //         };
 //       } catch (error) {
-//         console.log(error);
-
 //         handleTRPCError(error, auth);
 
 //         return { error: new Error("Something went wrong") };

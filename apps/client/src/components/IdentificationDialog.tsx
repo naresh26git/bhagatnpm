@@ -21,7 +21,6 @@ export const IdentificationDialog = () => {
   const handleSubmit = async () => {
     try {
       if (typeId === undefined) return;
-      console.log({ typeId });
 
       await client.identification.set.mutate({
         typeId,

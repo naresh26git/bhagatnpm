@@ -53,7 +53,6 @@ export const ProfilePage = () => {
   const [state, setState] = React.useState("");
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location.state);
   return (
     <>
       <NavLink to="/account">

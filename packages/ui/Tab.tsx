@@ -104,7 +104,6 @@ export const tabButtonBaseClasses = "nav-link";
 
 export const getTabButtonClasses = (props: TabButtonProps) => {
   const className = `${tabButtonBaseClasses} ${props.className}`;
-  console.log({ className, tabButtonBaseClasses, props });
 
   return className;
 };

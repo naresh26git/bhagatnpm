@@ -4,7 +4,6 @@ import { protectedProcedure } from "../../trpc";
 
 export const signOut = protectedProcedure.mutation(async ({ ctx }) => {
   try {
-    console.log({ user: ctx.user });
     if (ctx.user) {
       ctx.res.clearCookie("refreshToken");
 

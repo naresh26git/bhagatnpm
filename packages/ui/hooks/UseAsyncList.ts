@@ -156,8 +156,6 @@ export const selectionReducer = (
       if (!state.has(action.payload.uid)) {
         const intermediateNextState = new Set([...state, action.payload.uid]);
 
-        // console.log({ state, action, intermediateNextState });
-
         return normalizeSelectionNextState(
           intermediateNextState,
           action.payload.items.length
@@ -413,28 +411,21 @@ export const useAsyncList = <
 
   React.useEffect(() => {
     if (initialLoad) return;
-    // console.log({ fetchingOnPaginationChanges: true });
     getListItems();
   }, [paginationState.page, paginationState.limit]);
 
   React.useEffect(() => {
     if (initialLoad) return;
     if (paginationState.page !== 0) return;
-    // console.log({ fetchingOnSortingChanges: true });
     getListItems();
   }, [sortState?.sortBy, sortState?.sortOrder]);
 
   React.useEffect(() => {
     if (initialLoad) {
-      // console.log({ fetchingOnInitialLoad: true });
       initialLoad = false;
       getListItems();
     }
   }, []);
-
-  // React.useEffect(() => {
-  //   console.log({ selectionState });
-  // }, [selectionState]);
 
   return context;
 };
@@ -601,8 +592,6 @@ export {
 
 //       if (!state.has(action.payload.uid)) {
 //         const intermediateNextState = new Set([...state, action.payload.uid]);
-
-//         // console.log({ state, action, intermediateNextState });
 
 //         return normalizeSelectionNextState(
 //           intermediateNextState,
@@ -807,28 +796,21 @@ export {
 
 //   React.useEffect(() => {
 //     if (initialLoad) return;
-//     // console.log({ fetchingOnPaginationChanges: true });
 //     getListItems();
 //   }, [paginationState.page, paginationState.limit]);
 
 //   React.useEffect(() => {
 //     if (initialLoad) return;
 //     if (paginationState.page !== 0) return;
-//     // console.log({ fetchingOnSortingChanges: true });
 //     getListItems();
 //   }, [sortState?.sortBy, sortState?.sortOrder]);
 
 //   React.useEffect(() => {
 //     if (initialLoad) {
-//       // console.log({ fetchingOnInitialLoad: true });
 //       initialLoad = false;
 //       getListItems();
 //     }
 //   }, []);
-
-//   // React.useEffect(() => {
-//   //   console.log({ selectionState });
-//   // }, [selectionState]);
 
 //   return context;
 // };
