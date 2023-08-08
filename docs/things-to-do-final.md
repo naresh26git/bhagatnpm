@@ -43,5 +43,6 @@
 - [x] Remove status from leave balance table - **Murali**
 - [x] Re-arrange the menu items according to the completeness - **Murali**
 - [x] Logout from the side menu bar - **Vignesh**
+- [x] Remove input parameters in company and identification type - **Sakthi**
 - [x] Remove delete from profile info - **Sakthi**
 - [x] Change the get-many of addresses to mutation - **Sakthi**
