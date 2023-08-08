@@ -75,6 +75,7 @@ export const ContactDataPage = () => {
                     : ""}
                 </>
               ),
+              ...value.sort("userId"),
             },
             {
               id: "3",
@@ -85,6 +86,7 @@ export const ContactDataPage = () => {
                   {item.addressType.name}
                 </Typography>
               ),
+              ...value.sort("addressTypeId"),
             },
             {
               id: "4",

@@ -130,6 +130,7 @@ export const TimeSheetPage = () => {
                     : ""}
                 </>
               ),
+              ...value.sort("userId"),
             },
             {
               id: "3",
@@ -146,11 +147,12 @@ export const TimeSheetPage = () => {
                     : ""}
                 </>
               ),
+              ...value.sort("inTime"),
             },
             {
               id: "4",
               key: "",
-              label: "CheckIN",
+              label: "Check-in",
               renderCell: (item) => (
                 <>
                   {item.inTime
@@ -166,7 +168,7 @@ export const TimeSheetPage = () => {
             {
               id: "5",
               key: "",
-              label: "CheckOUT",
+              label: "Check-out",
               renderCell: (item) => (
                 <>
                   {item.outTime
@@ -198,6 +200,7 @@ export const TimeSheetPage = () => {
                   </Typography>
                 </Badge>
               ),
+              ...value.sort("statusId"),
             },
           ]}
         />

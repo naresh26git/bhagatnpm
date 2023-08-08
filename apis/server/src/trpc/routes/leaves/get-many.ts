@@ -6,12 +6,27 @@ import { RouterOutput } from "../../router";
 import { baseGetManyInputParameters } from "../../shared/base-get-many-input-parameters";
 import { protectedProcedure } from "../../trpc";
 
+const sortBy = (sortBy: string, sortOrder: "asc" | "desc") => {
+  const complexSortBysMap: Record<string, unknown> = {
+    statusId: { status: { name: sortOrder } },
+    userId: { user: { personalInfo: { firstName: sortOrder } } },
+    leaveTypeId: { leaveType: { name: sortOrder } },
+    daysAlloted: { leaveType: { daysAlloted: sortOrder } },
+  };
+
+  return complexSortBysMap[sortBy] ?? { [sortBy]: sortOrder };
+};
+
 const sortBys = [
   "fromDate",
   "toDate",
   "remarks",
   "noOfDays",
   "createdAt",
+  "statusId",
+  "userId",
+  "leaveTypeId",
+  "daysAlloted",
 ] as const;
 
 const inputParameters = baseGetManyInputParameters.merge(
@@ -77,9 +92,8 @@ export const getMany = protectedProcedure
         skip: (input?.page ?? 0) * (input?.limit ?? 5),
         orderBy:
           input?.sortBy && input?.sortOrder
-            ? { [input.sortBy]: input.sortOrder }
+            ? sortBy(input.sortBy, input.sortOrder)
             : { createdAt: "desc" },
-
         where,
       });
 

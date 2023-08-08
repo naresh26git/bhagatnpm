@@ -74,6 +74,7 @@ const Qualifications = () => {
                     : ""}
                 </>
               ),
+              ...value.sort("userId"),
             },
             {
               id: "3",

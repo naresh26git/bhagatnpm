@@ -6,7 +6,23 @@ import { RouterOutput } from "../../router";
 import { baseGetManyInputParameters } from "../../shared/base-get-many-input-parameters";
 import { protectedProcedure } from "../../trpc";
 
-const sortBys = ["date", "tittle", "description", "remarks"] as const;
+const sortBy = (sortBy: string, sortOrder: "asc" | "desc") => {
+  const complexSortBysMap: Record<string, unknown> = {
+    statusId: { status: { name: sortOrder } },
+    categoryId: { category: { name: sortOrder } },
+  };
+
+  return complexSortBysMap[sortBy] ?? { [sortBy]: sortOrder };
+};
+
+const sortBys = [
+  "date",
+  "tittle",
+  "categoryId",
+  "statusId",
+  "description",
+  "remarks",
+] as const;
 
 const inputParameters = baseGetManyInputParameters.merge(
   z.object({ sortBy: z.enum(sortBys).optional() })
@@ -63,12 +79,8 @@ export const getMany = protectedProcedure
         skip: (input?.page ?? 0) * (input?.limit ?? 5),
         orderBy:
           input?.sortBy && input?.sortOrder
-            ? {
-                [input.sortBy]: input.sortOrder,
-              }
-            : {
-                createdAt: "desc",
-              },
+            ? sortBy(input.sortBy, input.sortOrder)
+            : { createdAt: "desc" },
         where,
       });
 

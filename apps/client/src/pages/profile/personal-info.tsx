@@ -145,12 +145,14 @@ export const PersonalInfoPage = () => {
               id: "4",
               key: "firstName",
               label: "First name",
+              ...value.sort("firstName"),
             },
 
             {
               id: "5",
               key: "lastName",
               label: "Last name",
+              ...value.sort("lastName"),
             },
             {
               id: "6",
@@ -187,12 +189,14 @@ export const PersonalInfoPage = () => {
               key: "",
               label: "Job Tittle",
               renderCell: (item) => <>{item.designation.name}</>,
+              ...value.sort("designationId"),
             },
             {
               id: "9",
               key: "",
               label: "Department",
               renderCell: (item) => <>{item.department.name}</>,
+              ...value.sort("departmentId"),
             },
           ]}
         />

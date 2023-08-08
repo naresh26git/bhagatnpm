@@ -111,6 +111,7 @@ export const HelpDeskPage = () => {
       renderCell: (item: HelpDesk) => (
         <Typography>{item.category.name}</Typography>
       ),
+      ...value.sort("categoryId"),
     },
     {
       id: "5",
@@ -144,6 +145,7 @@ export const HelpDeskPage = () => {
           {item.status.name}
         </Typography>
       ),
+      ...value.sort("statusId"),
     },
     {
       id: "8",

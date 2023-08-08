@@ -93,6 +93,7 @@ export const LeaveViewPage = () => {
           {item.user.personalInfo?.firstName} {item.user.personalInfo?.lastName}
         </>
       ),
+      ...value.sort("userId"),
     },
     {
       id: "3",
@@ -115,6 +116,7 @@ export const LeaveViewPage = () => {
       key: "",
       label: "Leave Type",
       renderCell: (item: Leave) => <>{item.leaveType.name}</>,
+      ...value.sort("leaveTypeId"),
     },
 
     {
@@ -178,6 +180,7 @@ export const LeaveViewPage = () => {
           {item.status.name}
         </Typography>
       ),
+      ...value.sort("statusId"),
     },
     {
       id: "9",

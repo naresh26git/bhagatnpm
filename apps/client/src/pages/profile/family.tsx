@@ -107,6 +107,7 @@ export const FamilyPage = () => {
                     : ""}
                 </>
               ),
+              ...value.sort("userId"),
             },
             {
               id: "3",
@@ -117,6 +118,7 @@ export const FamilyPage = () => {
                   {item.relationshipType.name}
                 </Typography>
               ),
+              ...value.sort("relationShipId"),
             },
             {
               id: "4",

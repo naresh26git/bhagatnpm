@@ -75,6 +75,7 @@ const Identifications = () => {
                     {item.user.personalInfo?.lastName}
                   </Typography>
                 ),
+                ...value.sort("userId"),
               },
               {
                 id: "3",
@@ -85,6 +86,7 @@ const Identifications = () => {
                     {item.type.name}
                   </Typography>
                 ),
+                ...value.sort("typeId"),
               },
               {
                 id: "4",

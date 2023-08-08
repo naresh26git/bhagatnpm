@@ -106,6 +106,7 @@ export const PayRollPage = () => {
                     : ""}
                 </>
               ),
+              ...value.sort("userId"),
             },
             {
               id: "3",
@@ -163,6 +164,7 @@ export const PayRollPage = () => {
                   {item.status.name}
                 </Typography>
               ),
+              ...value.sort("statusId"),
             },
             {
               id: "7",

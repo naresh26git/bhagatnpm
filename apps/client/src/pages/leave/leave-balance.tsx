@@ -79,6 +79,12 @@ export const LeaveBalancePage = () => {
           {...(value as AsyncListContextValue<Leave>)}
           columns={[
             {
+              id: "1",
+              key: "",
+              label: "Emp code",
+              renderCell: (item) => <>{item.user.id}</>,
+            },
+            {
               id: "2",
               key: "",
               label: "Emp Name",
@@ -89,18 +95,21 @@ export const LeaveBalancePage = () => {
                     : ""}
                 </>
               ),
+              ...value.sort("userId"),
             },
             {
               id: "3",
               key: "",
               label: "Leave Type",
               renderCell: (item) => <>{item.leaveType.name}</>,
+              ...value.sort("leaveTypeId"),
             },
             {
               id: "4",
               key: "",
               label: "Available Units",
               renderCell: (item) => <>{item.leaveType.daysAlloted}</>,
+              ...value.sort("daysAlloted"),
             },
             {
               id: "5",

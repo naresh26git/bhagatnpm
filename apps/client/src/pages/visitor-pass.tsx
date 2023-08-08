@@ -144,6 +144,7 @@ const VisitorPasses = () => {
                     {item.companies.name}
                   </Typography>
                 ),
+                ...value.sort("companyId"),
               },
               {
                 id: "5",
@@ -154,6 +155,7 @@ const VisitorPasses = () => {
                     {item.hr.user.name}
                   </Typography>
                 ),
+                ...value.sort("hrId"),
               },
               {
                 id: "6",

@@ -6,6 +6,15 @@ import { RouterOutput } from "../../router";
 import { baseGetManyInputParameters } from "../../shared/base-get-many-input-parameters";
 import { protectedProcedure } from "../../trpc";
 
+const sortBy = (sortBy: string, sortOrder: "asc" | "desc") => {
+  const complexSortBysMap: Record<string, unknown> = {
+    companyId: { companies: { name: sortOrder } },
+    hrId: { hr: { user: { name: sortOrder } } },
+  };
+
+  return complexSortBysMap[sortBy] ?? { [sortBy]: sortOrder };
+};
+
 const sortBys = [
   "name",
   "date",
@@ -14,6 +23,8 @@ const sortBys = [
   "fromPlace",
   "mobileNumber",
   "reason",
+  "hrId",
+  "companyId",
 ] as const;
 
 const inputParameters = baseGetManyInputParameters.merge(
@@ -60,12 +71,8 @@ export const getMany = protectedProcedure
         skip: (input?.page ?? 0) * (input?.limit ?? 5),
         orderBy:
           input?.sortBy && input?.sortOrder
-            ? {
-                [input.sortBy]: input.sortOrder,
-              }
-            : {
-                createdAt: "desc",
-              },
+            ? sortBy(input.sortBy, input.sortOrder)
+            : { createdAt: "desc" },
       });
 
       const count = await prisma.visitorPass.count();

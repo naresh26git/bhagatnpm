@@ -69,6 +69,7 @@ const Payslip = () => {
                     : ""}
                 </>
               ),
+              ...value.sort("userId"),
             },
             {
               id: "3",
@@ -126,6 +127,7 @@ const Payslip = () => {
                   {item.status.name}
                 </Typography>
               ),
+              ...value.sort("statusId"),
             },
             {
               id: "7",
