@@ -6,7 +6,6 @@ import Stack from "ui/Stack";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
-// import { useDialog } from "ui/hooks/UseDialog";
 interface helpDeskStatusProps {
   helpDeskId: number;
   variant: "admin" | "employee";
@@ -89,7 +88,6 @@ const HelpDeskStatusDialog = (props: helpDeskStatusProps) => {
                     setStatusId(parseInt(event.target.value))
                   }
                 >
-                  {/* <option value={undefined}>Select a Status</option> */}
                   {status.map((status) => {
                     return <option value={status.id}>{status.name}</option>;
                   })}
@@ -98,13 +96,6 @@ const HelpDeskStatusDialog = (props: helpDeskStatusProps) => {
             </Stack>
           </Dialog.Body>
           <Dialog.Footer>
-            {/* <Button
-            variant="outline-primary"
-            data-bs-toggle="modal"
-            data-bs-target={`#${value.id}`}
-          >
-            Cancel
-          </Button> */}
             <div
               style={{
                 width: "100%",

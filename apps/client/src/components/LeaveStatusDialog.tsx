@@ -1,3 +1,5 @@
+import { faCheck, faPencil, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { LeaveStatus } from "server/src/trpc/routes/leave-status/get-many";
 import Button from "ui/Button";
@@ -6,9 +8,6 @@ import Stack from "ui/Stack";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCheck, faPencil, faRightLong, faXmark } from "@fortawesome/free-solid-svg-icons";
-// import { useDialog } from "ui/hooks/UseDialog";
 interface leaveStatusProps {
   leaveId: number;
   variant: "admin" | "employee";
@@ -63,12 +62,19 @@ const LeaveStatusDialog = (props: leaveStatusProps) => {
   return (
     <>
       <Dialog.Trigger {...value} variant="success">
-        {props.variant === "admin" ? <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>  : <FontAwesomeIcon icon={faPencil}></FontAwesomeIcon>}
+        {props.variant === "admin" ? (
+          <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
+        ) : (
+          <FontAwesomeIcon icon={faPencil}></FontAwesomeIcon>
+        )}
       </Dialog.Trigger>
       <Dialog.Trigger {...value} variant="danger">
-        {props.variant === "admin" ? <FontAwesomeIcon icon={faXmark}></FontAwesomeIcon>  : <FontAwesomeIcon icon={faPencil}></FontAwesomeIcon>}
+        {props.variant === "admin" ? (
+          <FontAwesomeIcon icon={faXmark}></FontAwesomeIcon>
+        ) : (
+          <FontAwesomeIcon icon={faPencil}></FontAwesomeIcon>
+        )}
       </Dialog.Trigger>
-
 
       <Dialog {...value}>
         <form onSubmit={handleSubmit} className="was-validated">
@@ -95,7 +101,6 @@ const LeaveStatusDialog = (props: leaveStatusProps) => {
                     setStatusId(parseInt(event.target.value))
                   }
                 >
-                  {/* <option value={undefined}>Select a Status</option> */}
                   {status.map((status) => {
                     return <option value={status.id}>{status.name}</option>;
                   })}
@@ -104,13 +109,13 @@ const LeaveStatusDialog = (props: leaveStatusProps) => {
             </Stack>
           </Dialog.Body>
           <Dialog.Footer>
-            {/* <Button
-            variant="outline-primary"
-            data-bs-toggle="modal"
-            data-bs-target={`#${value.id}`}
-          >
-            Cancel
-          </Button> */}
+            <Button
+              variant="outline-primary"
+              data-bs-toggle="modal"
+              data-bs-target={`#${value.id}`}
+            >
+              Cancel
+            </Button>
             <div
               style={{
                 width: "100%",

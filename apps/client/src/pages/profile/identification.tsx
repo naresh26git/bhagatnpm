@@ -95,8 +95,6 @@ const Identifications = () => {
                 ),
                 ...value.sort("number"),
               },
-
-              // { id: "6", key: "date", label: "FromDate" },
             ]}
           />
         </Card>

@@ -81,7 +81,6 @@ export const PersonalInfoPage = () => {
 
   const deleteUser = async (id: number) => {
     try {
-      // await client.user.remove.mutate(id);
     } catch (error) {
       handleTRPCError(error, auth);
 
@@ -147,28 +146,12 @@ export const PersonalInfoPage = () => {
               key: "firstName",
               label: "First name",
             },
-            // {
-            //   id: "3",
-            //   key: "middleName",
-            //   label: "Middle name",
-            // },
+
             {
               id: "5",
               key: "lastName",
               label: "Last name",
             },
-            // {
-            //   id: "5",
-            //   key: "",
-            //   label: "Emp Full Name",
-            //   renderCell: (item) => (
-            //     <>
-            //       {item.firstName}
-            //       {item.middleName ? ` ${item.middleName} ` : " "}
-            //       {item.lastName}
-            //     </>
-            //   ),
-            // },
             {
               id: "6",
               key: "",

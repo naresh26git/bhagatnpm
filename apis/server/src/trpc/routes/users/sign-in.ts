@@ -20,7 +20,6 @@ export const signIn = publicProcedure
           username: true,
           role: {
             select: {
-              // id: true,
               name: true,
             },
           },

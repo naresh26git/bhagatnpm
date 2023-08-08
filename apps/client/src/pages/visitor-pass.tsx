@@ -93,44 +93,6 @@ const VisitorPasses = () => {
             </Grid.Col>
           </Grid.Row>
         </Grid.Row>
-        {/* <Grid.Row>
-          <Grid.Col className="py-2" cols={["12", "md-2"]}>
-            <input
-              type="text"
-              className="form-control form-control-sm"
-              placeholder="From"
-            />
-          </Grid.Col>
-          <Grid.Col className="py-2" cols={["12", "md-2"]}>
-            <input
-              type="text"
-              className="form-control form-control-sm"
-              placeholder="To"
-            />
-          </Grid.Col>
-          <Grid.Col className="py-2" cols={["12", "md-2"]}>
-            <input
-              type="text"
-              className="form-control form-control-sm"
-              placeholder="Leave Type"
-            />
-          </Grid.Col>
-          <Grid.Col className="py-2" cols={["12", "md-2"]}>
-            <Button variant="primary" className="w-100">
-              Search
-            </Button>
-          </Grid.Col>
-        </Grid.Row> */}
-        {/* <Stack orientation="horizontal" gap="2">
-          <input
-            type="text"
-            className="form-control form-control-sm rounded-pill w-25"
-            placeholder="Search"
-          />
-          <Link className="bg-primary" color="light" component={IconButton}>
-            <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
-          </Link>
-        </Stack> */}
         <PageHeader
           title={<PageHeader.Title></PageHeader.Title>}
           actions={<VisitorPassDialog />}
@@ -193,7 +155,6 @@ const VisitorPasses = () => {
                   </Typography>
                 ),
               },
-              // { id: "6", key: "date", label: "FromDate" },
               {
                 id: "6",
                 key: "mobileNumber",

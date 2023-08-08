@@ -1,22 +1,17 @@
 import React from "react";
+import { Department } from "server/src/trpc/routes/department/get-many";
+import { Designation } from "server/src/trpc/routes/designation/get-many";
 import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
-// import { useDialog } from "ui/hooks/UseDialog";
-import { Designation } from "server/src/trpc/routes/designation/get-many";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
-import { handleTRPCError } from "../utils/handle-trpc-error";
 import { uploadFileToBlob } from "../utils/azure-blob-upload";
+import { handleTRPCError } from "../utils/handle-trpc-error";
 
-export type Department = {
-  id: number;
-  name: string;
-};
 export const PersonalInfoDialog = () => {
   const auth = useAuthContext();
-  // const [userId, setUserId] = React.useState<number>(0);
   const [firstName, setFirstName] = React.useState("");
   const [middleName, setMiddleName] = React.useState("");
   const [lastName, setLastName] = React.useState("");
@@ -30,8 +25,6 @@ export const PersonalInfoDialog = () => {
   const [reportingManagerId, setReportingManagerId] = React.useState<number>(2);
   const [fileSelected, setFileSelected] = React.useState<File>();
   const [uploading, setUploading] = React.useState(false);
-
-  // const value = useDialog();
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
@@ -59,8 +52,6 @@ export const PersonalInfoDialog = () => {
       if (departmentId === undefined) return;
       if (designationId === undefined) return;
       await client.personalInfo.set.mutate({
-        // name,
-        // userId,
         firstName,
         lastName,
         middleName,
@@ -70,19 +61,11 @@ export const PersonalInfoDialog = () => {
         designationId,
         reportingManagerId,
         imageUrl,
-
-        // email: email || undefined,,
-        // mobile: mobile || undefined,
       });
     } catch (error) {
       handleTRPCError(error, auth);
     }
   };
-  // const departmentResult = async () =>await client.department.getMany.query()
-
-  // React.useEffect(() => {
-  //   setDepartmentType(departmentResult);
-  // }, [departmentResult]);
 
   const value = {
     id: "create-info",
@@ -135,13 +118,6 @@ export const PersonalInfoDialog = () => {
                     className="form-control"
                     onChange={onFileChange}
                   />
-                  {/* <Button type="submit" onClick={onFileUpload}>
-          Upload
-        </Button> */}
-                  {/* <FontAwesomeIcon
-                        icon={faPlus}
-                        style={{ height: "30px", width: "30px" }}
-                      /> */}
                 </label>
 
                 <input
@@ -232,10 +208,6 @@ export const PersonalInfoDialog = () => {
                         <option value={department.id}>{department.name}</option>
                       );
                     })}
-
-                    {/* {departmentType.map((dept) => {
-                      return <option value={dept.id}>{dept.name}</option>;
-                    })} */}
                   </select>
                   <label htmlFor="Department">Department</label>
                 </div>
@@ -257,10 +229,6 @@ export const PersonalInfoDialog = () => {
                         </option>
                       );
                     })}
-
-                    {/* {departmentType.map((dept) => {
-                      return <option value={dept.id}>{dept.name}</option>;
-                    })} */}
                   </select>
                   <label htmlFor="Designation">Designation</label>
                 </div>

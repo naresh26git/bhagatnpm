@@ -3,7 +3,6 @@ import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
-// import { useDialog } from "ui/hooks/UseDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
@@ -32,11 +31,6 @@ export const ContactDialog = () => {
       handleTRPCError(error, auth);
     }
   };
-  // const departmentResult = async () =>await client.department.getMany.query()
-
-  // React.useEffect(() => {
-  //   setDepartmentType(departmentResult);
-  // }, [departmentResult]);
 
   const value = {
     id: "create-contact",

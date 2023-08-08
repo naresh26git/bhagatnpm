@@ -35,11 +35,7 @@ export const TopNavbar = () => {
         className="border-bottom"
       >
         <Container maxWidth="fluid">
-          <Navbar.Brand color="primary">
-            {/* <Typography as="h3" color="primary">
-              HRMS
-            </Typography> */}
-          </Navbar.Brand>
+          <Navbar.Brand color="primary"></Navbar.Brand>
 
           <Navbar.Toggler>
             <FontAwesomeIcon icon={faBars} />
@@ -47,12 +43,6 @@ export const TopNavbar = () => {
 
           <Navbar.Collapse>
             <Navbar.Links className="gap-3 ms-auto align-items-center">
-              {/* <Navbar.LinkItem> */}
-              {/* <Navbar.Link color="primary" component={IconButton}>
-                  <FontAwesomeIcon icon={faQuestionCircle} /> */}
-              {/* </Navbar.Link>
-              </Navbar.LinkItem> */}
-
               <Navbar.LinkItem>
                 <Navbar.Link color="primary" component={IconButton}>
                   <FontAwesomeIcon icon={faBell} />

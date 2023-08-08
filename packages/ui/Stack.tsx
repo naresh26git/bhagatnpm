@@ -151,19 +151,3 @@ export const StackItem = (props: StackItemProps) => {
 Stack.Item = StackItem;
 
 export default Stack;
-
-// ? archived old implementation of vertical stack
-// import Grid, { GridRowProps } from "./Grid";
-// export type StackProps = GridRowProps;
-
-// export const Stack = (props: StackProps) => {
-//   const computedChildren = React.Children.map(props.children, (child) => (
-//     <Grid.Col>{child}</Grid.Col>
-//   ));
-
-//   return (
-//     <Grid.Row {...props} className={`flex-column ${props.className}`}>
-//       {computedChildren}
-//     </Grid.Row>
-//   );
-// };

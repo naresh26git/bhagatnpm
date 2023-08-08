@@ -9,14 +9,8 @@ import Grid from "ui/Grid";
 import Image from "ui/Image";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
-// import { useAuthContext } from "../hooks/UseAuth";
-// import { client, setToken } from "../main";
-// import { handleTRPCError } from "../utils/handle-trpc-error";
-
-// export type LoginPageProps = {};
 
 export const ProfilePage = () => {
-  // const auth = useAuthContext();
   const [fatherName, setFatherName] = React.useState("");
   const [motherName, setMotherName] = React.useState("");
   const [personalEmail, setPersonalEmail] = React.useState("");
@@ -69,13 +63,7 @@ export const ProfilePage = () => {
         <Stack gap="3">
           <Grid.Row>
             <Grid.Col>
-              <Image
-                src="/images/profile.png"
-                // className="w-50"
-                className=" h-75"
-                // variant="fluid"
-                // rounded={true}
-              />
+              <Image src="/images/profile.png" className=" h-75" />
             </Grid.Col>
             <Grid.Col>
               <Typography as="h4">

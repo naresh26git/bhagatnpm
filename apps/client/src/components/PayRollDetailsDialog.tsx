@@ -15,9 +15,6 @@ const PayRollDetailsDialog = (props: PayRollDetailsProps) => {
     id: `payroll-details${props.payRollDetails.id}`,
     labelId: `payroll-details-label${props.payRollDetails.id}`,
   };
-  // React.useEffect(() => {
-  //   setPayRoll(props.payRollDetails);
-  // }, [props.payRollDetails]);
 
   return (
     <>
@@ -46,17 +43,21 @@ const PayRollDetailsDialog = (props: PayRollDetailsProps) => {
               </Stack>
             </Grid.Col>
             <Grid.Col cols="4">
-              {/* <Stack orientation="horizontal">
+              <Stack orientation="horizontal">
                 <Typography color="secondary">Period:&nbsp;</Typography>
                 <Typography>
                   {new Intl.DateTimeFormat("en-US", {
                     month: "short",
                     year: "2-digit",
                   }).format(
-                    new Date().setFullYear(props.payRollDetails.year, props.payRollDetails.month, 1)
+                    new Date().setFullYear(
+                      props.payRollDetails.year,
+                      props.payRollDetails.month,
+                      1
+                    )
                   )}
                 </Typography>
-              </Stack> */}
+              </Stack>
             </Grid.Col>
             <Grid.Col cols="5">
               <Stack orientation="horizontal">

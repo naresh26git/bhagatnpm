@@ -16,15 +16,6 @@ import TimesheetDialog from "../components/TimesheetDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
-// export type TimeSheetList = {
-//   uid: string;
-//   empcode: string;
-//   empname: string;
-//   attendancedate: string;
-//   checkin: string;
-//   checkout: string;
-//   status: string;
-// };
 
 export const timeSheet = {
   uid: "1",
@@ -84,10 +75,6 @@ export const TimeSheetPage = () => {
   });
   return (
     <Stack gap="3">
-      {/* <PageHeader
-        title={<PageHeader.Title></PageHeader.Title>}
-        actions={<CreateHelpdeskDialog />}
-      /> */}
       <Grid.Row>
         <Grid.Col className="py-2" cols={["12", "md-2"]}>
           <input

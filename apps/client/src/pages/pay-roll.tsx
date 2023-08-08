@@ -60,13 +60,7 @@ export const PayRollPage = () => {
             placeholder="Emp.Name"
           />
         </Grid.Col>
-        {/* <Grid.Col className="py-2" cols={["12", "md-2"]}>
-          <input
-            type="text"
-            className="form-control form-control-sm"
-            placeholder="DOJ"
-          />
-        </Grid.Col> */}
+
         <Grid.Row>
           <Grid.Col className="py-2" cols={["12", "md-2"]}>
             <input
@@ -89,21 +83,8 @@ export const PayRollPage = () => {
           </Grid.Col>
         </Grid.Row>
       </Grid.Row>
-      {/* <Stack orientation="horizontal" gap="2">
-        <input
-          type="text"
-          className="form-control form-control-sm rounded-pill w-25"
-          placeholder="Search"
-        />
-        <Link className="bg-primary" color="light" component={IconButton}>
-          <FontAwesomeIcon icon={faSearch}></FontAwesomeIcon>
-        </Link>
-      </Stack> */}
-      {/* <PageHeader title={<PageHeader.Title>Pay Roll</PageHeader.Title>} /> */}
-      <PageHeader
-        title={<PageHeader.Title></PageHeader.Title>}
-        // actions={<PayrollDialog />}
-      />
+
+      <PageHeader title={<PageHeader.Title></PageHeader.Title>} />
       <Card>
         <DataGrid<PayRoll>
           {...(value as AsyncListContextValue<PayRoll>)}

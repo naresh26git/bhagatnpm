@@ -16,22 +16,9 @@ import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
-// export type HelpDesk = {
-//   uid: string;
-//   empcode: string;
-//   empname: string;
-//   date: string;
-//   tittle: string;
-//   category: string;
-//   description: string;
-//   remarks: string;
-//   status: string;
-// };
-
 export const helpDesk = {
   uid: "1",
   id: "1210",
-  // empname: "Vignesh S",
   date: "18/04/2023",
   tittle: "Work",
   category: "Salary Issue",
@@ -92,12 +79,6 @@ export const HelpDeskPage = () => {
       label: "Id",
       renderCell: (item: HelpDesk) => <>{item.user.id}</>,
     },
-    // {
-    //   id: "2",
-    //   key: "",
-    //   label: "Emp Name",
-    //   renderCell: (item: HelpDesk) => <>{item.user.name}</>,
-    // },
     {
       id: "2",
       key: "",
@@ -201,13 +182,7 @@ export const HelpDeskPage = () => {
             placeholder="Tittle"
           />
         </Grid.Col>
-        {/* <Grid.Col className="py-2" cols={["12", "md-2"]}>
-          <input
-            type="text"
-            className="form-control form-control-sm"
-            placeholder="DOJ"
-          />
-        </Grid.Col> */}
+
         <Grid.Row>
           <Grid.Col className="py-2" cols={["12", "md-2"]}>
             <input

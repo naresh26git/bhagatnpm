@@ -108,20 +108,3 @@ const Travel = () => {
 };
 
 export default Travel;
-
-// import Typography from "ui/Typography";
-// export const TravelPage = () => {
-//   return (
-//     <>
-//       <img
-//         src="/images/404-image.png"
-//         className="rounded mx-auto d-block h-75"
-//       />
-//       <Typography as="h1" align="center">
-//         page not found
-//       </Typography>
-//     </>
-//   );
-// };
-
-// export default TravelPage;

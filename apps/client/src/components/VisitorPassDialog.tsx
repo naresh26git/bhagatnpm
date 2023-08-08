@@ -1,15 +1,13 @@
 import React from "react";
-import Button from "ui/Button";
-import Dialog from "ui/Dialog";
-import Grid from "ui/Grid";
-import Stack from "ui/Stack";
-import { client } from "../main";
-// import { useDialog } from "ui/hooks/UseDialog";
 import { Company } from "server/dist/trpc/routes/company/get-many";
 import { Hr } from "server/dist/trpc/routes/hr/get-many";
-import { DialogHeader } from "ui/Dialog";
+import Button from "ui/Button";
+import Dialog, { DialogHeader } from "ui/Dialog";
+import Grid from "ui/Grid";
+import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { useAuthContext } from "../hooks/UseAuth";
+import { client } from "../main";
 import { uploadFileToBlob } from "../utils/azure-blob-upload";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
@@ -18,7 +16,6 @@ export const VisitorPass = () => {
   const [photo, setPhoto] = React.useState("");
   const [name, setName] = React.useState("");
   const [fromPlace, setFromPlace] = React.useState("");
-  // const [hr, setHR] = React.useState("");
   const [hrId, setHrId] = React.useState<number>();
   const [companyId, setCompanyId] = React.useState<number>();
   const [mobileNumber, setMobileNumber] = React.useState("");
@@ -77,9 +74,6 @@ export const VisitorPass = () => {
     id: "create-info",
     labelId: "create-info-label",
   };
-  // const handleDepartmentId = (e: any) => {
-  //   setDepartmentId(e.target.value);
-  // };
 
   React.useEffect(() => {
     (async () => {
@@ -141,13 +135,6 @@ export const VisitorPass = () => {
                         className="form-control"
                         onChange={onFileChange}
                       />
-                      {/* <Button type="submit" onClick={onFileUpload}>
-          Upload
-        </Button> */}
-                      {/* <FontAwesomeIcon
-                        icon={faPlus}
-                        style={{ height: "30px", width: "30px" }}
-                      /> */}
                     </label>
 
                     <input
@@ -166,9 +153,7 @@ export const VisitorPass = () => {
                 <label htmlFor="First Name">
                   <Typography fontWeight="bolder">Visitor Name</Typography>{" "}
                 </label>
-                <div
-                //  className="form-floating"
-                >
+                <div>
                   <input
                     type="text"
                     className="form-control"
@@ -183,9 +168,7 @@ export const VisitorPass = () => {
                 <label htmlFor="Fromplace">
                   <Typography fontWeight="bolder">From Place</Typography>
                 </label>
-                <div
-                //  className="form-floating"
-                >
+                <div>
                   <input
                     type="text"
                     className="form-control"
@@ -236,9 +219,7 @@ export const VisitorPass = () => {
                   {" "}
                   <Typography fontWeight="bolder">From date</Typography>
                 </label>
-                <div
-                //  className="form-floating"
-                >
+                <div>
                   <input
                     type="date"
                     className="form-control"
@@ -255,9 +236,7 @@ export const VisitorPass = () => {
                   {" "}
                   <Typography fontWeight="bolder">Mobile Number</Typography>
                 </label>
-                <div
-                //  className="form-floating"
-                >
+                <div>
                   <input
                     type="text"
                     className="form-control"
@@ -307,12 +286,9 @@ export const VisitorPass = () => {
                   <Typography fontWeight="bolder">Reason</Typography>
                 </label>
 
-                <div
-                //  className="form-floating"
-                >
+                <div>
                   <textarea
                     className="form-control"
-                    // placeholder="Leave a comment here"
                     id="floatingTextarea2"
                     rows={2}
                     value={reason}
@@ -321,30 +297,11 @@ export const VisitorPass = () => {
                     }
                   />
                 </div>
-                {/* <div
-
-                >
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="reason"
-                    //
-                    value={reason}
-                    onChange={(event) => setReason(event.target.value)}
-                  />
-                </div> */}
               </Grid.Col>
             </Grid.Row>
           </Stack>
         </Dialog.Body>
         <Dialog.Footer>
-          {/* <Button
-            variant="outline-primary"
-            data-bs-toggle="modal"
-            data-bs-target={`#${value.id}`}
-          >
-            Cancel
-          </Button> */}
           <div
             style={{
               width: "100%",
@@ -364,24 +321,6 @@ export const VisitorPass = () => {
             </Button>
           </div>
         </Dialog.Footer>
-        {/* <Dialog.Footer>
-          <Button
-            variant="outline-primary"
-            data-bs-toggle="modal"
-            data-bs-target={`#${value.id}`}
-          >
-            Cancel
-          </Button>
-
-          <Button
-            variant="primary"
-            onClick={handleSubmit}
-            data-bs-toggle="modal"
-            data-bs-target={`#${value.id}`}
-          >
-            Submit
-          </Button>
-        </Dialog.Footer> */}
       </Dialog>
     </>
   );

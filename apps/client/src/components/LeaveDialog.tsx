@@ -1,15 +1,13 @@
 import React from "react";
+import { LeaveType } from "server/src/trpc/routes/leaves/leave-types/get-many";
 import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
-// import { useDialog } from "ui/hooks/UseDialog";
-import { LeaveType } from "server/src/trpc/routes/leaves/leave-types/get-many";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
-// export type CreateDialogProps = { variant: "update" | "create" };
 export const LeaveDialog = () => {
   const auth = useAuthContext();
   const [fromDate, setFromDate] = React.useState(`${new Date()}`);
@@ -22,14 +20,10 @@ export const LeaveDialog = () => {
     try {
       if (leaveTypeId === undefined) return;
       await client.leave.set.mutate({
-        // name,
         noOfDays,
         fromDate,
         toDate,
         leaveTypeId,
-
-        // email: email || undefined,
-        // mobile: mobile || undefined,
       });
     } catch (error) {
       handleTRPCError(error, auth);
@@ -40,9 +34,6 @@ export const LeaveDialog = () => {
     id: "create-leave",
     labelId: "create-leave-label",
   };
-  // const handleStatus = (e: any) => {
-  //   setStatusId(e.target.value);
-  // };
 
   React.useEffect(() => {
     (async () => {

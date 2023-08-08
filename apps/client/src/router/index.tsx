@@ -21,9 +21,7 @@ const LazyUnderMaintainancePage = React.lazy(
 const LazyprofilePage = React.lazy(
   () => import("../pages/profile/profile-page")
 );
-// const LazyLeaveBalancePage = React.lazy(
-//   () => import("../pages/leave/leave-balance")
-// );
+
 const LazyExpensePage = React.lazy(() => import("../pages/expense"));
 const LazyTimeSheetPage = React.lazy(() => import("../pages/time-sheet"));
 const LazyHelpDeskPage = React.lazy(() => import("../pages/help-desk"));
@@ -31,10 +29,6 @@ const LazyPayRollPage = React.lazy(() => import("../pages/pay-roll"));
 const LazyTravelPage = React.lazy(() => import("../pages/travel"));
 const LazyLoanPage = React.lazy(() => import("../pages/loan"));
 const LazyVisitorPassPage = React.lazy(() => import("../pages/visitor-pass"));
-//   () => import("../pages/profile/personal-info")
-// );
-// const LazyFamilyPage = React.lazy(() => import("../pages/profile/family"));
-// const LazyContactPage = React.lazy(() => import("../pages/profile/contact"));
 
 const LazyLoginPageWithFallback = () => (
   <React.Suspense fallback={"Loading..."}>
@@ -60,129 +54,74 @@ const LazyEmployeesPageWithFallback = () => (
 const LazyLeavePageWithFallback = () => (
   <React.Suspense fallback={"Loading..."}>
     <ProtectedRoute>
-      {/* <ShowIf.Admin> */}
       <LazyLeavePage />
-      {/* </ShowIf.Admin> */}
     </ProtectedRoute>
   </React.Suspense>
 );
 const LazyProfilePageWithFallback = () => (
   <React.Suspense fallback={"Loading..."}>
     <ProtectedRoute>
-      {/* <ShowIf.Admin> */}
       <LazyprofilePage />
-      {/* </ShowIf.Admin> */}
     </ProtectedRoute>
   </React.Suspense>
 );
 const LazyUnderMaintainancePageWithFallback = () => (
   <React.Suspense fallback={"Loading..."}>
     <ProtectedRoute>
-      {/* <ShowIf.Admin> */}
       <LazyUnderMaintainancePage />
-      {/* </ShowIf.Admin> */}
     </ProtectedRoute>
   </React.Suspense>
 );
-// const LazyLeaveBalancePageWithFallback = () => (
-//   <React.Suspense fallback={"Loading..."}>
-//     <ProtectedRoute>
-//       {/* <ShowIf.Admin> */}
-//       <LazyLeaveBalancePage />
-//       {/* </ShowIf.Admin> */}
-//     </ProtectedRoute>
-//   </React.Suspense>
-// );
+
 const LazyTimeSheetPageWithFallback = () => (
   <React.Suspense fallback={"Loading..."}>
     <ProtectedRoute>
-      {/* <ShowIf.Admin> */}
       <LazyTimeSheetPage />
-      {/* </ShowIf.Admin> */}
     </ProtectedRoute>
   </React.Suspense>
 );
 const LazyLoanPageWithFallback = () => (
   <React.Suspense fallback={"Loading..."}>
     <ProtectedRoute>
-      {/* <ShowIf.Admin> */}
       <LazyLoanPage />
-      {/* </ShowIf.Admin> */}
     </ProtectedRoute>
   </React.Suspense>
 );
 const LazyHelpDeskPageWithFallback = () => (
   <React.Suspense fallback={"Loading..."}>
     <ProtectedRoute>
-      {/* <ShowIf.Admin> */}
       <LazyHelpDeskPage />
-      {/* </ShowIf.Admin> */}
     </ProtectedRoute>
   </React.Suspense>
 );
 const LazyExpensePageWithFallback = () => (
   <React.Suspense fallback={"Loading..."}>
     <ProtectedRoute>
-      {/* <ShowIf.Admin> */}
       <LazyExpensePage />
-      {/* </ShowIf.Admin> */}
     </ProtectedRoute>
   </React.Suspense>
 );
 const LazyPayRollPageWithFallback = () => (
   <React.Suspense fallback={"Loading..."}>
     <ProtectedRoute>
-      {/* <ShowIf.Admin> */}
       <LazyPayRollPage />
-      {/* <ShowIf.Admin> */}
     </ProtectedRoute>
   </React.Suspense>
 );
 const LazyTravelPageWithFallback = () => (
   <React.Suspense fallback={"Loading..."}>
     <ProtectedRoute>
-      {/* <ShowIf.Admin> */}
       <LazyTravelPage />
-      {/* <ShowIf.Admin> */}
     </ProtectedRoute>
   </React.Suspense>
 );
 const LazyVisitorPassPageWithFallback = () => (
   <React.Suspense fallback={"Loading..."}>
     <ProtectedRoute>
-      {/* <ShowIf.Admin> */}
       <LazyVisitorPassPage />
-      {/* <ShowIf.Admin> */}
     </ProtectedRoute>
   </React.Suspense>
 );
-// const LazyPersonalInfoPageWithFallback = () => (
-//   <React.Suspense fallback={"Loading..."}>
-//     <ProtectedRoute>
-//       {/* <ShowIf.Admin> */}
-//       <LazyPersonalInfoPage />
-//       {/* <ShowIf.Admin> */}
-//     </ProtectedRoute>
-//   </React.Suspense>
-// );
-// const LazyFamilyPageWithFallback = () => (
-//   <React.Suspense fallback={"Loading..."}>
-//     <ProtectedRoute>
-//       {/* <ShowIf.Admin> */}
-//       <LazyFamilyPage />
-//       {/* <ShowIf.Admin> */}
-//     </ProtectedRoute>
-//   </React.Suspense>
-// );
-// const LazyContactPageWithFallback = () => (
-//   <React.Suspense fallback={"Loading..."}>
-//     <ProtectedRoute>
-//       {/* <ShowIf.Admin> */}
-//       <LazyContactPage />
-//       {/* <ShowIf.Admin> */}
-//     </ProtectedRoute>
-//   </React.Suspense>
-// );
 
 export type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -252,10 +191,6 @@ export const router = createBrowserRouter([
             path: "",
             element: <LazyLeavePageWithFallback />,
           },
-          // {
-          //   path: "balance",
-          //   element: <LazyLeaveBalancePageWithFallback />,
-          // },
         ],
       },
       {
@@ -338,24 +273,6 @@ export const router = createBrowserRouter([
           },
         ],
       },
-      // {
-      //   path: "personal-info/*",
-      //   element: <Outlet />,
-      //   children: [
-      //     {
-      //       path: "",
-      //       element: <LazyPersonalInfoPageWithFallback />,
-      //     },
-      //     {
-      //       path: "family",
-      //       element: <LazyFamilyPageWithFallback />,
-      //     },
-      //     {
-      //       path: "contact",
-      //       element: <LazyContactPageWithFallback />,
-      //     },
-      //   ],
-      // },
       {
         path: "*",
         element: <LazyUnderMaintainancePageWithFallback />,

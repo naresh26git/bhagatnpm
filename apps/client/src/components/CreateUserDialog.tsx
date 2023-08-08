@@ -4,7 +4,6 @@ import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
-// import { useDialog } from "ui/hooks/UseDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
@@ -15,10 +14,6 @@ export const CreateUserDialog = () => {
   const [name, setName] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const [email, setEmail] = React.useState("");
-  // const [mobile, setMobile] = React.useState("");
-
-  // const value = useDialog();
 
   const createUser = async () => {
     try {
@@ -27,8 +22,6 @@ export const CreateUserDialog = () => {
         username,
         password,
         role,
-        // email: email || undefined,
-        // mobile: mobile || undefined,
       });
     } catch (error) {
       handleTRPCError(error, auth);
@@ -123,37 +116,7 @@ export const CreateUserDialog = () => {
                   <label htmlFor="password">Password</label>
                 </div>
               </Grid.Col>
-
-              {/* <Grid.Col cols={["12", "lg-6"]}>
-                <div className="form-floating">
-                  <input
-                    type="email"
-                    className="form-control"
-                    id="email"
-                    placeholder="johndoe@example.com"
-                    value={email}
-                    onChange={(event) => setEmail(event.target.value)}
-                  />
-                  <label htmlFor="email">Email Address</label>
-                </div>
-              </Grid.Col> */}
             </Grid.Row>
-
-            {/* <Grid.Row gutters="3">
-              <Grid.Col cols={["12", "lg-6"]}>
-                <div className="form-floating">
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="mobile"
-                    placeholder="+919876543210"
-                    value={mobile}
-                    onChange={(event) => setMobile(event.target.value)}
-                  />
-                  <label htmlFor="mobile">Mobile</label>
-                </div>
-              </Grid.Col>
-            </Grid.Row> */}
           </Stack>
         </Dialog.Body>
 

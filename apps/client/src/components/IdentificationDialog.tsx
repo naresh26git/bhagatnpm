@@ -1,20 +1,17 @@
 import React from "react";
+import { IdentificationTypes } from "server/src/trpc/routes/identification/identificationType/get-many";
 import Button from "ui/Button";
-import Dialog from "ui/Dialog";
+import Dialog, { DialogHeader } from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
-import { client } from "../main";
-// import { useDialog } from "ui/hooks/UseDialog";
-import { IdentificationTypes } from "server/src/trpc/routes/identification/identificationType/get-many";
-import { DialogHeader } from "ui/Dialog";
 import Typography from "ui/Typography";
 import { useAuthContext } from "../hooks/UseAuth";
+import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
 export const IdentificationDialog = () => {
   const auth = useAuthContext();
   const [number, setNumber] = React.useState("");
-  // const [hr, setHR] = React.useState("");
   const [typeId, setTypeId] = React.useState<number>();
   const [type, setType] = React.useState<IdentificationTypes[]>([]);
 
@@ -25,9 +22,6 @@ export const IdentificationDialog = () => {
       await client.identification.set.mutate({
         typeId,
         number,
-
-        // email: email || undefined,,
-        // mobile: mobile || undefined,
       });
       window.location.reload();
     } catch (error) {
@@ -39,9 +33,6 @@ export const IdentificationDialog = () => {
     id: "create-identification",
     labelId: "create-identification-label",
   };
-  // const handleDepartmentId = (e: any) => {
-  //   setDepartmentId(e.target.value);
-  // };
 
   React.useEffect(() => {
     (async () => {
@@ -72,9 +63,7 @@ export const IdentificationDialog = () => {
                     Identification Name
                   </Typography>{" "}
                 </label>
-                <div
-                //  className="form-floating"
-                >
+                <div>
                   <input
                     type="text"
                     className="form-control"
@@ -112,13 +101,6 @@ export const IdentificationDialog = () => {
           </Stack>
         </Dialog.Body>
         <Dialog.Footer>
-          {/* <Button
-            variant="outline-primary"
-            data-bs-toggle="modal"
-            data-bs-target={`#${value.id}`}
-          >
-            Cancel
-          </Button> */}
           <div
             style={{
               width: "100%",
@@ -127,6 +109,13 @@ export const IdentificationDialog = () => {
               alignItems: "center",
             }}
           >
+            <Button
+              variant="outline-primary"
+              data-bs-toggle="modal"
+              data-bs-target={`#${value.id}`}
+            >
+              Cancel
+            </Button>
             <Button
               variant="primary"
               className="center"
@@ -138,24 +127,6 @@ export const IdentificationDialog = () => {
             </Button>
           </div>
         </Dialog.Footer>
-        {/* <Dialog.Footer>
-          <Button
-            variant="outline-primary"
-            data-bs-toggle="modal"
-            data-bs-target={`#${value.id}`}
-          >
-            Cancel
-          </Button>
-
-          <Button
-            variant="primary"
-            onClick={handleSubmit}
-            data-bs-toggle="modal"
-            data-bs-target={`#${value.id}`}
-          >
-            Submit
-          </Button>
-        </Dialog.Footer> */}
       </Dialog>
     </>
   );

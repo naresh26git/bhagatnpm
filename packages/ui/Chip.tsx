@@ -3,7 +3,6 @@ import Typography, { TypographyProps } from "./Typography";
 export const baseClasses =
   "d-inline-flex px-2 py-1 fw-semibold rounded-2" as const;
 
-// border border-warning-subtle
 export const variantsColorsMap = {
   primary: "bg-primary-subtle text-primary-emphasis",
   secondary: "bg-secondary-subtle text-secondary-emphasis",

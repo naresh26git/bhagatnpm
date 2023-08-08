@@ -1,10 +1,9 @@
 import React from "react";
+import { RelationShip } from "server/src/trpc/routes/relationship/get-many";
 import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
-// import { useDialog } from "ui/hooks/UseDialog";
-import { RelationShip } from "server/src/trpc/routes/relationship/get-many";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
@@ -28,11 +27,6 @@ export const FamilyDialog = () => {
       handleTRPCError(error, auth);
     }
   };
-  // const departmentResult = async () =>await client.department.getMany.query()
-
-  // React.useEffect(() => {
-  //   setDepartmentType(departmentResult);
-  // }, [departmentResult]);
 
   const value = {
     id: "create-family-info",
@@ -101,10 +95,6 @@ export const FamilyDialog = () => {
                         <option value={relation.id}>{relation.name} </option>
                       );
                     })}
-
-                    {/* {departmentType.map((dept) => {
-                      return <option value={dept.id}>{dept.name}</option>;
-                    })} */}
                   </select>
                   <label htmlFor="Relation">Relation</label>
                 </div>

@@ -1,5 +1,6 @@
 # Things to do final
 
+- [ ] Leave accept and reject is not working properly - **Sakthi**
 - [ ] Page reload after submit should be improved - **Mithunish**
 - [ ] Print and export to excel feature needs to be implemented - **Mithunish**
 - [ ] Add image url to the identification tab - **Sakthi**
@@ -37,6 +38,7 @@
 
 - [x] Fix all count for get many apis - **Team**
 - [x] Remove all unnecessary console logs - **Team**
+- [x] Remove all unnecessary comments - **Team**
 - [x] Improve the sorting integration between client and server - **Team**
 - [x] Change the status appearance of time management according to the designs - **Vishnupriya**
 - [x] Seed for visitor pass and help desk - **Vishnupriya**
