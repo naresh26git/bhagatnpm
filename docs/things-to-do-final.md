@@ -36,6 +36,7 @@
 ### Things that are done
 
 - [x] Fix all count for get many apis - **Team**
+- [x] Remove all unnecessary console logs - **Team**
 - [x] Improve the sorting integration between client and server - **Team**
 - [x] Change the status appearance of time management according to the designs - **Vishnupriya**
 - [x] Seed for visitor pass and help desk - **Vishnupriya**
