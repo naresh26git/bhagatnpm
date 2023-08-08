@@ -3,6 +3,7 @@
 - [ ] Leave accept and reject is not working properly - **Sakthi**
 - [ ] Page reload after submit should be improved - **Mithunish**
 - [ ] Print and export to excel feature needs to be implemented - **Mithunish**
+- [ ] Add emp code and emp name to the help desk table - **Murali**
 - [ ] Add image url to the identification tab - **Sakthi**
 - [ ] Add passport to the identification type - **Sakthi**
 - [ ] Add upload profile picture to personal info form - **Sakthi&Vignesh**
@@ -30,7 +31,6 @@
 - [ ] Add password hashing with salt - **Mithunish**
 - [ ] Improve the prisma development and production setup - **Mithunish**
 - [ ] Remove relevant get APIs from server - **Team**
-
 - [ ] Search Option for every table - **Mithunish**
 - [ ] Improve layout inconsistencies - **Mithunish**
 
@@ -40,6 +40,7 @@
 - [x] Remove all unnecessary console logs - **Team**
 - [x] Remove all unnecessary comments - **Team**
 - [x] Improve the sorting integration between client and server - **Team**
+- [x] Implement complex sorting for all tables - **Team**
 - [x] Change the status appearance of time management according to the designs - **Vishnupriya**
 - [x] Seed for visitor pass and help desk - **Vishnupriya**
 - [x] Remove status from leave balance table - **Murali**
