@@ -1,7 +1,6 @@
 # Things to do final
 
 - [ ] Leave accept and reject is not working properly - **Sakthi**
-- [ ] Page reload after submit should be improved - **Mithunish**
 - [ ] Print and export to excel feature needs to be implemented - **Mithunish**
 - [ ] Add emp code and emp name to the help desk table - **Murali**
 - [ ] Add image url to the identification tab - **Sakthi**
@@ -41,6 +40,7 @@
 - [x] Remove all unnecessary comments - **Team**
 - [x] Improve the sorting integration between client and server - **Team**
 - [x] Implement complex sorting for all tables - **Team**
+- [x] Page reload after submit should be improved - **Team**
 - [x] Change the status appearance of time management according to the designs - **Vishnupriya**
 - [x] Seed for visitor pass and help desk - **Vishnupriya**
 - [x] Remove status from leave balance table - **Murali**
@@ -49,3 +49,4 @@
 - [x] Remove input parameters in company and identification type - **Sakthi**
 - [x] Remove delete from profile info - **Sakthi**
 - [x] Change the get-many of addresses to mutation - **Sakthi**
+- [x] Show and hide elements based on user role - **Sakthi**
