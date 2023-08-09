@@ -1,17 +1,21 @@
 import React from "react";
+
 import { HelpDeskStatus } from "server/src/trpc/routes/helpdesk-status/get-many";
 import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Stack from "ui/Stack";
+import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
-interface helpDeskStatusProps {
+
+export type HelpDeskStatusProps = {
   helpDeskId: number;
   variant: "admin" | "employee";
-}
+  asyncList: AsyncListContextValue;
+};
 
-const HelpDeskStatusDialog = (props: helpDeskStatusProps) => {
+const HelpDeskStatusDialog = (props: HelpDeskStatusProps) => {
   const auth = useAuthContext();
   const [status, setStatus] = React.useState<HelpDeskStatus[]>([]);
   const [statusId, setStatusId] = React.useState<number>();
@@ -37,9 +41,9 @@ const HelpDeskStatusDialog = (props: helpDeskStatusProps) => {
         statusId: statusId,
       };
 
-      const helpDeskStatus = await client.helpDesk.adminUpdate.mutate(
-        inputParameters
-      );
+      await client.helpDesk.adminUpdate.mutate(inputParameters);
+
+      props.asyncList.refresh();
     } catch (error) {
       handleTRPCError(error, auth);
     }

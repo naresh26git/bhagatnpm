@@ -51,7 +51,11 @@ const Identifications = () => {
         <ShowIf.Employee>
           <PageHeader
             title={<PageHeader.Title></PageHeader.Title>}
-            actions={<IdentificationDialog />}
+            actions={
+              <IdentificationDialog
+                asyncList={value as AsyncListContextValue}
+              />
+            }
           />
         </ShowIf.Employee>
 

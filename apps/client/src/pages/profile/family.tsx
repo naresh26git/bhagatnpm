@@ -82,7 +82,7 @@ export const FamilyPage = () => {
       <ShowIf.Employee>
         <PageHeader
           title={<PageHeader.Title></PageHeader.Title>}
-          actions={<FamilyDialog />}
+          actions={<FamilyDialog asyncList={value as AsyncListContextValue} />}
         />{" "}
       </ShowIf.Employee>
 

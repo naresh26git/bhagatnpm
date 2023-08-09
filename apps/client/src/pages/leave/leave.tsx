@@ -1,16 +1,11 @@
-import {
-  InputParameters,
-  Leave,
-} from "server/dist/trpc/routes/leaves/get-many";
+import { Leave } from "server/dist/trpc/routes/leaves/get-many";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
-import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
+import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
 import LeaveStatusDialog from "../../components/LeaveStatusDialog";
 import { useAuthContext } from "../../hooks/UseAuth";
-import { client } from "../../main";
-import { handleTRPCError } from "../../utils/handle-trpc-error";
 
 export type LeaveList = {
   uid: string;
@@ -49,34 +44,13 @@ export const leaves = [
   { ...leave, uid: "12" },
   { ...leave, uid: "13" },
 ];
-export type LeaveViewPageProps = {};
+export type LeaveViewPageProps = {
+  value: AsyncListContextValue;
+};
 
-export const LeaveViewPage = () => {
+export const LeaveViewPage = ({ value }: LeaveViewPageProps) => {
   const auth = useAuthContext();
 
-  const value = useAsyncList<Leave, InputParameters["sortBy"]>({
-    load: async ({ states }) => {
-      try {
-        const inputParameters = {
-          sortBy: states.sortState?.sortBy,
-          sortOrder: states.sortState?.sortOrder,
-          limit: states.paginationState.limit,
-          page: states.paginationState.page,
-        };
-
-        const result = await client.leave.getMany.mutate(inputParameters);
-
-        return {
-          totalCount: result.totalCount,
-          items: result.items as any,
-        };
-      } catch (error) {
-        handleTRPCError(error, auth);
-
-        return { error: new Error("Something went wrong") };
-      }
-    },
-  });
   const columns = [
     {
       id: "1",
@@ -193,6 +167,7 @@ export const LeaveViewPage = () => {
               auth.state.user?.role.name === "admin" ? "admin" : "employee"
             }
             leaveId={item.id}
+            asyncList={value as AsyncListContextValue}
           />
         </>
       ),

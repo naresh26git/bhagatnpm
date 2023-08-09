@@ -3,11 +3,16 @@ import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
+import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
-export const ContactDialog = () => {
+export type ContactDialogProps = {
+  asyncList: AsyncListContextValue;
+};
+
+export const ContactDialog = (props: ContactDialogProps) => {
   const auth = useAuthContext();
   const [userId, setUserId] = React.useState<number>(0);
   const [addressTypeId, setAddressTypeId] = React.useState<number>(1);
@@ -27,6 +32,8 @@ export const ContactDialog = () => {
         street,
         state,
       });
+
+      props.asyncList.refresh();
     } catch (error) {
       handleTRPCError(error, auth);
     }

@@ -5,11 +5,16 @@ import Dialog, { DialogHeader } from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
+import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
-export const IdentificationDialog = () => {
+export type IdentificationDialogProps = {
+  asyncList: AsyncListContextValue;
+};
+
+export const IdentificationDialog = (props: IdentificationDialogProps) => {
   const auth = useAuthContext();
   const [number, setNumber] = React.useState("");
   const [typeId, setTypeId] = React.useState<number>();
@@ -23,7 +28,8 @@ export const IdentificationDialog = () => {
         typeId,
         number,
       });
-      window.location.reload();
+
+      props.asyncList.refresh();
     } catch (error) {
       handleTRPCError(error, auth);
     }

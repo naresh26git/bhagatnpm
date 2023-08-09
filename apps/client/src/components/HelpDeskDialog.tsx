@@ -4,11 +4,16 @@ import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
+import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
-export const HelpDeskDialog = () => {
+export type HelpDeskDialogProps = {
+  asyncList: AsyncListContextValue;
+};
+
+export const HelpDeskDialog = (props: HelpDeskDialogProps) => {
   const auth = useAuthContext();
   const [tittle, setTittle] = React.useState("");
   const [category, setCategory] = React.useState<HelpdeskCategories[]>([]);
@@ -24,6 +29,8 @@ export const HelpDeskDialog = () => {
         categoryId,
         description,
       });
+
+      props.asyncList.refresh();
     } catch (error) {
       handleTRPCError(error, auth);
     }

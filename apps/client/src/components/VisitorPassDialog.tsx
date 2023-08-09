@@ -6,12 +6,17 @@ import Dialog, { DialogHeader } from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
+import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { uploadFileToBlob } from "../utils/azure-blob-upload";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
-export const VisitorPass = () => {
+export type VisitorPassDialogProps = {
+  asyncList: AsyncListContextValue;
+};
+
+export const VisitorPass = (props: VisitorPassDialogProps) => {
   const auth = useAuthContext();
   const [photo, setPhoto] = React.useState("");
   const [name, setName] = React.useState("");
@@ -27,6 +32,7 @@ export const VisitorPass = () => {
   const [reason, setReason] = React.useState<string>("");
   const [fileSelected, setFileSelected] = React.useState<File>();
   const [uploading, setUploading] = React.useState(false);
+
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
 
@@ -48,6 +54,7 @@ export const VisitorPass = () => {
 
       setFileSelected(undefined);
       setUploading(false);
+
       if (hrId === undefined) return;
 
       if (companyId === undefined) return;
@@ -64,7 +71,8 @@ export const VisitorPass = () => {
         outTime,
         reason,
       });
-      // window.location.reload();
+
+      props.asyncList.refresh();
     } catch (error) {
       handleTRPCError(error, auth);
     }

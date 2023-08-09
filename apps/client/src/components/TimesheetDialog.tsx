@@ -4,11 +4,16 @@ import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
+import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
-export const TimesheetDialog = () => {
+export type TimesheetDialogProps = {
+  asyncList: AsyncListContextValue;
+};
+
+export const TimesheetDialog = (props: TimesheetDialogProps) => {
   const auth = useAuthContext();
   const [inTime, setInTime] = React.useState<string>(`${new Date()}`);
   const [outTime, setOutTime] = React.useState<string>(`${new Date()}`);
@@ -24,6 +29,8 @@ export const TimesheetDialog = () => {
         outTime,
         statusId,
       });
+
+      props.asyncList.refresh();
     } catch (error) {
       handleTRPCError(error, auth);
     }

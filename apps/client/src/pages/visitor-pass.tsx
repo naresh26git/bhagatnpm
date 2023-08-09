@@ -16,7 +16,7 @@ import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
-export type TimeSheetPageProps = {};
+export type VisitorPassPageProps = {};
 
 const VisitorPasses = () => {
   const auth = useAuthContext();
@@ -95,7 +95,9 @@ const VisitorPasses = () => {
         </Grid.Row>
         <PageHeader
           title={<PageHeader.Title></PageHeader.Title>}
-          actions={<VisitorPassDialog />}
+          actions={
+            <VisitorPassDialog asyncList={value as AsyncListContextValue} />
+          }
         />
         <Card>
           <DataGrid<VisitorPass>

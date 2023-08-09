@@ -4,11 +4,16 @@ import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
+import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
-export const FamilyDialog = () => {
+export type FamilyDialogProps = {
+  asyncList: AsyncListContextValue;
+};
+
+export const FamilyDialog = (props: FamilyDialogProps) => {
   const auth = useAuthContext();
   const [name, setName] = React.useState("");
   const [dateOfBirth, setDateOfBirth] = React.useState(`${new Date()}`);
@@ -18,11 +23,14 @@ export const FamilyDialog = () => {
   const addFamilyDetails = async () => {
     try {
       if (relationshipTypeId === undefined) return;
+
       await client.familyDetail.set.mutate({
         name,
         dateOfBirth,
         relationshipTypeId,
       });
+
+      props.asyncList.refresh();
     } catch (error) {
       handleTRPCError(error, auth);
     }

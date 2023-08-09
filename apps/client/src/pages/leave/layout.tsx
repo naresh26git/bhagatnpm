@@ -1,11 +1,42 @@
+import { InputParameters, Leave } from "server/src/trpc/routes/leaves/get-many";
 import Button from "ui/Button";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
+import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import LeaveDialog from "../../components/LeaveDialog";
 import PageHeader from "../../components/PageHeader";
+import { useAuthContext } from "../../hooks/UseAuth";
+import { client } from "../../main";
+import { handleTRPCError } from "../../utils/handle-trpc-error";
 import LeaveViewPage from "./leave";
 import LeaveBalancePage from "./leave-balance";
+
 export const LeaveTabs = () => {
+  const auth = useAuthContext();
+  const leaveValue = useAsyncList<Leave, InputParameters["sortBy"]>({
+    load: async ({ states }) => {
+      try {
+        const inputParameters = {
+          sortBy: states.sortState?.sortBy,
+          sortOrder: states.sortState?.sortOrder,
+          limit: states.paginationState.limit,
+          page: states.paginationState.page,
+        };
+
+        const result = await client.leave.getMany.mutate(inputParameters);
+
+        return {
+          totalCount: result.totalCount,
+          items: result.items as any,
+        };
+      } catch (error) {
+        handleTRPCError(error, auth);
+
+        return { error: new Error("Something went wrong") };
+      }
+    },
+  });
+
   return (
     <>
       <Stack gap="3">
@@ -39,7 +70,9 @@ export const LeaveTabs = () => {
         </Grid.Row>
         <PageHeader
           title={<PageHeader.Title></PageHeader.Title>}
-          actions={<LeaveDialog />}
+            actions={
+              <LeaveDialog asyncList={leaveValue as AsyncListContextValue} />
+            }
         />
 
         {/* <PageHeader title={<PageHeader.Title>Account</PageHeader.Title>} /> */}
@@ -110,7 +143,7 @@ export const LeaveTabs = () => {
             role="tabpanel"
             aria-labelledby="viewleave-tab"
           >
-            <LeaveViewPage />
+            <LeaveViewPage value={leaveValue as AsyncListContextValue} />
           </div>
           <div
             className="tab-pane fade"

@@ -47,6 +47,7 @@ export type HelpDeskPageProps = {};
 
 export const HelpDeskPage = () => {
   const auth = useAuthContext();
+
   const value = useAsyncList<HelpDesk, InputParameters["sortBy"]>({
     load: async ({ states }) => {
       try {
@@ -158,6 +159,7 @@ export const HelpDeskPage = () => {
               auth.state.user?.role.name === "admin" ? "admin" : "employee"
             }
             helpDeskId={item.id}
+            asyncList={value as AsyncListContextValue}
           />
         </>
       ),
@@ -167,7 +169,9 @@ export const HelpDeskPage = () => {
     <Stack gap="3">
       <PageHeader
         title={<PageHeader.Title></PageHeader.Title>}
-        actions={<HelpDeskDialog />}
+          actions={
+            <HelpDeskDialog asyncList={value as AsyncListContextValue} />
+          }
       />
       <Grid.Row>
         <Grid.Col className="py-2" cols={["12", "md-2"]}>

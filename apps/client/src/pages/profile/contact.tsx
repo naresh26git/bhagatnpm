@@ -50,7 +50,7 @@ export const ContactDataPage = () => {
       <ShowIf.Employee>
         <PageHeader
           title={<PageHeader.Title></PageHeader.Title>}
-          actions={<ContactDialog />}
+          actions={<ContactDialog asyncList={value as AsyncListContextValue} />}
         />
       </ShowIf.Employee>
 

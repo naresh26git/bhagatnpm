@@ -5,13 +5,16 @@ import { LeaveStatus } from "server/src/trpc/routes/leave-status/get-many";
 import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Stack from "ui/Stack";
+import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
-interface leaveStatusProps {
+
+export type leaveStatusProps = {
   leaveId: number;
   variant: "admin" | "employee";
-}
+  asyncList: AsyncListContextValue;
+};
 
 const LeaveStatusDialog = (props: leaveStatusProps) => {
   const auth = useAuthContext();
@@ -39,9 +42,9 @@ const LeaveStatusDialog = (props: leaveStatusProps) => {
         statusId: statusId,
       };
 
-      const helpDeskStatus = await client.leave.adminUpdate.mutate(
-        inputParameters
-      );
+      await client.leave.adminUpdate.mutate(inputParameters);
+
+      props.asyncList.refresh();
     } catch (error) {
       handleTRPCError(error, auth);
     }

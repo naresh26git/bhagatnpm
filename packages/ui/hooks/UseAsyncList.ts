@@ -233,6 +233,7 @@ export type AsyncListContextValue<
     sortOrder: Sorted["sortOrder"];
     options: [];
   };
+  refresh: () => Promise<void>;
 };
 
 export const AsyncListContext =
@@ -329,6 +330,9 @@ export const useAsyncList = <
       selectionDispatcher,
       sortDispatcher,
     },
+    refresh: async () => {
+      return;
+    },
     sort: (sortBy: SortByType) => {
       return {
         sortOrder:
@@ -370,7 +374,7 @@ export const useAsyncList = <
     ...injectedProps,
   } as AsyncListContextValue<InjectedProps, SortByType, ListItemType>;
 
-  const getListItems = React.useCallback(async () => {
+  const loadListItems = async () => {
     listDispatcher({ type: "loading" });
     const response = await load(context);
 
@@ -381,6 +385,12 @@ export const useAsyncList = <
     if (response && "totalCount" in response && "items" in response) {
       listDispatcher({ type: "success", payload: response });
     }
+  };
+
+  context.refresh = loadListItems;
+
+  const getListItems = React.useCallback(async () => {
+    await loadListItems();
   }, [
     sortState?.sortBy,
     sortState?.sortOrder,

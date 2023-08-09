@@ -5,12 +5,17 @@ import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
+import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { uploadFileToBlob } from "../utils/azure-blob-upload";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
-export const PersonalInfoDialog = () => {
+export type PersonalInfoDialogProps = {
+  asyncList: AsyncListContextValue;
+};
+
+export const PersonalInfoDialog = (props: PersonalInfoDialogProps) => {
   const auth = useAuthContext();
   const [firstName, setFirstName] = React.useState("");
   const [middleName, setMiddleName] = React.useState("");
@@ -50,7 +55,9 @@ export const PersonalInfoDialog = () => {
       setUploading(false);
 
       if (departmentId === undefined) return;
+
       if (designationId === undefined) return;
+
       await client.personalInfo.set.mutate({
         firstName,
         lastName,
@@ -62,6 +69,8 @@ export const PersonalInfoDialog = () => {
         reportingManagerId,
         imageUrl,
       });
+
+      props.asyncList.refresh();
     } catch (error) {
       handleTRPCError(error, auth);
     }

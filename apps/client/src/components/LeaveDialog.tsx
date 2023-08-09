@@ -4,11 +4,16 @@ import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
+import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
-export const LeaveDialog = () => {
+export type LeaveDialogProps = {
+  asyncList: AsyncListContextValue;
+};
+
+export const LeaveDialog = (props: LeaveDialogProps) => {
   const auth = useAuthContext();
   const [fromDate, setFromDate] = React.useState(`${new Date()}`);
   const [toDate, setToDate] = React.useState(`${new Date()}`);
@@ -19,12 +24,15 @@ export const LeaveDialog = () => {
   const handleSubmit = async () => {
     try {
       if (leaveTypeId === undefined) return;
+
       await client.leave.set.mutate({
         noOfDays,
         fromDate,
         toDate,
         leaveTypeId,
       });
+
+      props.asyncList.refresh();
     } catch (error) {
       handleTRPCError(error, auth);
     }

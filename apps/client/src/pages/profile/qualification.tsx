@@ -49,7 +49,9 @@ const Qualifications = () => {
       <ShowIf.Employee>
         <PageHeader
           title={<PageHeader.Title></PageHeader.Title>}
-          actions={<QualificationDialog />}
+          actions={
+            <QualificationDialog asyncList={value as AsyncListContextValue} />
+          }
         />
       </ShowIf.Employee>
 

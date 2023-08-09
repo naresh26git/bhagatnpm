@@ -95,7 +95,9 @@ export const PersonalInfoPage = () => {
       <ShowIf.Employee>
         <PageHeader
           title={<PageHeader.Title></PageHeader.Title>}
-          actions={<PersonalInfoDialog />}
+          actions={
+            <PersonalInfoDialog asyncList={value as AsyncListContextValue} />
+          }
         />
       </ShowIf.Employee>
       <Card>

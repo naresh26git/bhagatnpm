@@ -107,7 +107,9 @@ export const TimeSheetPage = () => {
       {/* <PageHeader actions={<TimesheetDialog />} /> */}
       <PageHeader
         title={<PageHeader.Title></PageHeader.Title>}
-        actions={<TimesheetDialog />}
+          actions={
+            <TimesheetDialog asyncList={value as AsyncListContextValue} />
+          }
       />
       <Card>
         <DataGrid<TimeSheet>
