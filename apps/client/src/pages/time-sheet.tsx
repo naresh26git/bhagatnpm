@@ -10,8 +10,8 @@ import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
-
 import PageHeader from "../components/PageHeader";
+import { ShowIf } from "../components/ShowIf";
 import TimesheetDialog from "../components/TimesheetDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
@@ -103,14 +103,16 @@ export const TimeSheetPage = () => {
           </Button>
         </Grid.Col>
       </Grid.Row>
-      <PageHeader title={<PageHeader.Title></PageHeader.Title>} />
-      {/* <PageHeader actions={<TimesheetDialog />} /> */}
-      <PageHeader
-        title={<PageHeader.Title></PageHeader.Title>}
+
+      <ShowIf.Employee>
+        <PageHeader
+          title={<PageHeader.Title></PageHeader.Title>}
           actions={
             <TimesheetDialog asyncList={value as AsyncListContextValue} />
           }
-      />
+        />
+      </ShowIf.Employee>
+
       <Card>
         <DataGrid<TimeSheet>
           {...(value as AsyncListContextValue<TimeSheet>)}

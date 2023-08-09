@@ -5,6 +5,7 @@ import Stack from "ui/Stack";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import LeaveDialog from "../../components/LeaveDialog";
 import PageHeader from "../../components/PageHeader";
+import { ShowIf } from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
@@ -68,13 +69,14 @@ export const LeaveTabs = () => {
             </Button>
           </Grid.Col>
         </Grid.Row>
-        <PageHeader
-          title={<PageHeader.Title></PageHeader.Title>}
+        <ShowIf.Employee>
+          <PageHeader
+            title={<PageHeader.Title></PageHeader.Title>}
             actions={
               <LeaveDialog asyncList={leaveValue as AsyncListContextValue} />
             }
-        />
-
+          />
+        </ShowIf.Employee>
         {/* <PageHeader title={<PageHeader.Title>Account</PageHeader.Title>} /> */}
 
         <ul className="nav nav-tabs" id="myTab" role="tablist">

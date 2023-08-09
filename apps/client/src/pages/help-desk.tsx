@@ -12,10 +12,10 @@ import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import HelpDeskDialog from "../components/HelpDeskDialog";
 import HelpDeskStatusDialog from "../components/HelpDeskStatusDialog";
 import PageHeader from "../components/PageHeader";
+import { ShowIf } from "../components/ShowIf";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
-
 export const helpDesk = {
   uid: "1",
   id: "1210",
@@ -167,12 +167,15 @@ export const HelpDeskPage = () => {
   ];
   return (
     <Stack gap="3">
-      <PageHeader
-        title={<PageHeader.Title></PageHeader.Title>}
+      <ShowIf.Employee>
+        <PageHeader
+          title={<PageHeader.Title></PageHeader.Title>}
           actions={
             <HelpDeskDialog asyncList={value as AsyncListContextValue} />
           }
-      />
+        />
+      </ShowIf.Employee>
+
       <Grid.Row>
         <Grid.Col className="py-2" cols={["12", "md-2"]}>
           <input
