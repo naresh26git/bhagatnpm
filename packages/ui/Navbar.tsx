@@ -1,11 +1,11 @@
+import Box from "./Box";
+import Button, { ButtonProps } from "./Button";
+import Link, { LinkProps } from "./Link";
 import {
   NavbarContext,
   NavbarContextValue,
   useNavbarContext,
 } from "./hooks/UseNavbar";
-import Box from "./Box";
-import Button, { ButtonProps } from "./Button";
-import Link, { LinkProps } from "./Link";
 
 export const navbarBaseClasses = "navbar text-bg-tertiary" as const;
 

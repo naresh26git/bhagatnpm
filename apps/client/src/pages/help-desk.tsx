@@ -20,7 +20,7 @@ export const helpDesk = {
   uid: "1",
   id: "1210",
   date: "18/04/2023",
-  tittle: "Work",
+  title: "Work",
   category: "Salary Issue",
   description: "My last month Salary Was not Credit My Account",
   remarks: "pls Clear my Issue Quickly",
@@ -77,8 +77,19 @@ export const HelpDeskPage = () => {
     {
       id: "1",
       key: "",
-      label: "Id",
+      label: "Empcode",
       renderCell: (item: HelpDesk) => <>{item.user.id}</>,
+    },
+    {
+      id: "2",
+      key: "",
+      label: "Emp Name",
+      renderCell: (item: HelpDesk) => (
+        <>
+          {item.user.personalInfo?.firstName} {item.user.personalInfo?.lastName}
+        </>
+      ),
+      ...value.sort("userId"),
     },
     {
       id: "2",
@@ -99,10 +110,10 @@ export const HelpDeskPage = () => {
     },
     {
       id: "3",
-      key: "tittle",
-      label: "Tittle",
-      renderCell: (item: HelpDesk) => <>{item.tittle}</>,
-      ...value.sort("tittle"),
+      key: "title",
+      label: "title",
+      renderCell: (item: HelpDesk) => <>{item.title}</>,
+      ...value.sort("title"),
     },
 
     {
@@ -188,7 +199,7 @@ export const HelpDeskPage = () => {
           <input
             type="text"
             className="form-control form-control-sm"
-            placeholder="Tittle"
+            placeholder="title"
           />
         </Grid.Col>
 

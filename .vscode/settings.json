@@ -72,6 +72,7 @@
   "typescript.format.enable": false,
   "typescript.updateImportsOnFileMove.enabled": "prompt",
   "cSpell.words": [
+    "Aadhaar",
     "autodocs",
     "autoincrement",
     "autoload",
@@ -101,7 +102,10 @@
     "popperjs",
     "Sakthi",
     "sqlserver",
+    "Tenkasi",
+    "Thiruvarur",
     "Timestamptz",
+    "Tiruvannamalai",
     "trpc",
     "usecase",
     "Vignesh",

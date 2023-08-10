@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import dotenv from "dotenv";
+import { hashSalt } from "../dist/trpc/routes/users/set";
 
 dotenv.config();
 
@@ -40,13 +41,13 @@ const main = async () => {
       const { id: systemUserId } = await tx.user.upsert({
         create: {
           name: "System",
-          password: "system",
+          password: hashSalt("system"),
           username: "system",
           roleId: systemRoleId,
         },
         update: {
           name: "System",
-          password: "system",
+          password: hashSalt("system"),
           username: "system",
           roleId: systemRoleId,
         },
@@ -109,7 +110,7 @@ const main = async () => {
       const { id: balajiUserId } = await tx.user.upsert({
         create: {
           name: "Balaji",
-          password: "balaji",
+          password: hashSalt("balaji"),
           username: "balaji",
           roleId: adminRoleId,
           createdById: systemUserId,
@@ -118,7 +119,7 @@ const main = async () => {
         },
         update: {
           name: "Balaji",
-          password: "balaji",
+          password: hashSalt("balaji"),
           username: "balaji",
           roleId: adminRoleId,
           createdById: systemUserId,
@@ -136,7 +137,7 @@ const main = async () => {
       const { id: sathishUserId } = await tx.user.upsert({
         create: {
           name: "Sathish",
-          password: "sathish",
+          password: hashSalt("sathish"),
           username: "sathish",
           roleId: adminRoleId,
           createdById: systemUserId,
@@ -145,7 +146,7 @@ const main = async () => {
         },
         update: {
           name: "Sathish",
-          password: "sathish",
+          password: hashSalt("sathish"),
           username: "sathish",
           roleId: adminRoleId,
           createdById: systemUserId,
@@ -160,10 +161,37 @@ const main = async () => {
         },
       });
 
+      const { id: mithunishUserId } = await tx.user.upsert({
+        create: {
+          name: "Mithunish",
+          password: hashSalt("mithunish"),
+          username: "mithunish",
+          roleId: employeeRoleId,
+          createdById: balajiUserId,
+          updatedById: balajiUserId,
+          statusId: defaultUserStatusId,
+        },
+        update: {
+          name: "Mithunish",
+          password: hashSalt("mithunish"),
+          username: "mithunish",
+          roleId: employeeRoleId,
+          createdById: balajiUserId,
+          updatedById: balajiUserId,
+          statusId: defaultUserStatusId,
+        },
+        where: {
+          username: "mithunish",
+        },
+        select: {
+          id: true,
+        },
+      });
+
       const { id: muraliUserId } = await tx.user.upsert({
         create: {
           name: "Murali",
-          password: "murali",
+          password: hashSalt("murali"),
           username: "murali",
           roleId: employeeRoleId,
           createdById: balajiUserId,
@@ -172,7 +200,7 @@ const main = async () => {
         },
         update: {
           name: "Murali",
-          password: "murali",
+          password: hashSalt("murali"),
           username: "murali",
           roleId: employeeRoleId,
           createdById: balajiUserId,
@@ -190,7 +218,7 @@ const main = async () => {
       const { id: sakthiUserId } = await tx.user.upsert({
         create: {
           name: "Sakthi",
-          password: "sakthi",
+          password: hashSalt("sakthi"),
           username: "sakthi",
           roleId: employeeRoleId,
           createdById: balajiUserId,
@@ -199,7 +227,7 @@ const main = async () => {
         },
         update: {
           name: "Sakthi",
-          password: "sakthi",
+          password: hashSalt("sakthi"),
           username: "sakthi",
           roleId: employeeRoleId,
           createdById: balajiUserId,
@@ -217,7 +245,7 @@ const main = async () => {
       const { id: danielUserId } = await tx.user.upsert({
         create: {
           name: "Daniel",
-          password: "daniel",
+          password: hashSalt("daniel"),
           username: "daniel",
           roleId: employeeRoleId,
           createdById: balajiUserId,
@@ -226,7 +254,7 @@ const main = async () => {
         },
         update: {
           name: "Daniel",
-          password: "daniel",
+          password: hashSalt("daniel"),
           username: "daniel",
           roleId: employeeRoleId,
           createdById: balajiUserId,
@@ -244,7 +272,7 @@ const main = async () => {
       const { id: naveenUserId } = await tx.user.upsert({
         create: {
           name: "Naveen",
-          password: "naveen",
+          password: hashSalt("naveen"),
           username: "naveen",
           roleId: employeeRoleId,
           createdById: balajiUserId,
@@ -253,7 +281,7 @@ const main = async () => {
         },
         update: {
           name: "Naveen",
-          password: "naveen",
+          password: hashSalt("naveen"),
           username: "naveen",
           roleId: employeeRoleId,
           createdById: balajiUserId,
@@ -267,6 +295,7 @@ const main = async () => {
           id: true,
         },
       });
+
       const [{ id: developmentDepartmentId }, { id: designDepartmentId }] =
         await Promise.all(
           [
@@ -275,11 +304,6 @@ const main = async () => {
               createdById: balajiUserId,
               updatedById: balajiUserId,
             },
-            // {
-            //   name: "Development",
-            //   createdById: balajiUserId,
-            //   updatedById: balajiUserId,
-            // },
             {
               name: "Design",
               createdById: balajiUserId,
@@ -301,6 +325,7 @@ const main = async () => {
 
       const [
         { id: JuniorFullstackDeveloperDesignationId },
+        { id: SeniorFullStackDeveloperDesignationId },
         { id: JuniorProductDesignerDesignationId },
       ] = await Promise.all(
         [
@@ -311,14 +336,8 @@ const main = async () => {
             updatedById: balajiUserId,
           },
           {
-            name: "Junior Fullstack Developer",
+            name: "Senior Fullstack Developer",
             departmentId: developmentDepartmentId,
-            createdById: balajiUserId,
-            updatedById: balajiUserId,
-          },
-          {
-            name: "Junior Product Designer",
-            departmentId: designDepartmentId,
             createdById: balajiUserId,
             updatedById: balajiUserId,
           },
@@ -347,6 +366,19 @@ const main = async () => {
         // { id: davidPersonalInfoId }
       ] = await Promise.all(
         [
+          {
+            imageUrl: "",
+            dateOfBirth: new Date(new Date().setFullYear(1994, 8, 27)),
+            dateOfJoining: new Date(new Date().setFullYear(2023, 1, 16)),
+            firstName: "Mithunish",
+            lastName: "Prabhakaran",
+            departmentId: developmentDepartmentId,
+            designationId: SeniorFullStackDeveloperDesignationId,
+            reportingManagerUserId: balajiUserId,
+            userId: mithunishUserId,
+            createdById: mithunishUserId,
+            updatedById: mithunishUserId,
+          },
           {
             imageUrl: "",
             dateOfBirth: new Date(new Date().setFullYear(1995, 5, 25)),
@@ -441,7 +473,18 @@ const main = async () => {
       ] = await Promise.all(
         [
           {
-            city: "Thiruvannamalai",
+            city: "Tiruvannamalai",
+            country: "India",
+            pincode: "632311",
+            state: "Tamil Nadu",
+            street: "2303, Ganapathi Nagar",
+            createdById: mithunishUserId,
+            updatedById: mithunishUserId,
+            userId: mithunishUserId,
+            addressTypeId: defaultAddressTypeId,
+          },
+          {
+            city: "Tiruvannamalai",
             country: "India",
             pincode: "606906",
             state: "Tamil Nadu",
@@ -553,6 +596,14 @@ const main = async () => {
         // { id: sakthiFatherFamilyDetailId },
       ] = await Promise.all(
         [
+          {
+            dateOfBirth: new Date(new Date().setFullYear(1965, 6, 11)),
+            name: "Prabhakaran",
+            relationshipTypeId: defaultRelationshipTypeId,
+            createdById: mithunishUserId,
+            updatedById: mithunishUserId,
+            userId: mithunishUserId,
+          },
           {
             dateOfBirth: new Date(new Date().setFullYear(1962, 7, 17)),
             name: "Thangamani",
@@ -798,8 +849,9 @@ const main = async () => {
       );
 
       const [
-        { id: aadharIdentificationTypeId },
+        { id: aadhaarIdentificationTypeId },
         { id: panIdentificationTypeId },
+        { id: passportIdentificationTypeId },
       ] = await Promise.all(
         [
           {
@@ -809,6 +861,11 @@ const main = async () => {
           },
           {
             name: "PAN",
+            createdById: systemUserId,
+            updatedById: systemUserId,
+          },
+          {
+            name: "PASSPORT",
             createdById: systemUserId,
             updatedById: systemUserId,
           },
@@ -859,7 +916,7 @@ const main = async () => {
       const [] = await Promise.all(
         [
           {
-            typeId: aadharIdentificationTypeId,
+            typeId: aadhaarIdentificationTypeId,
             number: "876323450987",
             userId: sakthiUserId,
             createdById: sakthiUserId,
@@ -868,6 +925,13 @@ const main = async () => {
           {
             typeId: panIdentificationTypeId,
             number: "HOPSR1236P",
+            userId: muraliUserId,
+            createdById: muraliUserId,
+            updatedById: muraliUserId,
+          },
+          {
+            typeId: passportIdentificationTypeId,
+            number: "789GKFY46FGTE",
             userId: muraliUserId,
             createdById: muraliUserId,
             updatedById: muraliUserId,
@@ -942,7 +1006,7 @@ const main = async () => {
           {
             userId: sakthiUserId,
             date: new Date(),
-            tittle: "title sample",
+            title: "title sample",
             description: "sample description",
             categoryId: defaultHelpDeskCategory,
             statusId: defaultHelpDeskStatus,

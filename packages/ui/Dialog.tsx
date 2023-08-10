@@ -1,11 +1,11 @@
+import Box from "./Box";
+import Button, { ButtonProps } from "./Button";
+import Link, { LinkProps } from "./Link";
 import {
   DialogContext,
   DialogContextValue,
   useDialogContext,
 } from "./hooks/UseDialog";
-import Box from "./Box";
-import Button, { ButtonProps } from "./Button";
-import Link, { LinkProps } from "./Link";
 
 export const dialogBaseClasses = "modal fade" as const;
 

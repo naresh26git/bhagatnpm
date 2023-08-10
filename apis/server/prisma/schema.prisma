@@ -349,7 +349,7 @@ model HelpDesk {
   id          Int              @id @default(autoincrement())
   userId      Int              @map("user_id")
   date        DateTime         @map("date") @db.Date
-  tittle      String           @map("tittle") @db.VarChar(128)
+  title       String           @map("title") @db.VarChar(128)
   description String           @map("description") @db.VarChar(2048)
   remarks     String?          @map("remarks") @db.VarChar(1024)
   categoryId  Int              @map("category_id")

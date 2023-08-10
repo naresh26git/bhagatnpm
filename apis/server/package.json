@@ -33,6 +33,7 @@
     "@fastify/static": "^6.10.1",
     "@prisma/client": "4.13.0",
     "@trpc/server": "^10.20.0",
+    "bcrypt": "^5.1.0",
     "dotenv": "^16.0.3",
     "drizzle-orm": "^0.23.13",
     "fastify": "^4.0.0",
@@ -43,6 +44,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/better-sqlite3": "^7.6.4",
     "@types/node": "^18.0.0",
     "@types/pg": "^8.6.6",

@@ -189,7 +189,7 @@ export const PersonalInfoPage = () => {
             {
               id: "8",
               key: "",
-              label: "Job Tittle",
+              label: "Job Title",
               renderCell: (item) => <>{item.designation.name}</>,
               ...value.sort("designationId"),
             },

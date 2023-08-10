@@ -15,7 +15,7 @@ export type HelpDeskDialogProps = {
 
 export const HelpDeskDialog = (props: HelpDeskDialogProps) => {
   const auth = useAuthContext();
-  const [tittle, setTittle] = React.useState("");
+  const [title, setTitle] = React.useState("");
   const [category, setCategory] = React.useState<HelpdeskCategories[]>([]);
   const [categoryId, setCategoryId] = React.useState<number>();
   const [description, setDescription] = React.useState("");
@@ -25,7 +25,7 @@ export const HelpDeskDialog = (props: HelpDeskDialogProps) => {
       if (categoryId === undefined) return;
 
       await client.helpDesk.set.mutate({
-        tittle,
+        title,
         categoryId,
         description,
       });
@@ -62,13 +62,13 @@ export const HelpDeskDialog = (props: HelpDeskDialogProps) => {
             <Stack gap="5">
               <Grid.Row gutters="5">
                 <Grid.Col cols={["12", "lg-6"]}>
-                  <label htmlFor="name">Tittle</label>
+                  <label htmlFor="name">title</label>
                   <input
                     type="text"
                     className="form-control"
-                    id="tittle"
-                    value={tittle}
-                    onChange={(event) => setTittle(event.target.value)}
+                    id="title"
+                    value={title}
+                    onChange={(event) => setTitle(event.target.value)}
                   />
                 </Grid.Col>
 

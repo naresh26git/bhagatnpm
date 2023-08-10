@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import bcrypt from "bcrypt";
 import { z } from "zod";
 import { prisma } from "../../../db/prisma";
 import env from "../../../environment/variables";
@@ -17,6 +18,7 @@ export const signIn = publicProcedure
         select: {
           id: true,
           name: true,
+          password: true,
           username: true,
           role: {
             select: {
@@ -26,10 +28,19 @@ export const signIn = publicProcedure
           email: true,
           mobile: true,
         },
-        where: { username: input.username, password: input.password },
+        where: { username: input.username },
       });
 
+      const isPasswordAMatch = bcrypt.compareSync(
+        input.password,
+        user.password
+      );
+
+      if (!isPasswordAMatch) throw new TRPCError({ code: "UNAUTHORIZED" });
+
       if (user) {
+        delete (user as Partial<typeof user>).password;
+
         const token = await ctx.res.jwtSign(user);
 
         const refreshToken = await ctx.res.jwtSign(user, { expiresIn: "1d" });

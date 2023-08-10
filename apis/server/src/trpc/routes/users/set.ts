@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import bcrypt from "bcrypt";
 import { z } from "zod";
 import { prisma } from "../../../db/prisma";
 import { getErrorMessage } from "../../../utils/get-error-message";
@@ -16,6 +17,14 @@ export const insertUserSchema = z.object({
   role: z.enum(roles),
 });
 
+export const hashSalt = (password: string) => {
+  const salt = bcrypt.genSaltSync(10);
+
+  const hashedPassword = bcrypt.hashSync(password, salt);
+
+  return hashedPassword;
+};
+
 export type InsertUser = z.infer<typeof insertUserSchema>;
 
 export type User = RouterInput["user"]["set"];
@@ -24,6 +33,8 @@ export const set = adminOnlyProcedure
   .input(insertUserSchema)
   .mutation(async ({ ctx, input }) => {
     try {
+      const hashedPassword = await hashSalt(input.password);
+
       const user = await prisma.$transaction(async (tx) => {
         const { id: roleId } = await tx.role.findUniqueOrThrow({
           select: {
@@ -42,7 +53,7 @@ export const set = adminOnlyProcedure
         const user = await tx.user.create({
           data: {
             name: input.name,
-            password: input.password,
+            password: hashedPassword,
             username: input.username,
             mobile: input.mobile,
             email: input.email,

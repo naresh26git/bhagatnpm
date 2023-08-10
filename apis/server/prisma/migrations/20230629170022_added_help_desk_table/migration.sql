@@ -37,7 +37,7 @@ CREATE TABLE [dbo].[help_desks] (
     [id] INT NOT NULL IDENTITY(1,1),
     [user_id] INT NOT NULL,
     [date] DATE NOT NULL,
-    [tittle] VARCHAR(128) NOT NULL,
+    [title] VARCHAR(128) NOT NULL,
     [description] VARCHAR(2048) NOT NULL,
     [remarks] VARCHAR(1024) NOT NULL,
     [category_id] INT NOT NULL,

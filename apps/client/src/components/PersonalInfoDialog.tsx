@@ -5,12 +5,12 @@ import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
+import Typography from "ui/Typography";
 import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { uploadFileToBlob } from "../utils/azure-blob-upload";
 import { handleTRPCError } from "../utils/handle-trpc-error";
-
 export type PersonalInfoDialogProps = {
   asyncList: AsyncListContextValue;
 };
@@ -30,11 +30,21 @@ export const PersonalInfoDialog = (props: PersonalInfoDialogProps) => {
   const [reportingManagerId, setReportingManagerId] = React.useState<number>(2);
   const [fileSelected, setFileSelected] = React.useState<File>();
   const [uploading, setUploading] = React.useState(false);
+  const [fileSizeExceedError, setFileSizeExceedError] = React.useState("");
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
 
     const [file] = event.target.files;
+    const fileSize = file.size;
+    const fileMb = fileSize / 1024 ** 2;
+
+    if (fileMb >= 2) {
+      setFileSizeExceedError("File size should not exceed 2MB.");
+      return;
+    }
+
+    setFileSizeExceedError("");
 
     if (!file) return;
 
@@ -138,6 +148,9 @@ export const PersonalInfoDialog = (props: PersonalInfoDialogProps) => {
                   id="customFile"
                 />
               </Grid.Col>
+              <Typography as="p" color="danger" wrap="nowrap">
+                {fileSizeExceedError}
+              </Typography>
               <Grid.Col cols={["12", "lg-6"]}>
                 <div className="form-floating">
                   <input

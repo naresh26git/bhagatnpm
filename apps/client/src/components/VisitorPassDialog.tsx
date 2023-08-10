@@ -32,25 +32,38 @@ export const VisitorPass = (props: VisitorPassDialogProps) => {
   const [reason, setReason] = React.useState<string>("");
   const [fileSelected, setFileSelected] = React.useState<File>();
   const [uploading, setUploading] = React.useState(false);
+  const [fileSizeExceedError, setFileSizeExceedError] = React.useState("");
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
 
     const [file] = event.target.files;
+    const fileSize = file.size;
+    const fileMb = fileSize / 1024 ** 2;
+
+    if (fileMb >= 2) {
+      setFileSizeExceedError("File size should not exceed 2MB.");
+      return;
+    }
+
+    setFileSizeExceedError("");
 
     if (!file) return;
 
     setFileSelected(file);
   };
+
   const handleSubmit = async () => {
     try {
-      if (!fileSelected) return;
-
-      const { sasToken } = await client.sasToken.get.query();
-
       setUploading(true);
 
-      const imageUrl = await uploadFileToBlob(fileSelected, sasToken);
+      let imageUrl;
+
+      if (fileSelected) {
+        const { sasToken } = await client.sasToken.get.query();
+
+        imageUrl = await uploadFileToBlob(fileSelected, sasToken);
+      }
 
       setFileSelected(undefined);
       setUploading(false);
@@ -153,6 +166,9 @@ export const VisitorPass = (props: VisitorPassDialogProps) => {
                       className="form-control"
                       id="customFile"
                     />
+                    <Typography as="p" color="danger" wrap="nowrap">
+                      {fileSizeExceedError}
+                    </Typography>
                   </Grid.Col>
                 </Stack>
               </Grid.Col>

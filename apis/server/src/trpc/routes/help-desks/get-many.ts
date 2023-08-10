@@ -17,11 +17,12 @@ const sortBy = (sortBy: string, sortOrder: "asc" | "desc") => {
 
 const sortBys = [
   "date",
-  "tittle",
+  "title",
   "categoryId",
   "statusId",
   "description",
   "remarks",
+  "userId",
 ] as const;
 
 const inputParameters = baseGetManyInputParameters.merge(
@@ -53,13 +54,20 @@ export const getMany = protectedProcedure
         select: {
           id: true,
           date: true,
-          tittle: true,
+          title: true,
           description: true,
           remarks: true,
           user: {
             select: {
               id: true,
               name: true,
+              personalInfo: {
+                select: {
+                  id: true,
+                  firstName: true,
+                  lastName: true,
+                },
+              },
             },
           },
           category: {

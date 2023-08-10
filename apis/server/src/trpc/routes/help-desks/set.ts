@@ -5,7 +5,7 @@ import { getErrorMessage } from "../../../utils/get-error-message";
 import { employeeOnlyProcedure } from "../../trpc";
 
 export const insertHelpDeskSchema = z.object({
-  tittle: z.string(),
+  title: z.string(),
   description: z.string(),
   categoryId: z.number(),
 });
@@ -29,7 +29,7 @@ export const set = employeeOnlyProcedure
         data: {
           userId: ctx.userId,
           date: new Date(),
-          tittle: input.tittle,
+          title: input.title,
           description: input.description,
           categoryId: input.categoryId,
           statusId: status.id,
@@ -40,7 +40,7 @@ export const set = employeeOnlyProcedure
         select: {
           userId: true,
           id: true,
-          tittle: true,
+          title: true,
           description: true,
           category: {
             select: {
