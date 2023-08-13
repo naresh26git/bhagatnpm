@@ -6,6 +6,15 @@ body,
   font-size: 0.935rem;
 }
 
+@media print {
+  body {
+    visibility: hidden;
+  }
+  #section-to-print * {
+    visibility: visible;
+  }
+}
+
 .nav-tabs > li > button,
 .nav-tabs > li > button:hover,
 .nav-tabs > li > button:focus {

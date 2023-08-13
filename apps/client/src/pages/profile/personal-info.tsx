@@ -10,6 +10,7 @@ import Stack from "ui/Stack";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import PageHeader from "../../components/PageHeader";
 import PersonalInfoDialog from "../../components/PersonalInfoDialog";
+import PrintButton from "../../components/PrintButton";
 import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
@@ -96,11 +97,24 @@ export const PersonalInfoPage = () => {
         <PageHeader
           title={<PageHeader.Title></PageHeader.Title>}
           actions={
-            <PersonalInfoDialog asyncList={value as AsyncListContextValue} />
+            <Stack orientation="horizontal" gap="3">
+              <PersonalInfoDialog asyncList={value as AsyncListContextValue} />
+              <PrintButton />
+            </Stack>
           }
         />
       </ShowIf.Employee>
-      <Card>
+      <ShowIf.Admin>
+        <PageHeader
+          title={<PageHeader.Title />}
+          actions={
+            <Stack orientation="horizontal" gap="3">
+              <PrintButton />
+            </Stack>
+          }
+        />
+      </ShowIf.Admin>
+      <Card id="section-to-print">
         <DataGrid<PersonalInfo>
           {...(value as AsyncListContextValue<PersonalInfo>)}
           onRowClick={(item) =>
