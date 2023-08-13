@@ -1,6 +1,7 @@
 # Things to do final
 
 - [ ] Improve data grid to handle loading, error and no data states gracefully - **Team**
+- [ ] Add confirmation modal wherever necessary - **Team**
 - [ ] Leave accept and reject is not working properly - **Sakthi**
 - [ ] Excel import for payslip - **Sakthi**
 - [ ] Print and export to excel feature needs to be implemented - **Mithunish**
@@ -9,7 +10,6 @@
 - [ ] Refactor schema file according to a common standard - **Mithunish**
 - [ ] Improve layout inconsistencies - **Mithunish**
 - [ ] Use react-hook-form validations for all forms - **Vishnupriya**
-- [ ] Add confirmation modal wherever necessary - **Team**
 - [ ] Add passport ocr to personal info screen - **Vignesh**
 - [ ] Add email poc integration to this project - **Vignesh**
 - [ ] Add sms poc integration to this project - **Vignesh**
