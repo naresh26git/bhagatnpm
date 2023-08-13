@@ -28,7 +28,9 @@
     "react-router-dom": "^6.10.0",
     "server": "*",
     "sort-by": "^1.2.0",
-    "ui": "*"
+    "superjson": "^1.13.1",
+    "ui": "*",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.0/xlsx-0.20.0.tgz"
   },
   "devDependencies": {
     "@types/react": "^18.0.28",

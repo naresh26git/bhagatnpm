@@ -4,6 +4,7 @@ import "bootstrap/dist/js/bootstrap.js";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import type { AppRouter } from "server/dist/trpc/router";
+import superjson from "superjson";
 import App from "./App";
 import "./index.scss";
 
@@ -26,6 +27,7 @@ export const getAuthorizationHeaders = () => {
 };
 
 export const client = createTRPCProxyClient<AppRouter>({
+  transformer: superjson,
   links: [
     httpBatchLink({
       url: "/trpc",

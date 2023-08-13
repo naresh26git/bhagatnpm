@@ -5,23 +5,44 @@ import Stack from "ui/Stack";
 import SideNavbar from "./SideNavbar";
 import TopNavbar from "./TopNavbar";
 
+export const sideNavbarWidth = "14rem";
+
 export const GlobalLayout = () => {
+  const content = (
+    <Stack className="h-100 w-100">
+      <TopNavbar />
+
+      <Stack className="flex-grow-1 overflow-hidden h-100 w-100">
+        <Container maxWidth="fluid" className="p-4 overflow-scroll">
+          <Outlet />
+        </Container>
+      </Stack>
+    </Stack>
+  );
+
   return (
     <>
       <Stack orientation="horizontal" className="h-100">
         <Hidden hiddenFor="auto" shownFor="lg" className="h-100">
-          <SideNavbar />
+          <SideNavbar width={sideNavbarWidth} />
         </Hidden>
 
-        <Stack className="h-100 w-100">
-          <TopNavbar />
+        <Hidden
+          hiddenFor="auto"
+          shownFor="lg"
+          className="h-100"
+          style={{
+            width: `calc(100% - ${sideNavbarWidth})`,
+            maxWidth: `calc(100% - ${sideNavbarWidth})`,
+            minWidth: `calc(100% - ${sideNavbarWidth})`,
+          }}
+        >
+          {content}
+        </Hidden>
 
-          <Stack className="flex-grow-1 overflow-hidden h-100 w-100">
-            <Container maxWidth="fluid" className="p-4 overflow-scroll">
-              <Outlet />
-            </Container>
-          </Stack>
-        </Stack>
+        <Hidden hiddenFor="lg" shownFor="auto" className="h-100 w-100">
+          {content}
+        </Hidden>
       </Stack>
     </>
   );

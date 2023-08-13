@@ -2,6 +2,7 @@ import {
   InputParameters,
   PayRoll,
 } from "server/dist/trpc/routes/pay-rolls/get-many";
+import { InputParameters as ImportPaySlipComponentsInputParameters } from "server/dist/trpc/routes/pay-rolls/import";
 import Button from "ui/Button";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
@@ -9,8 +10,10 @@ import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
+import XLSX from "xlsx";
 import PageHeader from "../components/PageHeader";
 import PayRollDetailsDialog from "../components/PayRollDetailsDialog";
+import ShowIf from "../components/ShowIf";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
@@ -42,6 +45,96 @@ export const PayRollPage = () => {
       }
     },
   });
+
+  const handleExport = async () => {
+    try {
+      const data = await client.payRoll.getMany.mutate({
+        fromDate: new Date(
+          new Date(
+            new Date().setFullYear(
+              new Date().getFullYear(),
+              new Date().getMonth(),
+              1
+            )
+          ).setHours(0, 0, 0, 0)
+        ),
+        toDate: new Date(
+          new Date(
+            new Date().setFullYear(
+              new Date().getFullYear(),
+              new Date().getMonth() + 1,
+              1
+            )
+          ).setHours(0, 0, 0, 0)
+        ),
+      });
+
+      const payRolls = data.items.map((item) => ({
+        "Emp Code": item.id,
+        "Emp Name":
+          item.user.personalInfo?.firstName && item.user.personalInfo.lastName
+            ? `${item.user.personalInfo?.firstName} ${item.user.personalInfo?.lastName}`
+            : item.user.name,
+        Department: item.user.personalInfo?.department.name,
+        Designation: item.user.personalInfo?.designation.name,
+        "Financial Year": `FY ${new Intl.DateTimeFormat("en-US", {
+          year: "2-digit",
+        }).format(new Date().setFullYear(item.year, item.month, 1))}`,
+        Period: `${new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          year: "2-digit",
+        }).format(new Date().setFullYear(item.year, item.month, 1))}`,
+        "Gross Pay": Intl.NumberFormat("en-IN", {
+          style: "currency",
+          currency: "INR",
+        }).format(
+          item.paySlipComponents.reduce(
+            (acc, paySlipComponent) => acc + Number(paySlipComponent.amount),
+            0
+          )
+        ),
+        Status: item.status.name,
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(payRolls);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "pay-roll");
+      XLSX.writeFile(workbook, "pay-roll.xlsx", { compression: true });
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
+  const importPaySlipComponents = async (file: File) => {
+    try {
+      const fileContentsAsBuffer = await file.arrayBuffer();
+
+      const workbook = XLSX.read(fileContentsAsBuffer, { type: "buffer" });
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      const rawData = XLSX.utils.sheet_to_json(worksheet);
+
+      await client.payRoll.import.mutate(
+        rawData.map((row: any) => ({
+          ...row,
+          amount: Number(row?.amount),
+        })) as ImportPaySlipComponentsInputParameters
+      );
+
+      console.log({ successfullyImported: true });
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
+  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files) return;
+
+    const [file] = event.target.files;
+
+    if (!file) return;
+
+    importPaySlipComponents(file);
+  };
 
   return (
     <Stack gap="3">
@@ -84,7 +177,31 @@ export const PayRollPage = () => {
         </Grid.Row>
       </Grid.Row>
 
-      <PageHeader title={<PageHeader.Title></PageHeader.Title>} />
+      <PageHeader
+        title={<PageHeader.Title />}
+        actions={
+          <Stack orientation="horizontal" gap="3">
+            <Button variant="primary" onClick={handleExport}>
+              Export
+            </Button>
+
+            <ShowIf.Admin>
+              <label className="btn btn-primary" htmlFor="customFile">
+                Import
+                <input
+                  type="file"
+                  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                  style={{
+                    display: "none",
+                  }}
+                  id="customFile"
+                  onChange={onFileChange}
+                />
+              </label>
+            </ShowIf.Admin>
+          </Stack>
+        }
+      />
       <Card>
         <DataGrid<PayRoll>
           {...(value as AsyncListContextValue<PayRoll>)}

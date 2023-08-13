@@ -166,6 +166,7 @@ export const VisitorPass = (props: VisitorPassDialogProps) => {
                       className="form-control"
                       id="customFile"
                     />
+
                     <Typography as="p" color="danger" wrap="nowrap">
                       {fileSizeExceedError}
                     </Typography>

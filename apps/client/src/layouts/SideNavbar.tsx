@@ -47,13 +47,17 @@ export const _inActiveStyles: CSSProperties = {
 export const getActiveStyles: NavLinkProps["style"] = ({ isActive }) =>
   isActive ? _activeStyles : _inActiveStyles;
 
-export const SideNavbar = () => {
+export type SideNavbarProps = {
+  width: string;
+};
+
+export const SideNavbar = ({ width }: SideNavbarProps) => {
   return (
     <Stack
       gap="5"
       justifyContent="between"
-      className="border-end  p-2 h-100 "
-      style={{ width: "14rem" }}
+      className="border-end p-2 h-100"
+      style={{ width }}
     >
       <Stack.Item cols="12">
         <Stack gap="3">

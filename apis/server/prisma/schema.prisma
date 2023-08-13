@@ -168,6 +168,8 @@ model PayRollStatus {
   updatedBy   User      @relation("PayRollStatusUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
   payRolls    PayRoll[] @relation("PayRollOfPayRollStatus")
 
+  importPaySlipComponents ImportPaySlipComponent[] @relation("ImportPaySlipComponentOfPayRollStatus")
+
   @@map("pay_roll_statuses")
 }
 
@@ -189,6 +191,7 @@ model PayRoll {
   updatedById Int      @map("updated_by_id")
   updatedBy   User     @relation("PayRollUpdatedByUser", fields: [updatedById], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
+  @@unique([userId, year, month])
   @@map("pay_rolls")
 }
 
@@ -240,6 +243,8 @@ model PaySlipComponentType {
 
   paySlips PaySlipComponent[] @relation("PaySlipComponentOfPaySlipComponentType")
 
+  importPaySlips ImportPaySlipComponent[] @relation("ImportPaySlipComponentOfPaySlipComponentType")
+
   //Audit Files
   createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
   createdById Int      @map("created_by_id")
@@ -269,6 +274,22 @@ model PaySlipComponent {
 
   @@unique([componentTypeId, payRollId])
   @@map("pay_slip_components")
+}
+
+model ImportPaySlipComponent {
+  id              Int                  @id @default(autoincrement())
+  componentType   PaySlipComponentType @relation("ImportPaySlipComponentOfPaySlipComponentType", fields: [componentTypeId], references: [id])
+  componentTypeId Int                  @map("component_type_id")
+  amount          Decimal              @db.Decimal
+  user            User                 @relation("ImportPaySlipComponentOfUser", fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  userId          Int                  @map("user_id")
+  year            Int
+  month           Int
+  status          PayRollStatus        @relation("ImportPaySlipComponentOfPayRollStatus", fields: [statusId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  statusId        Int                  @map("status_id")
+
+  @@unique([componentTypeId, userId])
+  @@map("import_pay_slip_components")
 }
 
 model IdentificationType {
@@ -534,55 +555,56 @@ model User {
   status   UserStatus? @relation("UserOfUserStatus", fields: [statusId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   statusId Int?        @map("status_id")
 
-  addresses                    Address[]              @relation("AddressOfUser")
-  addressesCreated             Address[]              @relation("AddressCreatedByUser")
-  addressesUpdated             Address[]              @relation("AddressUpdatedByUser")
-  departmentsCreated           Department[]           @relation("DepartmentCreatedByUser")
-  departmentsUpdated           Department[]           @relation("DepartmentUpdatedByUser")
-  designationsCreated          Designation[]          @relation("DesignationCreatedByUser")
-  designationsUpdated          Designation[]          @relation("DesignationUpdatedByUser")
-  familyDetails                FamilyDetail[]         @relation("FamilyDetailOfUser")
-  familyDetailsCreated         FamilyDetail[]         @relation("FamilyDetailCreatedByUser")
-  familyDetailsUpdated         FamilyDetail[]         @relation("FamilyDetailUpdatedByUser")
-  leaveTypesCreated            LeaveType[]            @relation("LeaveTypeCreatedByUser")
-  leaveTypesUpdated            LeaveType[]            @relation("LeaveTypeUpdatedByUser")
-  leaves                       Leave[]                @relation("LeaveOfUser")
-  leavesCreated                Leave[]                @relation("LeaveCreatedByUser")
-  leavesUpdated                Leave[]                @relation("LeaveUpdatedByUser")
-  payRolls                     PayRoll[]              @relation("PayRollOfUser")
-  payRollsCreated              PayRoll[]              @relation("PayRollCreatedByUser")
-  payRollsUpdated              PayRoll[]              @relation("PayRollUpdatedByUser")
-  task                         Task[]                 @relation("TaskOfUser")
-  taskCreated                  Task[]                 @relation("TaskCreatedByUser")
-  taskUpdated                  Task[]                 @relation("TaskUpdatedByUser")
-  personalInfo                 PersonalInfo?          @relation("PersonalInfoOfUser")
-  personalInfosCreated         PersonalInfo[]         @relation("PersonalInfoCreatedByUser")
-  personalInfosUpdated         PersonalInfo[]         @relation("PersonalInfoUpdatedByUser")
-  qualifications               Qualification[]        @relation("QualificationOfUser")
-  qualificationsCreated        Qualification[]        @relation("QualificationCreatedByUser")
-  qualificationsUpdated        Qualification[]        @relation("QualificationUpdatedByUser")
-  identificationTypesCreated   IdentificationType[]   @relation("IdentificationTypeCreatedByUser")
-  identificationTypesUpdated   IdentificationType[]   @relation("IdentificationTypeUpdatedByUser")
-  identifications              Identification[]       @relation("IdentificationOfUser")
-  identificationsCreated       Identification[]       @relation("IdentificationCreatedByUser")
-  identificationsUpdated       Identification[]       @relation("IdentificationUpdatedByUser")
-  paySlipComponentsCreated     PaySlipComponent[]     @relation("PaySlipComponentCreatedByUser")
-  paySlipComponentsUpdated     PaySlipComponent[]     @relation("PaySlipComponentUpdatedByUser")
-  paySlipComponentTypesCreated PaySlipComponentType[] @relation("PaySlipComponentTypeCreatedByUser")
-  paySlipComponentTypesUpdated PaySlipComponentType[] @relation("PaySlipComponentTypeUpdatedByUser")
-  rolesCreated                 Role[]                 @relation("RoleCreatedByUser")
-  rolesUpdated                 Role[]                 @relation("RoleUpdatedByUser")
-  helpDesks                    HelpDesk[]             @relation("HelpDeskOfUser")
-  helpDesksCreated             HelpDesk[]             @relation("HelpDeskCreatedByUser")
-  helpDesksUpdated             HelpDesk[]             @relation("HelpDeskUpdatedByUser")
+  addresses                    Address[]                @relation("AddressOfUser")
+  addressesCreated             Address[]                @relation("AddressCreatedByUser")
+  addressesUpdated             Address[]                @relation("AddressUpdatedByUser")
+  departmentsCreated           Department[]             @relation("DepartmentCreatedByUser")
+  departmentsUpdated           Department[]             @relation("DepartmentUpdatedByUser")
+  designationsCreated          Designation[]            @relation("DesignationCreatedByUser")
+  designationsUpdated          Designation[]            @relation("DesignationUpdatedByUser")
+  familyDetails                FamilyDetail[]           @relation("FamilyDetailOfUser")
+  familyDetailsCreated         FamilyDetail[]           @relation("FamilyDetailCreatedByUser")
+  familyDetailsUpdated         FamilyDetail[]           @relation("FamilyDetailUpdatedByUser")
+  leaveTypesCreated            LeaveType[]              @relation("LeaveTypeCreatedByUser")
+  leaveTypesUpdated            LeaveType[]              @relation("LeaveTypeUpdatedByUser")
+  leaves                       Leave[]                  @relation("LeaveOfUser")
+  leavesCreated                Leave[]                  @relation("LeaveCreatedByUser")
+  leavesUpdated                Leave[]                  @relation("LeaveUpdatedByUser")
+  payRolls                     PayRoll[]                @relation("PayRollOfUser")
+  payRollsCreated              PayRoll[]                @relation("PayRollCreatedByUser")
+  payRollsUpdated              PayRoll[]                @relation("PayRollUpdatedByUser")
+  task                         Task[]                   @relation("TaskOfUser")
+  taskCreated                  Task[]                   @relation("TaskCreatedByUser")
+  taskUpdated                  Task[]                   @relation("TaskUpdatedByUser")
+  personalInfo                 PersonalInfo?            @relation("PersonalInfoOfUser")
+  personalInfosCreated         PersonalInfo[]           @relation("PersonalInfoCreatedByUser")
+  personalInfosUpdated         PersonalInfo[]           @relation("PersonalInfoUpdatedByUser")
+  qualifications               Qualification[]          @relation("QualificationOfUser")
+  qualificationsCreated        Qualification[]          @relation("QualificationCreatedByUser")
+  qualificationsUpdated        Qualification[]          @relation("QualificationUpdatedByUser")
+  identificationTypesCreated   IdentificationType[]     @relation("IdentificationTypeCreatedByUser")
+  identificationTypesUpdated   IdentificationType[]     @relation("IdentificationTypeUpdatedByUser")
+  identifications              Identification[]         @relation("IdentificationOfUser")
+  identificationsCreated       Identification[]         @relation("IdentificationCreatedByUser")
+  identificationsUpdated       Identification[]         @relation("IdentificationUpdatedByUser")
+  importPaySlipComponents      ImportPaySlipComponent[] @relation("ImportPaySlipComponentOfUser")
+  paySlipComponentsCreated     PaySlipComponent[]       @relation("PaySlipComponentCreatedByUser")
+  paySlipComponentsUpdated     PaySlipComponent[]       @relation("PaySlipComponentUpdatedByUser")
+  paySlipComponentTypesCreated PaySlipComponentType[]   @relation("PaySlipComponentTypeCreatedByUser")
+  paySlipComponentTypesUpdated PaySlipComponentType[]   @relation("PaySlipComponentTypeUpdatedByUser")
+  rolesCreated                 Role[]                   @relation("RoleCreatedByUser")
+  rolesUpdated                 Role[]                   @relation("RoleUpdatedByUser")
+  helpDesks                    HelpDesk[]               @relation("HelpDeskOfUser")
+  helpDesksCreated             HelpDesk[]               @relation("HelpDeskCreatedByUser")
+  helpDesksUpdated             HelpDesk[]               @relation("HelpDeskUpdatedByUser")
   // sessions             Session[]           @relation("SessionOfUser")
-  subordinates                 PersonalInfo[]         @relation("ReportingManagerOfUser")
-  timeSheets                   TimeSheet[]            @relation("TimeSheetOfUser")
-  timeSheetsCreated            TimeSheet[]            @relation("TimeSheetCreatedByUser")
-  timeSheetsUpdated            TimeSheet[]            @relation("TimeSheetUpdatedByUser")
-  usersCreated                 User[]                 @relation("UserCreatedByUser")
-  usersUpdated                 User[]                 @relation("UserUpdatedByUser")
-  hr                           Hr[]                   @relation("UserOfHr")
+  subordinates                 PersonalInfo[]           @relation("ReportingManagerOfUser")
+  timeSheets                   TimeSheet[]              @relation("TimeSheetOfUser")
+  timeSheetsCreated            TimeSheet[]              @relation("TimeSheetCreatedByUser")
+  timeSheetsUpdated            TimeSheet[]              @relation("TimeSheetUpdatedByUser")
+  usersCreated                 User[]                   @relation("UserCreatedByUser")
+  usersUpdated                 User[]                   @relation("UserUpdatedByUser")
+  hr                           Hr[]                     @relation("UserOfHr")
 
   // Audit Fields
   createdAt   DateTime @default(now()) @map("created_at") @db.DateTime2
