@@ -89,6 +89,7 @@
     "fors",
     "fortawesome",
     "Genyus",
+    "HRMS",
     "hstack",
     "Johan",
     "localforage",
@@ -110,7 +111,8 @@
     "usecase",
     "Vignesh",
     "Vishnupriya",
-    "vstack"
+    "vstack",
+    "Xmark"
   ],
   "cSpell.enableFiletypes": ["prisma"],
   "appService.zipIgnorePattern": ["node_modules{,/**}", ".vscode{,/**}"],

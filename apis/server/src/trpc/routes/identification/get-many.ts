@@ -65,6 +65,7 @@ export const getMany = protectedProcedure
               name: true,
             },
           },
+          imageUrl: true,
           number: true,
         },
         take: input?.limit ?? 5,

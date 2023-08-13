@@ -287,6 +287,7 @@ model IdentificationType {
 
 model Identification {
   id          Int                @id @default(autoincrement())
+  imageUrl    String?            @map("image_url")
   typeId      Int                @map("type_id")
   number      String             @unique @db.VarChar(128)
   userId      Int                @map("user_id")

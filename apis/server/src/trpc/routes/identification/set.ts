@@ -7,6 +7,7 @@ import { employeeOnlyProcedure } from "../../trpc";
 export const insertIdentificationSchema = z.object({
   number: z.string(),
   typeId: z.number(),
+  imageUrl: z.string().optional(),
 });
 
 export type insertIdentification = z.infer<typeof insertIdentificationSchema>;
@@ -17,6 +18,7 @@ export const set = employeeOnlyProcedure
     try {
       const identifications = await prisma.identification.create({
         data: {
+          imageUrl: input.imageUrl,
           number: input.number,
           typeId: input.typeId,
           userId: ctx.userId,
@@ -26,6 +28,7 @@ export const set = employeeOnlyProcedure
         select: {
           id: true,
           userId: true,
+          imageUrl: true,
           number: true,
           type: {
             select: {

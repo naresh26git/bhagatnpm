@@ -48,18 +48,6 @@ export const getActiveStyles: NavLinkProps["style"] = ({ isActive }) =>
   isActive ? _activeStyles : _inActiveStyles;
 
 export const SideNavbar = () => {
-  const auth = useAuthContext();
-
-  const logout = async () => {
-    try {
-      await client.user.signOut.mutate();
-      resetToken();
-      auth.dispatcher({ type: "reset-user" });
-    } catch (error) {
-      handleTRPCError(error, auth);
-    }
-  };
-
   return (
     <Stack
       gap="5"
@@ -75,99 +63,119 @@ export const SideNavbar = () => {
             </Typography>
           </Stack>
 
-          <Stack>
-            <Link component={NavLink} to="/" style={getActiveStyles}>
-              <Stack gap="2" orientation="horizontal">
-                <FontAwesomeIcon icon={faHome} /> Home
-              </Stack>{" "}
-            </Link>
-
-            <Link component={NavLink} to="account" style={getActiveStyles}>
-              <Stack gap="2" orientation="horizontal">
-                <FontAwesomeIcon icon={faCircleUser} /> Profile
-              </Stack>{" "}
-            </Link>
-
-            <Link component={NavLink} to="leave" style={getActiveStyles}>
-              <Stack gap="2" orientation="horizontal">
-                <FontAwesomeIcon icon={faPersonWalkingArrowRight} /> Leave
-              </Stack>
-            </Link>
-
-            <Link to="time-sheet" component={NavLink} style={getActiveStyles}>
-              <Stack gap="2" orientation="horizontal">
-                <FontAwesomeIcon icon={faBusinessTime} /> Time management
-              </Stack>
-            </Link>
-
-            <Link to="pay-roll" component={NavLink} style={getActiveStyles}>
-              <Stack gap="2" orientation="horizontal">
-                <FontAwesomeIcon icon={faReceipt} /> Payroll
-              </Stack>
-            </Link>
-
-            <Link to="help-desk" component={NavLink} style={getActiveStyles}>
-              <Stack gap="2" orientation="horizontal">
-                <FontAwesomeIcon icon={faQuestionCircle} />
-                Helpdesk
-              </Stack>
-            </Link>
-
-            <Link to="visitor-pass" component={NavLink} style={getActiveStyles}>
-              <Stack gap="2" orientation="horizontal">
-                <FontAwesomeIcon icon={faCircleXmark} /> Visitor pass
-              </Stack>
-            </Link>
-
-            <Link component={NavLink} to="travel" style={getActiveStyles}>
-              <Stack gap="2" orientation="horizontal">
-                <FontAwesomeIcon icon={faPlaneDeparture} /> Travel
-              </Stack>
-            </Link>
-
-            <Link component={NavLink} to="expense" style={getActiveStyles}>
-              <Stack gap="2" orientation="horizontal">
-                <FontAwesomeIcon icon={faClipboard} /> Expense
-              </Stack>
-            </Link>
-
-            <Link component={NavLink} to="loan" style={getActiveStyles}>
-              <Stack gap="2" orientation="horizontal">
-                <FontAwesomeIcon icon={faLandmark} /> Loan
-              </Stack>
-            </Link>
-
-            <Link component={NavLink} to="announcement" style={getActiveStyles}>
-              <Stack gap="2" orientation="horizontal">
-                <FontAwesomeIcon icon={faBullhorn} /> Announcement
-              </Stack>{" "}
-            </Link>
-
-            <Link to="alert" component={NavLink} style={getActiveStyles}>
-              <Stack gap="2" orientation="horizontal">
-                <FontAwesomeIcon icon={faTriangleExclamation} /> Alert
-              </Stack>
-            </Link>
-
-            <Link to="admin" component={NavLink} style={getActiveStyles}>
-              <Stack gap="2" orientation="horizontal">
-                <FontAwesomeIcon icon={faUser} /> Admin
-              </Stack>
-            </Link>
-
-            <Link
-              to="login"
-              component={NavLink}
-              onClick={logout}
-              style={getActiveStyles}
-            >
-              <Stack gap="2" orientation="horizontal">
-                <FontAwesomeIcon icon={faRightFromBracket} /> Logout
-              </Stack>
-            </Link>
-          </Stack>
+          <SideNavbarLinks />
         </Stack>
       </Stack.Item>
+    </Stack>
+  );
+};
+
+export type SideNavbarLinksProps = JSX.IntrinsicElements["div"] & {};
+
+export const SideNavbarLinks = (props: SideNavbarLinksProps) => {
+  const auth = useAuthContext();
+
+  const logout = async () => {
+    try {
+      await client.user.signOut.mutate();
+      resetToken();
+      auth.dispatcher({ type: "reset-user" });
+    } catch (error) {
+      handleTRPCError(error, auth);
+    }
+  };
+
+  return (
+    <Stack>
+      <Link component={NavLink} to="/" style={getActiveStyles}>
+        <Stack gap="2" orientation="horizontal" {...props}>
+          <FontAwesomeIcon icon={faHome} /> Home
+        </Stack>{" "}
+      </Link>
+
+      <Link component={NavLink} to="account" style={getActiveStyles}>
+        <Stack gap="2" orientation="horizontal" {...props}>
+          <FontAwesomeIcon icon={faCircleUser} /> Profile
+        </Stack>{" "}
+      </Link>
+
+      <Link component={NavLink} to="leave" style={getActiveStyles}>
+        <Stack gap="2" orientation="horizontal" {...props}>
+          <FontAwesomeIcon icon={faPersonWalkingArrowRight} /> Leave
+        </Stack>
+      </Link>
+
+      <Link to="time-sheet" component={NavLink} style={getActiveStyles}>
+        <Stack gap="2" orientation="horizontal" {...props}>
+          <FontAwesomeIcon icon={faBusinessTime} /> Time management
+        </Stack>
+      </Link>
+
+      <Link to="pay-roll" component={NavLink} style={getActiveStyles}>
+        <Stack gap="2" orientation="horizontal" {...props}>
+          <FontAwesomeIcon icon={faReceipt} /> Payroll
+        </Stack>
+      </Link>
+
+      <Link to="help-desk" component={NavLink} style={getActiveStyles}>
+        <Stack gap="2" orientation="horizontal" {...props}>
+          <FontAwesomeIcon icon={faQuestionCircle} />
+          Help-desk
+        </Stack>
+      </Link>
+
+      <Link to="visitor-pass" component={NavLink} style={getActiveStyles}>
+        <Stack gap="2" orientation="horizontal" {...props}>
+          <FontAwesomeIcon icon={faCircleXmark} /> Visitor pass
+        </Stack>
+      </Link>
+
+      <Link component={NavLink} to="travel" style={getActiveStyles}>
+        <Stack gap="2" orientation="horizontal" {...props}>
+          <FontAwesomeIcon icon={faPlaneDeparture} /> Travel
+        </Stack>
+      </Link>
+
+      <Link component={NavLink} to="expense" style={getActiveStyles}>
+        <Stack gap="2" orientation="horizontal" {...props}>
+          <FontAwesomeIcon icon={faClipboard} /> Expense
+        </Stack>
+      </Link>
+
+      <Link component={NavLink} to="loan" style={getActiveStyles}>
+        <Stack gap="2" orientation="horizontal" {...props}>
+          <FontAwesomeIcon icon={faLandmark} /> Loan
+        </Stack>
+      </Link>
+
+      <Link component={NavLink} to="announcement" style={getActiveStyles}>
+        <Stack gap="2" orientation="horizontal" {...props}>
+          <FontAwesomeIcon icon={faBullhorn} /> Announcement
+        </Stack>{" "}
+      </Link>
+
+      <Link to="alert" component={NavLink} style={getActiveStyles}>
+        <Stack gap="2" orientation="horizontal" {...props}>
+          <FontAwesomeIcon icon={faTriangleExclamation} /> Alert
+        </Stack>
+      </Link>
+
+      <Link to="admin" component={NavLink} style={getActiveStyles}>
+        <Stack gap="2" orientation="horizontal" {...props}>
+          <FontAwesomeIcon icon={faUser} /> Admin
+        </Stack>
+      </Link>
+
+      <Link
+        to="login"
+        component={NavLink}
+        onClick={logout}
+        style={getActiveStyles}
+      >
+        <Stack gap="2" orientation="horizontal" {...props}>
+          <FontAwesomeIcon icon={faRightFromBracket} /> Logout
+        </Stack>
+      </Link>
     </Stack>
   );
 };
