@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   InputParameters,
   TimeSheet,
@@ -14,7 +15,6 @@ import XLSX from "xlsx";
 import PageHeader from "../components/PageHeader";
 import PrintButton from "../components/PrintButton";
 import { ShowIf } from "../components/ShowIf";
-import TimesheetDialog from "../components/TimesheetDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
@@ -48,6 +48,8 @@ export const timeSheets = [
 export type TimeSheetPageProps = {};
 
 export const TimeSheetPage = () => {
+  const [status, setStatus] = useState<"in" | "out">(); // Initial status is "out"
+
   const auth = useAuthContext();
 
   const value = useAsyncList<TimeSheet, InputParameters["sortBy"]>({
@@ -75,6 +77,7 @@ export const TimeSheetPage = () => {
       }
     },
   });
+
   const handleExport = async () => {
     try {
       const data = await client.timeSheet.getMany.mutate({
@@ -134,6 +137,46 @@ export const TimeSheetPage = () => {
     }
   };
 
+  React.useEffect(() => {
+    (async () => {
+      try {
+        const timeSheet = await client.timeSheet.getByDate.mutate();
+
+        if (timeSheet.inTime && timeSheet.outTime === null) {
+          return setStatus("in");
+        }
+      } catch (error) {
+        setStatus("out");
+
+        handleTRPCError(error, auth);
+      }
+    })();
+  }, []);
+
+  const attendanceIn = async () => {
+    try {
+      await client.timeSheet.set.mutate({
+        inTime: new Date(),
+      });
+      setStatus("in");
+      value.refresh();
+    } catch (error) {
+      console.error("Error during check-in", error);
+    }
+  };
+
+  const attendanceOut = async () => {
+    try {
+      await client.timeSheet.set.mutate({
+        outTime: new Date(),
+      });
+      setStatus(undefined);
+      value.refresh();
+    } catch (error) {
+      console.error("Error during check-out", error);
+    }
+  };
+
   return (
     <Stack gap="3">
       <Grid.Row>
@@ -170,7 +213,16 @@ export const TimeSheetPage = () => {
           title={<PageHeader.Title></PageHeader.Title>}
           actions={
             <Stack orientation="horizontal" gap="3">
-              <TimesheetDialog asyncList={value as AsyncListContextValue} />
+              {status === "out" && (
+                <Button variant="primary" onClick={attendanceIn}>
+                  Check In
+                </Button>
+              )}
+              {status === "in" && (
+                <Button variant="primary" onClick={attendanceOut}>
+                  Check Out
+                </Button>
+              )}
               <Button variant="primary" onClick={handleExport}>
                 Export
               </Button>

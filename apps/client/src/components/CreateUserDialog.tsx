@@ -19,6 +19,7 @@ export const CreateUserDialog = (props: CreateUserDialogProps) => {
   const [name, setName] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [email, setEmail] = React.useState("");
 
   const createUser = async () => {
     try {
@@ -27,6 +28,7 @@ export const CreateUserDialog = (props: CreateUserDialogProps) => {
         username,
         password,
         role,
+        email,
       });
 
       props.asyncList.refresh();
@@ -121,6 +123,19 @@ export const CreateUserDialog = (props: CreateUserDialogProps) => {
                     onChange={(event) => setPassword(event.target.value)}
                   />
                   <label htmlFor="password">Password</label>
+                </div>
+              </Grid.Col>
+              <Grid.Col cols={["12", "lg-6"]}>
+                <div className="form-floating">
+                  <input
+                    type="email"
+                    className="form-control"
+                    id="email"
+                    placeholder="john@gmail.com"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                  />
+                  <label htmlFor="email">Email</label>
                 </div>
               </Grid.Col>
             </Grid.Row>

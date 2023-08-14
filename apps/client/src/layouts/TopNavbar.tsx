@@ -75,7 +75,7 @@ export const TopNavbar = () => {
             <Drawer {...drawer} position="start">
               <Drawer.Header>
                 <Drawer.Title>
-                  <Typography as="h3" color="primary" fontWeight="bolder">
+                  <Typography display="6" color="primary" fontWeight="bolder">
                     HRMS
                   </Typography>
                 </Drawer.Title>

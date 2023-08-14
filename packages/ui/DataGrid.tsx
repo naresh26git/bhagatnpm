@@ -69,6 +69,8 @@ export const Table = () => {
   delete domProps.defaultSelection;
   delete domProps.onRowClick;
   delete domProps.onSelection;
+  delete domProps.sort;
+  delete domProps.refresh;
 
   return (
     <Box as="div" className="overflow-auto">
@@ -227,7 +229,7 @@ export const TableBody = () => {
       {props.states.listState.items.map((item, itemIndex) => (
         <Box
           as="tr"
-          key={item.uid}
+          key={item.uid ?? itemIndex}
           className={getTableBodyClasses(props, item.uid)}
           tabIndex={0}
           onClick={() => props.onRowClick?.(item)}

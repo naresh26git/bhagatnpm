@@ -1,15 +1,11 @@
 # Things to do final
 
 - [ ] Add pay slip print - **Team**
-- [ ] Change the time sheet add modal to check-in and check-out - **Vignesh**
-- [ ] Add email poc integration to this project - **Vignesh**
 - [ ] Add passport ocr to personal info screen - **Vignesh**
 - [ ] Leave accept and reject is not working properly - **Sakthi**
-- [ ] Add icon buttons for leave approval and rejection in the leave page - **Mithunish**
 
 - [ ] Improve data grid to handle loading, error and no data states gracefully - **Team**
 - [ ] Add success, warning and error alerts for all tables - **Team**
-- [ ] Fix the react key error in the data grid component - **Mithunish**
 - [ ] Refactor the responsiveness of payslip modal - **Sakthi**
 - [ ] Search option for every table - **Mithunish**
 - [ ] Use react-hook-form validations for all forms - **Vishnupriya**
@@ -18,7 +14,7 @@
 - [ ] Add confirmation modal wherever necessary - **Team**
 - [ ] Use date validations for date fields in input parameters for all APIs - **Mithunish**
 - [ ] Add sms poc integration to this project - **Vignesh**
-- [x] *Print and export to excel feature needs to be implemented* - **Mithunish**
+- [ ] Improve browser inconsistencies - **Mithunish**
 
 ## Things to figure out
 
@@ -32,7 +28,6 @@
 - [ ] Improve API documentation after changes - **Vishnupriya**
 - [ ] Add react-query library for trpc client and implement loading states - **Mithunish**
 - [ ] Improve the prisma development and production setup - **Mithunish**
-- [ ] Improve browser inconsistencies - **Mithunish**
 
 ### Things that are done
 
@@ -63,4 +58,9 @@
 - [x] Logout from the side menu bar - **Vignesh**
 - [x] Add emp code and emp name to the help desk table - **Murali**
 - [x] Add password hashing with salt - **Vignesh**
+- [x] Add email poc integration to this project - **Vignesh&Mithunish**
 - [x] Fix the dropdowns error in all forms - **Team**
+- [x] Print and export to excel feature needs to be implemented - **Team**
+- [x] Fix the react key error in the data grid component - **Mithunish**
+- [x] Change the time sheet add modal to check-in and check-out - **Vignesh&Mithunish**
+- [x] Add icon buttons for leave approval and rejection in the leave page - **Vignesh**

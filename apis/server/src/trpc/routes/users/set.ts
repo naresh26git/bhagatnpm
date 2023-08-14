@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import { z } from "zod";
 import { prisma } from "../../../db/prisma";
 import { getErrorMessage } from "../../../utils/get-error-message";
+import { sendEmail, senderAddress } from "../../../utils/send-email";
 import { RouterInput } from "../../router";
 import { adminOnlyProcedure } from "../../trpc";
 
@@ -13,7 +14,7 @@ export const insertUserSchema = z.object({
   username: z.string().min(3),
   password: z.string().min(3).max(20),
   mobile: z.string().min(10).optional(),
-  email: z.string().min(5).optional(),
+  email: z.string().min(5),
   role: z.enum(roles),
 });
 
@@ -75,6 +76,30 @@ export const set = adminOnlyProcedure
         });
 
         return user;
+      });
+
+      sendEmail({
+        senderAddress,
+        content: {
+          subject: "Welcome to HRMS",
+          plainText: `Welcome ${user.name}!
+
+Following are the credentials for your account:
+Username: ${user.username}
+Password: ${input.password}
+
+Regards,
+Team HRMS
+`,
+        },
+        recipients: {
+          to: [
+            {
+              address: `<${user.email}>`,
+              displayName: user.name,
+            },
+          ],
+        },
       });
 
       return user;
