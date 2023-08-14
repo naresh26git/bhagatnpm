@@ -7,6 +7,7 @@ import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
+import XLSX from "xlsx";
 import ContactDialog from "../../components/ContactDialog";
 import PageHeader from "../../components/PageHeader";
 import ShowIf from "../../components/ShowIf";
@@ -44,6 +45,65 @@ export const ContactDataPage = () => {
       }
     },
   });
+
+  const handleExport = async () => {
+    try {
+      const data = await client.payRoll.getMany.mutate({
+        fromDate: new Date(
+          new Date(
+            new Date().setFullYear(
+              new Date().getFullYear(),
+              new Date().getMonth(),
+              1
+            )
+          ).setHours(0, 0, 0, 0)
+        ),
+        toDate: new Date(
+          new Date(
+            new Date().setFullYear(
+              new Date().getFullYear(),
+              new Date().getMonth() + 1,
+              1
+            )
+          ).setHours(0, 0, 0, 0)
+        ),
+      });
+
+      const payRolls = data.items.map((item) => ({
+        "Emp Code": item.id,
+        "Emp Name":
+          item.user.personalInfo?.firstName && item.user.personalInfo.lastName
+            ? `${item.user.personalInfo?.firstName} ${item.user.personalInfo?.lastName}`
+            : item.user.name,
+        Department: item.user.personalInfo?.department.name,
+        Designation: item.user.personalInfo?.designation.name,
+        "Financial Year": `FY ${new Intl.DateTimeFormat("en-US", {
+          year: "2-digit",
+        }).format(new Date().setFullYear(item.year, item.month, 1))}`,
+        Period: `${new Intl.DateTimeFormat("en-US", {
+          month: "short",
+          year: "2-digit",
+        }).format(new Date().setFullYear(item.year, item.month, 1))}`,
+        "Gross Pay": Intl.NumberFormat("en-IN", {
+          style: "currency",
+          currency: "INR",
+        }).format(
+          item.paySlipComponents.reduce(
+            (acc, paySlipComponent) => acc + Number(paySlipComponent.amount),
+            0
+          )
+        ),
+        Status: item.status.name,
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(payRolls);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "pay-roll");
+      XLSX.writeFile(workbook, "pay-roll.xlsx", { compression: true });
+    } catch (error) {
+      console.log({ error });
+    }
+  };
 
   return (
     <Stack gap="3">
