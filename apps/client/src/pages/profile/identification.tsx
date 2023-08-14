@@ -9,6 +9,7 @@ import Typography from "ui/Typography";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import IdentificationDialog from "../../components/IdentificationDialog";
 import PageHeader from "../../components/PageHeader";
+import PrintButton from "../../components/PrintButton";
 import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
@@ -52,13 +53,25 @@ const Identifications = () => {
           <PageHeader
             title={<PageHeader.Title></PageHeader.Title>}
             actions={
-              <IdentificationDialog
-                asyncList={value as AsyncListContextValue}
-              />
+              <Stack orientation="horizontal" gap="3">
+                <IdentificationDialog
+                  asyncList={value as AsyncListContextValue}
+                />
+                <PrintButton />
+              </Stack>
             }
           />
         </ShowIf.Employee>
-
+        <ShowIf.Admin>
+          <PageHeader
+            title={<PageHeader.Title />}
+            actions={
+              <Stack orientation="horizontal" gap="3">
+                <PrintButton />
+              </Stack>
+            }
+          />
+        </ShowIf.Admin>
         <Card>
           <DataGrid<Identification>
             {...(value as AsyncListContextValue<Identification>)}

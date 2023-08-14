@@ -13,6 +13,7 @@ import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import XLSX from "xlsx";
 import PageHeader from "../components/PageHeader";
 import PayRollDetailsDialog from "../components/PayRollDetailsDialog";
+import PrintButton from "../components/PrintButton";
 import ShowIf from "../components/ShowIf";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
@@ -199,6 +200,7 @@ export const PayRollPage = () => {
                 />
               </label>
             </ShowIf.Admin>
+            <PrintButton />
           </Stack>
         }
       />

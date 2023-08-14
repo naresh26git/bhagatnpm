@@ -5,6 +5,8 @@ import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
 import LeaveStatusDialog from "../../components/LeaveStatusDialog";
+import PageHeader from "../../components/PageHeader";
+import PrintButton from "../../components/PrintButton";
 import { useAuthContext } from "../../hooks/UseAuth";
 
 export type LeaveList = {
@@ -175,6 +177,10 @@ export const LeaveViewPage = ({ value }: LeaveViewPageProps) => {
   ];
   return (
     <Stack gap="3">
+      <PageHeader
+        title={<PageHeader.Title></PageHeader.Title>}
+        actions={<PrintButton />}
+      />
       <Card>
         <DataGrid<Leave>
           {...(value as AsyncListContextValue<Leave>)}

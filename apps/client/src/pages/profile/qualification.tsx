@@ -7,6 +7,7 @@ import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import PageHeader from "../../components/PageHeader";
+import PrintButton from "../../components/PrintButton";
 import QualificationDialog from "../../components/QualificationDialog";
 import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
@@ -50,11 +51,23 @@ const Qualifications = () => {
         <PageHeader
           title={<PageHeader.Title></PageHeader.Title>}
           actions={
-            <QualificationDialog asyncList={value as AsyncListContextValue} />
+            <Stack orientation="horizontal" gap="3">
+              <QualificationDialog asyncList={value as AsyncListContextValue} />
+              <PrintButton />
+            </Stack>
           }
         />
       </ShowIf.Employee>
-
+      <ShowIf.Admin>
+        <PageHeader
+          title={<PageHeader.Title />}
+          actions={
+            <Stack orientation="horizontal" gap="3">
+              <PrintButton />
+            </Stack>
+          }
+        />
+      </ShowIf.Admin>
       <Card>
         <DataGrid<Qualification>
           {...(value as AsyncListContextValue<Qualification>)}

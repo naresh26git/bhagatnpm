@@ -7,7 +7,9 @@ import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
+import PageHeader from "../../components/PageHeader";
 import PayRollDetailsDialog from "../../components/PayRollDetailsDialog";
+import PrintButton from "../../components/PrintButton";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
@@ -47,6 +49,10 @@ const Payslip = () => {
           actions={<QualificationDialog />}
         />
       </ShowIf.Employee> */}
+      <PageHeader
+        title={<PageHeader.Title></PageHeader.Title>}
+        actions={<PrintButton />}
+      />
 
       <Card>
         <DataGrid<PayRoll>

@@ -10,6 +10,7 @@ import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 
 import FamilyDialog from "../../components/FamilyDialog";
 import PageHeader from "../../components/PageHeader";
+import PrintButton from "../../components/PrintButton";
 import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
@@ -82,10 +83,24 @@ export const FamilyPage = () => {
       <ShowIf.Employee>
         <PageHeader
           title={<PageHeader.Title></PageHeader.Title>}
-          actions={<FamilyDialog asyncList={value as AsyncListContextValue} />}
-        />{" "}
+          actions={
+            <Stack orientation="horizontal" gap="3">
+              <FamilyDialog asyncList={value as AsyncListContextValue} />
+              <PrintButton />
+            </Stack>
+          }
+        />
       </ShowIf.Employee>
-
+      <ShowIf.Admin>
+        <PageHeader
+          title={<PageHeader.Title />}
+          actions={
+            <Stack orientation="horizontal" gap="3">
+              <PrintButton />
+            </Stack>
+          }
+        />
+      </ShowIf.Admin>
       <Card>
         <DataGrid<FamilyDetail>
           {...(value as AsyncListContextValue<FamilyDetail>)}

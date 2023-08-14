@@ -9,6 +9,8 @@ import Grid from "ui/Grid";
 import Image from "ui/Image";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
+import PageHeader from "../../components/PageHeader";
+import PrintButton from "../../components/PrintButton";
 
 export const ProfilePage = () => {
   const [fatherName, setFatherName] = React.useState("");
@@ -58,6 +60,10 @@ export const ProfilePage = () => {
           <FontAwesomeIcon icon={faArrowLeft} /> Back
         </Typography>
       </NavLink>
+      <PageHeader
+        title={<PageHeader.Title></PageHeader.Title>}
+        actions={<PrintButton />}
+      />
 
       <Grid.Col cols="12">
         <Stack gap="3">

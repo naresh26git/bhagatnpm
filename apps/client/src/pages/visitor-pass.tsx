@@ -11,6 +11,8 @@ import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import PageHeader from "../components/PageHeader";
+import PrintButton from "../components/PrintButton";
+import ShowIf from "../components/ShowIf";
 import VisitorPassDialog from "../components/VisitorPassDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
@@ -93,12 +95,27 @@ const VisitorPasses = () => {
             </Grid.Col>
           </Grid.Row>
         </Grid.Row>
-        <PageHeader
-          title={<PageHeader.Title></PageHeader.Title>}
-          actions={
-            <VisitorPassDialog asyncList={value as AsyncListContextValue} />
-          }
-        />
+        <ShowIf.Employee>
+          <PageHeader
+            title={<PageHeader.Title></PageHeader.Title>}
+            actions={
+              <Stack orientation="horizontal" gap="3">
+                <VisitorPassDialog asyncList={value as AsyncListContextValue} />
+                <PrintButton />
+              </Stack>
+            }
+          />
+        </ShowIf.Employee>
+        <ShowIf.Admin>
+          <PageHeader
+            title={<PageHeader.Title />}
+            actions={
+              <Stack orientation="horizontal" gap="3">
+                <PrintButton />
+              </Stack>
+            }
+          />
+        </ShowIf.Admin>
         <Card>
           <DataGrid<VisitorPass>
             {...(value as AsyncListContextValue<VisitorPass>)}

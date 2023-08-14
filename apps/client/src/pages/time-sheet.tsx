@@ -11,6 +11,7 @@ import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import PageHeader from "../components/PageHeader";
+import PrintButton from "../components/PrintButton";
 import { ShowIf } from "../components/ShowIf";
 import TimesheetDialog from "../components/TimesheetDialog";
 import { useAuthContext } from "../hooks/UseAuth";
@@ -108,10 +109,23 @@ export const TimeSheetPage = () => {
         <PageHeader
           title={<PageHeader.Title></PageHeader.Title>}
           actions={
-            <TimesheetDialog asyncList={value as AsyncListContextValue} />
+            <Stack orientation="horizontal" gap="3">
+              <TimesheetDialog asyncList={value as AsyncListContextValue} />
+              <PrintButton />
+            </Stack>
           }
         />
       </ShowIf.Employee>
+      <ShowIf.Admin>
+        <PageHeader
+          title={<PageHeader.Title />}
+          actions={
+            <Stack orientation="horizontal" gap="3">
+              <PrintButton />
+            </Stack>
+          }
+        />
+      </ShowIf.Admin>
 
       <Card>
         <DataGrid<TimeSheet>
