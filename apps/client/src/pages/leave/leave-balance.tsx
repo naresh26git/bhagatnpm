@@ -6,6 +6,8 @@ import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
+import PageHeader from "../../components/PageHeader";
+import PrintButton from "../../components/PrintButton";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
@@ -74,6 +76,7 @@ export const LeaveBalancePage = () => {
   });
   return (
     <Stack gap="3">
+      <PageHeader title={<PageHeader.Title />} actions={<PrintButton />} />
       <Card>
         <DataGrid<Leave>
           {...(value as AsyncListContextValue<Leave>)}

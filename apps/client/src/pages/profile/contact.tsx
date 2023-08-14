@@ -9,6 +9,7 @@ import Typography from "ui/Typography";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import ContactDialog from "../../components/ContactDialog";
 import PageHeader from "../../components/PageHeader";
+import PrintButton from "../../components/PrintButton";
 import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
@@ -50,9 +51,24 @@ export const ContactDataPage = () => {
       <ShowIf.Employee>
         <PageHeader
           title={<PageHeader.Title></PageHeader.Title>}
-          actions={<ContactDialog asyncList={value as AsyncListContextValue} />}
+          actions={
+            <Stack orientation="horizontal" gap="3">
+              <ContactDialog asyncList={value as AsyncListContextValue} />
+              <PrintButton />
+            </Stack>
+          }
         />
       </ShowIf.Employee>
+      <ShowIf.Admin>
+        <PageHeader
+          title={<PageHeader.Title />}
+          actions={
+            <Stack orientation="horizontal" gap="3">
+              <PrintButton />
+            </Stack>
+          }
+        />
+      </ShowIf.Admin>
 
       <Card>
         <DataGrid<Address>

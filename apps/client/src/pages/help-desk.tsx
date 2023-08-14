@@ -12,6 +12,7 @@ import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import HelpDeskDialog from "../components/HelpDeskDialog";
 import HelpDeskStatusDialog from "../components/HelpDeskStatusDialog";
 import PageHeader from "../components/PageHeader";
+import PrintButton from "../components/PrintButton";
 import { ShowIf } from "../components/ShowIf";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
@@ -178,15 +179,6 @@ export const HelpDeskPage = () => {
   ];
   return (
     <Stack gap="3">
-      <ShowIf.Employee>
-        <PageHeader
-          title={<PageHeader.Title></PageHeader.Title>}
-          actions={
-            <HelpDeskDialog asyncList={value as AsyncListContextValue} />
-          }
-        />
-      </ShowIf.Employee>
-
       <Grid.Row>
         <Grid.Col className="py-2" cols={["12", "md-2"]}>
           <input
@@ -225,7 +217,27 @@ export const HelpDeskPage = () => {
           </Grid.Col>
         </Grid.Row>
       </Grid.Row>
-
+      <ShowIf.Employee>
+        <PageHeader
+          title={<PageHeader.Title></PageHeader.Title>}
+          actions={
+            <Stack orientation="horizontal" gap="3">
+              <HelpDeskDialog asyncList={value as AsyncListContextValue} />
+              <PrintButton />
+            </Stack>
+          }
+        />
+      </ShowIf.Employee>
+      <ShowIf.Admin>
+        <PageHeader
+          title={<PageHeader.Title />}
+          actions={
+            <Stack orientation="horizontal" gap="3">
+              <PrintButton />
+            </Stack>
+          }
+        />
+      </ShowIf.Admin>
       <Card>
         <DataGrid<HelpDesk>
           {...(value as AsyncListContextValue<HelpDesk>)}
