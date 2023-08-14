@@ -7,13 +7,13 @@
 - [ ] Leave accept and reject is not working properly - **Sakthi**
 - [ ] Refactor the responsiveness of payslip modal - **Sakthi**
 - [ ] Use date validations for date fields in input parameters for all APIs - **Mithunish**
-- [ ] Print and export to excel feature needs to be implemented - **Mithunish**
 - [ ] Search Option for every table - **Mithunish**
 - [ ] Add icon buttons for leave approval and rejection in the leave page - **Mithunish**
 - [ ] Use react-hook-form validations for all forms - **Vishnupriya**
 - [ ] Add passport ocr to personal info screen - **Vignesh**
 - [ ] Add email poc integration to this project - **Vignesh**
 - [ ] Add sms poc integration to this project - **Vignesh**
+- [x] *Print and export to excel feature needs to be implemented* - **Mithunish**
 
 ## Things to figure out
 
@@ -27,6 +27,7 @@
 - [ ] Improve API documentation after changes - **Vishnupriya**
 - [ ] Add react-query library for trpc client and implement loading states - **Mithunish**
 - [ ] Improve the prisma development and production setup - **Mithunish**
+- [ ] Improve browser inconsistencies - **Mithunish**
 
 ### Things that are done
 
