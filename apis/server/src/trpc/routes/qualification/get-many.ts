@@ -17,9 +17,14 @@ const sortBy = (sortBy: string, sortOrder: "asc" | "desc") => {
 const sortBys = ["name", "userId"] as const;
 
 const inputParameters = baseGetManyInputParameters.merge(
-  z.object({ sortBy: z.enum(sortBys).optional() })
+  z.object({
+    limit: z.number().optional(),
+    page: z.number().optional(),
+    sortBy: z.enum(sortBys).optional(),
+    fromDate: z.date().optional(),
+    toDate: z.date().optional(),
+  })
 );
-
 export type Qualification =
   RouterOutput["qualifications"]["getMany"]["items"][0];
 
@@ -29,21 +34,27 @@ export const getMany = protectedProcedure
   .input(inputParameters.optional())
   .mutation(async ({ ctx, input }) => {
     try {
-      const where =
-        ctx.role === "admin"
+      const where = {
+        ...(input?.fromDate && input?.toDate
+          ? {
+              createdAt: {
+                gte: input.fromDate,
+                lt: input.toDate,
+              },
+            }
+          : {}),
+        ...(ctx.role === "admin"
           ? {
               user: {
                 role: {
-                  name: {
-                    in: ["admin", "employee"],
-                  },
+                  name: "employee",
                 },
               },
             }
           : {
               userId: ctx.userId,
-            };
-
+            }),
+      };
       const qualifications = await prisma.qualification.findMany({
         select: {
           id: true,
@@ -62,8 +73,12 @@ export const getMany = protectedProcedure
           },
           name: true,
         },
-        take: input?.limit ?? 5,
-        skip: (input?.page ?? 0) * (input?.limit ?? 5),
+        ...(input?.limit && input?.page
+          ? {
+              take: input.limit,
+              skip: input.page * input.limit,
+            }
+          : {}),
         orderBy:
           input?.sortBy && input?.sortOrder
             ? sortBy(input.sortBy, input.sortOrder)

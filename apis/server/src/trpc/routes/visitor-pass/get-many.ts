@@ -8,7 +8,7 @@ import { protectedProcedure } from "../../trpc";
 
 const sortBy = (sortBy: string, sortOrder: "asc" | "desc") => {
   const complexSortBysMap: Record<string, unknown> = {
-    companyId: { companies: { name: sortOrder } },
+    companyId: { company: { name: sortOrder } },
     hrId: { hr: { user: { name: sortOrder } } },
   };
 
@@ -28,7 +28,13 @@ const sortBys = [
 ] as const;
 
 const inputParameters = baseGetManyInputParameters.merge(
-  z.object({ sortBy: z.enum(sortBys).optional() })
+  z.object({
+    limit: z.number().optional(),
+    page: z.number().optional(),
+    sortBy: z.enum(sortBys).optional(),
+    fromDate: z.date().optional(),
+    toDate: z.date().optional(),
+  })
 );
 export type VisitorPass = RouterOutput["visitorPass"]["getMany"]["items"][0];
 
@@ -38,6 +44,17 @@ export const getMany = protectedProcedure
   .input(inputParameters.optional())
   .mutation(async ({ ctx, input }) => {
     try {
+      const where = {
+        ...(input?.fromDate && input?.toDate
+          ? {
+              createdAt: {
+                gte: input.fromDate,
+                lt: input.toDate,
+              },
+            }
+          : {}),
+      };
+
       const visitorPasses = await prisma.visitorPass.findMany({
         select: {
           id: true,
@@ -49,7 +66,7 @@ export const getMany = protectedProcedure
           inTime: true,
           outTime: true,
           reason: true,
-          companies: {
+          company: {
             select: {
               id: true,
               name: true,
@@ -67,12 +84,17 @@ export const getMany = protectedProcedure
             },
           },
         },
-        take: input?.limit ?? 5,
-        skip: (input?.page ?? 0) * (input?.limit ?? 5),
+        ...(input?.limit && input?.page
+          ? {
+              take: input.limit,
+              skip: input.page * input.limit,
+            }
+          : {}),
         orderBy:
           input?.sortBy && input?.sortOrder
             ? sortBy(input.sortBy, input.sortOrder)
             : { createdAt: "desc" },
+        where,
       });
 
       const count = await prisma.visitorPass.count();

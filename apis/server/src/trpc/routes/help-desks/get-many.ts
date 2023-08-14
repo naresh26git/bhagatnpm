@@ -26,7 +26,13 @@ const sortBys = [
 ] as const;
 
 const inputParameters = baseGetManyInputParameters.merge(
-  z.object({ sortBy: z.enum(sortBys).optional() })
+  z.object({
+    limit: z.number().optional(),
+    page: z.number().optional(),
+    sortBy: z.enum(sortBys).optional(),
+    fromDate: z.date().optional(),
+    toDate: z.date().optional(),
+  })
 );
 
 export type HelpDesk = RouterOutput["helpDesk"]["getMany"]["items"][0];
@@ -37,8 +43,16 @@ export const getMany = protectedProcedure
   .input(inputParameters.optional())
   .mutation(async ({ ctx, input }) => {
     try {
-      const where =
-        ctx.role === "admin"
+      const where = {
+        ...(input?.fromDate && input?.toDate
+          ? {
+              createdAt: {
+                gte: input.fromDate,
+                lt: input.toDate,
+              },
+            }
+          : {}),
+        ...(ctx.role === "admin"
           ? {
               user: {
                 role: {
@@ -48,7 +62,8 @@ export const getMany = protectedProcedure
             }
           : {
               userId: ctx.userId,
-            };
+            }),
+      };
 
       const helpDesks = await prisma.helpDesk.findMany({
         select: {
@@ -83,8 +98,12 @@ export const getMany = protectedProcedure
             },
           },
         },
-        take: input?.limit ?? 5,
-        skip: (input?.page ?? 0) * (input?.limit ?? 5),
+        ...(input?.limit && input?.page
+          ? {
+              take: input.limit,
+              skip: input.page * input.limit,
+            }
+          : {}),
         orderBy:
           input?.sortBy && input?.sortOrder
             ? sortBy(input.sortBy, input.sortOrder)

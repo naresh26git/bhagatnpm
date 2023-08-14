@@ -10,6 +10,7 @@ import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
+import XLSX from "xlsx";
 import PageHeader from "../components/PageHeader";
 import PrintButton from "../components/PrintButton";
 import ShowIf from "../components/ShowIf";
@@ -48,6 +49,65 @@ const VisitorPasses = () => {
       }
     },
   });
+
+  const handleExport = async () => {
+    try {
+      const data = await client.visitorPass.getMany.mutate({
+        fromDate: new Date(
+          new Date(
+            new Date().setFullYear(
+              new Date().getFullYear(),
+              new Date().getMonth(),
+              1
+            )
+          ).setHours(0, 0, 0, 0)
+        ),
+        toDate: new Date(
+          new Date(
+            new Date().setFullYear(
+              new Date().getFullYear(),
+              new Date().getMonth() + 1,
+              1
+            )
+          ).setHours(0, 0, 0, 0)
+        ),
+      });
+
+      const visitorPasses = data.items.map((item) => ({
+        "Visitor Image": item.imageUrl,
+        Name: item.name,
+        "From Place": item.fromPlace,
+        "Company Name": item.company.name,
+        "HR Name": item.hr.user.name,
+        "Mobile Number": item.mobileNumber,
+        Date: new Intl.DateTimeFormat("en-US", {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+        }).format(new Date(item.date)),
+        "In-time": new Intl.DateTimeFormat("en-US", {
+          hour: "numeric",
+          minute: "numeric",
+        }).format(new Date(item.inTime)),
+        "Out-time":
+          item.outTime !== null
+            ? new Intl.DateTimeFormat("en-US", {
+                hour: "numeric",
+                minute: "numeric",
+              }).format(new Date(item.outTime))
+            : "",
+        Reason: item.reason,
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(visitorPasses);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "visitor-passes");
+      XLSX.writeFile(workbook, "visitor-passes.xlsx", { compression: true });
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
   return (
     <>
       <Stack gap="3">
@@ -95,28 +155,23 @@ const VisitorPasses = () => {
             </Grid.Col>
           </Grid.Row>
         </Grid.Row>
-        <ShowIf.Employee>
-          <PageHeader
-            title={<PageHeader.Title></PageHeader.Title>}
-            actions={
-              <Stack orientation="horizontal" gap="3">
+        <PageHeader
+          title={<PageHeader.Title />}
+          actions={
+            <Stack orientation="horizontal" gap="3">
+              <ShowIf.Employee>
                 <VisitorPassDialog asyncList={value as AsyncListContextValue} />
-                <PrintButton />
-              </Stack>
-            }
-          />
-        </ShowIf.Employee>
-        <ShowIf.Admin>
-          <PageHeader
-            title={<PageHeader.Title />}
-            actions={
-              <Stack orientation="horizontal" gap="3">
-                <PrintButton />
-              </Stack>
-            }
-          />
-        </ShowIf.Admin>
-        <Card>
+              </ShowIf.Employee>
+
+              <Button variant="primary" onClick={handleExport}>
+                Export
+              </Button>
+
+              <PrintButton />
+            </Stack>
+          }
+        />
+        <Card id="section-to-print">
           <DataGrid<VisitorPass>
             {...(value as AsyncListContextValue<VisitorPass>)}
             columns={[
@@ -160,7 +215,7 @@ const VisitorPasses = () => {
                 label: "Company Name",
                 renderCell: (item) => (
                   <Typography transform="capitalize">
-                    {item.companies.name}
+                    {item.company.name}
                   </Typography>
                 ),
                 ...value.sort("companyId"),
@@ -203,7 +258,7 @@ const VisitorPasses = () => {
               {
                 id: "8",
                 key: "",
-                label: "InTime",
+                label: "In-time",
                 renderCell: (item) => (
                   <>
                     {new Intl.DateTimeFormat("en-US", {
@@ -217,7 +272,7 @@ const VisitorPasses = () => {
               {
                 id: "9",
                 key: "",
-                label: "OutTime",
+                label: "Out-time",
                 renderCell: (item) => (
                   <>
                     {item.outTime !== null

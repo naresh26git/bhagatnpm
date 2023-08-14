@@ -48,7 +48,7 @@ export const set = employeeOnlyProcedure
           inTime: true,
           outTime: true,
           reason: true,
-          companies: {
+          company: {
             select: {
               name: true,
             },

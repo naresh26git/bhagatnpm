@@ -1,17 +1,22 @@
 # Things to do final
 
-- [ ] Improve data grid to handle loading, error and no data states gracefully - **Team**
-- [ ] Refactor schema file according to a common standard - **Mithunish**
-- [ ] Fix the react key error in the data grid component - **Mithunish**
-- [ ] Add confirmation modal wherever necessary - **Team**
-- [ ] Leave accept and reject is not working properly - **Sakthi**
-- [ ] Refactor the responsiveness of payslip modal - **Sakthi**
-- [ ] Use date validations for date fields in input parameters for all APIs - **Mithunish**
-- [ ] Search Option for every table - **Mithunish**
-- [ ] Add icon buttons for leave approval and rejection in the leave page - **Mithunish**
-- [ ] Use react-hook-form validations for all forms - **Vishnupriya**
-- [ ] Add passport ocr to personal info screen - **Vignesh**
+- [ ] Add pay slip print - **Team**
+- [ ] Change the time sheet add modal to check-in and check-out - **Vignesh**
 - [ ] Add email poc integration to this project - **Vignesh**
+- [ ] Add passport ocr to personal info screen - **Vignesh**
+- [ ] Leave accept and reject is not working properly - **Sakthi**
+- [ ] Add icon buttons for leave approval and rejection in the leave page - **Mithunish**
+
+- [ ] Improve data grid to handle loading, error and no data states gracefully - **Team**
+- [ ] Add success, warning and error alerts for all tables - **Team**
+- [ ] Fix the react key error in the data grid component - **Mithunish**
+- [ ] Refactor the responsiveness of payslip modal - **Sakthi**
+- [ ] Search option for every table - **Mithunish**
+- [ ] Use react-hook-form validations for all forms - **Vishnupriya**
+
+- [ ] Refactor schema file according to a common standard - **Mithunish**
+- [ ] Add confirmation modal wherever necessary - **Team**
+- [ ] Use date validations for date fields in input parameters for all APIs - **Mithunish**
 - [ ] Add sms poc integration to this project - **Vignesh**
 - [x] *Print and export to excel feature needs to be implemented* - **Mithunish**
 
@@ -58,3 +63,4 @@
 - [x] Logout from the side menu bar - **Vignesh**
 - [x] Add emp code and emp name to the help desk table - **Murali**
 - [x] Add password hashing with salt - **Vignesh**
+- [x] Fix the dropdowns error in all forms - **Team**

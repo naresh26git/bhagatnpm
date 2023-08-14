@@ -98,12 +98,19 @@ export const VisitorPass = (props: VisitorPassDialogProps) => {
 
   React.useEffect(() => {
     (async () => {
-      const companies = await client.company.getMany.query();
-      setCompany(companies);
+      try {
+        const companies = await client.company.getMany.mutate();
 
-      const [firstCompany] = companies;
-      if (firstCompany === undefined) return;
-      setCompanyId(firstCompany.id);
+        setCompany(companies);
+
+        const [firstCompany] = companies;
+
+        if (firstCompany === undefined) return;
+
+        setCompanyId(firstCompany.id);
+      } catch (error) {
+        handleTRPCError(error, auth);
+      }
     })();
   }, []);
 
@@ -113,12 +120,10 @@ export const VisitorPass = (props: VisitorPassDialogProps) => {
         if (companyId === undefined) return;
 
         const hr = await client.hr.getMany.mutate({ companyId });
-        // API call successfully done
-        // window.location.reload();
+
         setHr(hr);
       } catch (error) {
-        // API call failed
-        // Why failed?
+        handleTRPCError(error, auth);
       }
     })();
   }, [companyId]);
@@ -126,7 +131,7 @@ export const VisitorPass = (props: VisitorPassDialogProps) => {
   return (
     <>
       <Dialog.Trigger {...value} variant="primary">
-        Apply VisitorPass
+        Apply Visitor Pass
       </Dialog.Trigger>
 
       <Dialog {...value}>

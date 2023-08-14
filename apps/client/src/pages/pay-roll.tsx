@@ -71,7 +71,7 @@ export const PayRollPage = () => {
       });
 
       const payRolls = data.items.map((item) => ({
-        "Emp Code": item.id,
+        "Emp Code": item.user.id,
         "Emp Name":
           item.user.personalInfo?.firstName && item.user.personalInfo.lastName
             ? `${item.user.personalInfo?.firstName} ${item.user.personalInfo?.lastName}`
@@ -200,11 +200,12 @@ export const PayRollPage = () => {
                 />
               </label>
             </ShowIf.Admin>
+
             <PrintButton />
           </Stack>
         }
       />
-      <Card>
+      <Card id="section-to-print">
         <DataGrid<PayRoll>
           {...(value as AsyncListContextValue<PayRoll>)}
           columns={[

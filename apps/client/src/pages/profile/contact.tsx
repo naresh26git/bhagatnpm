@@ -2,6 +2,7 @@ import {
   Address,
   InputParameters,
 } from "server/dist/trpc/routes/addresses/get-many";
+import Button from "ui/Button";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
@@ -49,7 +50,7 @@ export const ContactDataPage = () => {
 
   const handleExport = async () => {
     try {
-      const data = await client.payRoll.getMany.mutate({
+      const data = await client.address.getMany.mutate({
         fromDate: new Date(
           new Date(
             new Date().setFullYear(
@@ -70,37 +71,24 @@ export const ContactDataPage = () => {
         ),
       });
 
-      const payRolls = data.items.map((item) => ({
-        "Emp Code": item.id,
+      const addresses = data.items.map((item) => ({
+        "Emp Code": item.user.id,
         "Emp Name":
           item.user.personalInfo?.firstName && item.user.personalInfo.lastName
             ? `${item.user.personalInfo?.firstName} ${item.user.personalInfo?.lastName}`
             : item.user.name,
-        Department: item.user.personalInfo?.department.name,
-        Designation: item.user.personalInfo?.designation.name,
-        "Financial Year": `FY ${new Intl.DateTimeFormat("en-US", {
-          year: "2-digit",
-        }).format(new Date().setFullYear(item.year, item.month, 1))}`,
-        Period: `${new Intl.DateTimeFormat("en-US", {
-          month: "short",
-          year: "2-digit",
-        }).format(new Date().setFullYear(item.year, item.month, 1))}`,
-        "Gross Pay": Intl.NumberFormat("en-IN", {
-          style: "currency",
-          currency: "INR",
-        }).format(
-          item.paySlipComponents.reduce(
-            (acc, paySlipComponent) => acc + Number(paySlipComponent.amount),
-            0
-          )
-        ),
-        Status: item.status.name,
+        "Address Type": item.addressType?.name,
+        Street: item.street,
+        City: item.city,
+        State: item.state,
+        Country: item.country,
+        Pincode: item.pincode,
       }));
 
-      const worksheet = XLSX.utils.json_to_sheet(payRolls);
+      const worksheet = XLSX.utils.json_to_sheet(addresses);
       const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, "pay-roll");
-      XLSX.writeFile(workbook, "pay-roll.xlsx", { compression: true });
+      XLSX.utils.book_append_sheet(workbook, worksheet, "addresses");
+      XLSX.writeFile(workbook, "addresses.xlsx", { compression: true });
     } catch (error) {
       console.log({ error });
     }
@@ -114,6 +102,9 @@ export const ContactDataPage = () => {
           actions={
             <Stack orientation="horizontal" gap="3">
               <ContactDialog asyncList={value as AsyncListContextValue} />
+              <Button variant="primary" onClick={handleExport}>
+                Export
+              </Button>
               <PrintButton />
             </Stack>
           }
@@ -124,6 +115,9 @@ export const ContactDataPage = () => {
           title={<PageHeader.Title />}
           actions={
             <Stack orientation="horizontal" gap="3">
+              <Button variant="primary" onClick={handleExport}>
+                Export
+              </Button>
               <PrintButton />
             </Stack>
           }

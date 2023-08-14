@@ -21,6 +21,7 @@ export const ContactDialog = (props: ContactDialogProps) => {
   const [country, setCountry] = React.useState("");
   const [pincode, setPincode] = React.useState("");
   const [state, setState] = React.useState("");
+
   const addContactDetails = async () => {
     try {
       await client.address.set.mutate({
@@ -47,7 +48,7 @@ export const ContactDialog = (props: ContactDialogProps) => {
   return (
     <>
       <Dialog.Trigger {...value} variant="primary">
-        Add Address
+        Add Contact
       </Dialog.Trigger>
 
       <Dialog {...value}>

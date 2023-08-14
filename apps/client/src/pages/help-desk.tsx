@@ -9,6 +9,7 @@ import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
+import XLSX from "xlsx";
 import HelpDeskDialog from "../components/HelpDeskDialog";
 import HelpDeskStatusDialog from "../components/HelpDeskStatusDialog";
 import PageHeader from "../components/PageHeader";
@@ -17,6 +18,7 @@ import { ShowIf } from "../components/ShowIf";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
+
 export const helpDesk = {
   uid: "1",
   id: "1210",
@@ -177,6 +179,59 @@ export const HelpDeskPage = () => {
       ),
     },
   ];
+
+  const handleExport = async () => {
+    try {
+      const data = await client.helpDesk.getMany.mutate({
+        fromDate: new Date(
+          new Date(
+            new Date().setFullYear(
+              new Date().getFullYear(),
+              new Date().getMonth(),
+              1
+            )
+          ).setHours(0, 0, 0, 0)
+        ),
+        toDate: new Date(
+          new Date(
+            new Date().setFullYear(
+              new Date().getFullYear(),
+              new Date().getMonth() + 1,
+              1
+            )
+          ).setHours(0, 0, 0, 0)
+        ),
+      });
+
+      const helpDesk = data.items.map((item) => ({
+        "Emp Code": item.user.id,
+        "Emp Name":
+          item.user.personalInfo?.firstName && item.user.personalInfo.lastName
+            ? `${item.user.personalInfo?.firstName} ${item.user.personalInfo?.lastName}`
+            : item.user.name,
+        Date: item.date
+          ? new Intl.DateTimeFormat("en-US", {
+              year: "numeric",
+              month: "numeric",
+              day: "numeric",
+            }).format(new Date(item.date))
+          : "",
+        Tittle: item.title,
+        Category: item.category.name,
+        Description: item.description,
+        Remarks: item.remarks,
+        Status: item.status.name,
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(helpDesk);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "help-desk");
+      XLSX.writeFile(workbook, "help-desk.xlsx", { compression: true });
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
   return (
     <Stack gap="3">
       <Grid.Row>
@@ -223,6 +278,9 @@ export const HelpDeskPage = () => {
           actions={
             <Stack orientation="horizontal" gap="3">
               <HelpDeskDialog asyncList={value as AsyncListContextValue} />
+              <Button variant="primary" onClick={handleExport}>
+                Export
+              </Button>
               <PrintButton />
             </Stack>
           }
@@ -233,12 +291,15 @@ export const HelpDeskPage = () => {
           title={<PageHeader.Title />}
           actions={
             <Stack orientation="horizontal" gap="3">
+              <Button variant="primary" onClick={handleExport}>
+                Export
+              </Button>
               <PrintButton />
             </Stack>
           }
         />
       </ShowIf.Admin>
-      <Card>
+      <Card id="section-to-print">
         <DataGrid<HelpDesk>
           {...(value as AsyncListContextValue<HelpDesk>)}
           columns={columns.filter((column) => {

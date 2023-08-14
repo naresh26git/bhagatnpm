@@ -6,7 +6,7 @@ import { protectedProcedure } from "../../trpc";
 
 export type TimeSheetStatus = RouterOutput["timeSheetStatus"]["getMany"][0];
 
-export const getMany = protectedProcedure.query(async () => {
+export const getMany = protectedProcedure.mutation(async () => {
   try {
     const timeSheetStatus = await prisma.timeSheetStatus.findMany({
       select: {

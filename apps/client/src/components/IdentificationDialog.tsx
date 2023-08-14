@@ -42,13 +42,20 @@ export const IdentificationDialog = (props: IdentificationDialogProps) => {
 
   React.useEffect(() => {
     (async () => {
-      const identificationTypes =
-        await client.identificationTypes.getMany.query();
-      setType(identificationTypes);
+      try {
+        const identificationTypes =
+          await client.identificationTypes.getMany.mutate();
 
-      const [firstCompany] = identificationTypes;
-      if (firstCompany === undefined) return;
-      setTypeId(firstCompany.id);
+        setType(identificationTypes);
+
+        const [firstIdentificationType] = identificationTypes;
+
+        if (firstIdentificationType === undefined) return;
+
+        setTypeId(firstIdentificationType.id);
+      } catch (error) {
+        handleTRPCError(error, auth);
+      }
     })();
   }, []);
 

@@ -521,7 +521,7 @@ model VisitorPass {
   outTime      DateTime? @map("out_time")
   reason       String    @map("reason") @db.VarChar(1024)
   createdBy    User      @relation("VisitorCreatedByUser", fields: [createdById], references: [id], onUpdate: NoAction)
-  companies    Company   @relation("CompanyOfVisitorPass", fields: [companyId], references: [id], onUpdate: NoAction)
+  company      Company   @relation("CompanyOfVisitorPass", fields: [companyId], references: [id], onUpdate: NoAction)
   hr           Hr        @relation("HrOfVisitorPass", fields: [hrId], references: [id], onUpdate: NoAction)
   updatedBy    User      @relation("VisitorUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
 

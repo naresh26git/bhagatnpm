@@ -90,35 +90,51 @@ export const PersonalInfoDialog = (props: PersonalInfoDialogProps) => {
     id: "create-info",
     labelId: "create-info-label",
   };
+
   React.useEffect(() => {
     (async () => {
-      const department = await client.department.getMany.query();
-      setDepartment(department);
+      try {
+        const departments = await client.department.getMany.mutate();
 
-      const [firstDepartment] = department;
-      if (firstDepartment === undefined) return;
-      setDepartmentId(firstDepartment.id);
+        setDepartment(departments);
+
+        const [firstDepartment] = departments;
+
+        if (firstDepartment === undefined) return;
+
+        setDepartmentId(firstDepartment.id);
+      } catch (error) {
+        handleTRPCError(error, auth);
+      }
     })();
   }, []);
+
   React.useEffect(() => {
     (async () => {
-      const designation = await client.designation.getMany.query();
-      setDesignation(designation);
+      try {
+        const designations = await client.designation.getMany.mutate();
 
-      const [firstDesignation] = designation;
-      if (firstDesignation === undefined) return;
-      setDesignationId(firstDesignation.id);
+        setDesignation(designations);
+
+        const [firstDesignation] = designations;
+
+        if (firstDesignation === undefined) return;
+
+        setDesignationId(firstDesignation.id);
+      } catch (error) {
+        handleTRPCError(error, auth);
+      }
     })();
   }, []);
 
   return (
     <>
       <Dialog.Trigger {...value} variant="primary">
-        Add PersonalInfo
+        Add Personal Info
       </Dialog.Trigger>
 
       <Dialog {...value}>
-        <Dialog.Header title="Add PersonalInfo" />
+        <Dialog.Header title="Add Personal Info" />
         <Dialog.Body>
           <Stack gap="3">
             <Grid.Row gutters="3">

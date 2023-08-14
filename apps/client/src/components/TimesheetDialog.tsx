@@ -47,18 +47,22 @@ export const TimesheetDialog = (props: TimesheetDialogProps) => {
 
   React.useEffect(() => {
     (async () => {
-      const status = await client.timeSheetStatus.getMany.query();
-      setStatus(status);
-      const [firstStatus] = status;
-      if (firstStatus === undefined) return;
-      setStatusId(firstStatus.id);
+      try {
+        const status = await client.timeSheetStatus.getMany.mutate();
+        setStatus(status);
+        const [firstStatus] = status;
+        if (firstStatus === undefined) return;
+        setStatusId(firstStatus.id);
+      } catch (error) {
+        handleTRPCError(error, auth);
+      }
     })();
   }, []);
 
   return (
     <>
       <Dialog.Trigger {...value} variant="primary">
-        Add Timesheet
+        Add Time Sheet
       </Dialog.Trigger>
 
       <Dialog {...value}>

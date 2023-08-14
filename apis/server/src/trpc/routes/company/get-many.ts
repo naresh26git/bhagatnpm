@@ -6,7 +6,7 @@ import { protectedProcedure } from "../../trpc";
 
 export type Company = RouterOutput["company"]["getMany"][0];
 
-export const getMany = protectedProcedure.query(async ({ ctx, input }) => {
+export const getMany = protectedProcedure.mutation(async () => {
   try {
     const companies = await prisma.company.findMany({
       select: {

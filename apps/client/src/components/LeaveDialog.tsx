@@ -45,14 +45,22 @@ export const LeaveDialog = (props: LeaveDialogProps) => {
 
   React.useEffect(() => {
     (async () => {
-      const leaveTypes = await client.leaveType.getMany.query();
-      setLeaveType(leaveTypes);
+      try {
+        const leaveTypes = await client.leaveType.getMany.mutate();
 
-      const [firstLeaveType] = leaveTypes;
-      if (firstLeaveType === undefined) return;
-      setLeaveTypeId(firstLeaveType.id);
+        setLeaveType(leaveTypes);
+
+        const [firstLeaveType] = leaveTypes;
+
+        if (firstLeaveType === undefined) return;
+
+        setLeaveTypeId(firstLeaveType.id);
+      } catch (error) {
+        handleTRPCError(error, auth);
+      }
     })();
   }, []);
+
   return (
     <>
       <Dialog.Trigger {...value} variant="primary">

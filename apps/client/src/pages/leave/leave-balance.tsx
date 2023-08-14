@@ -2,10 +2,12 @@ import {
   InputParameters,
   Leave,
 } from "server/dist/trpc/routes/leaves/get-many";
+import Button from "ui/Button";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Stack from "ui/Stack";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
+import XLSX from "xlsx";
 import PageHeader from "../../components/PageHeader";
 import PrintButton from "../../components/PrintButton";
 import { useAuthContext } from "../../hooks/UseAuth";
@@ -74,10 +76,65 @@ export const LeaveBalancePage = () => {
       }
     },
   });
+
+  const handleExport = async () => {
+    try {
+      const data = await client.leave.getMany.mutate({
+        fromDate: new Date(
+          new Date(
+            new Date().setFullYear(
+              new Date().getFullYear(),
+              new Date().getMonth(),
+              1
+            )
+          ).setHours(0, 0, 0, 0)
+        ),
+        toDate: new Date(
+          new Date(
+            new Date().setFullYear(
+              new Date().getFullYear(),
+              new Date().getMonth() + 1,
+              1
+            )
+          ).setHours(0, 0, 0, 0)
+        ),
+      });
+
+      const leaveBalances = data.items.map((item) => ({
+        "Emp Code": item.user.id,
+        "Emp Name":
+          item.user.personalInfo?.firstName && item.user.personalInfo.lastName
+            ? `${item.user.personalInfo?.firstName} ${item.user.personalInfo?.lastName}`
+            : item.user.name,
+        "Leave Type": item.leaveType.name,
+        "Available Units": item.leaveType.daysAlloted,
+        "Balance Units":
+          Number(item.leaveType.daysAlloted) - Number(item.noOfDays),
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(leaveBalances);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "leave-balance");
+      XLSX.writeFile(workbook, "leave-balance.xlsx", { compression: true });
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
   return (
     <Stack gap="3">
-      <PageHeader title={<PageHeader.Title />} actions={<PrintButton />} />
-      <Card>
+      <PageHeader
+        title={<PageHeader.Title />}
+        actions={
+          <Stack orientation="horizontal" gap="3">
+            <Button variant="primary" onClick={handleExport}>
+              Export
+            </Button>
+            <PrintButton />
+          </Stack>
+        }
+      />
+      <Card id="section-to-print">
         <DataGrid<Leave>
           {...(value as AsyncListContextValue<Leave>)}
           columns={[

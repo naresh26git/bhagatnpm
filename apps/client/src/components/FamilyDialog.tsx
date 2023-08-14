@@ -40,16 +40,25 @@ export const FamilyDialog = (props: FamilyDialogProps) => {
     id: "create-family-info",
     labelId: "create-family-info-label",
   };
+
   React.useEffect(() => {
     (async () => {
-      const relationShip = await client.relationShip.getMany.query();
-      setRelation(relationShip);
+      try {
+        const relationShipTypes = await client.relationShip.getMany.mutate();
 
-      const [firstCategory] = relationShip;
-      if (firstCategory === undefined) return;
-      setRelationShipTypeId(firstCategory.id);
+        setRelation(relationShipTypes);
+
+        const [firstRelationShipType] = relationShipTypes;
+
+        if (firstRelationShipType === undefined) return;
+
+        setRelationShipTypeId(firstRelationShipType.id);
+      } catch (error) {
+        handleTRPCError(error, auth);
+      }
     })();
   }, []);
+
   return (
     <>
       <Dialog.Trigger {...value} variant="primary">

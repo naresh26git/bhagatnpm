@@ -40,19 +40,27 @@ export const HelpDeskDialog = (props: HelpDeskDialogProps) => {
 
   React.useEffect(() => {
     (async () => {
-      const helpDeskCategories =
-        await client.helpDeskCategories.getMany.query();
-      setCategory(helpDeskCategories);
+      try {
+        const helpDeskCategories =
+          await client.helpDeskCategories.getMany.mutate();
 
-      const [firstCategory] = helpDeskCategories;
-      if (firstCategory === undefined) return;
-      setCategoryId(firstCategory.id);
+        setCategory(helpDeskCategories);
+
+        const [firstCategory] = helpDeskCategories;
+
+        if (firstCategory === undefined) return;
+
+        setCategoryId(firstCategory.id);
+      } catch (error) {
+        handleTRPCError(error, auth);
+      }
     })();
   }, []);
+
   return (
     <>
       <Dialog.Trigger {...value} variant="primary">
-        Add HeskDesk
+        Add Hesk Desk
       </Dialog.Trigger>
       <Dialog {...value}>
         <Dialog.Header color="primary" title={"HELP DESK"} />

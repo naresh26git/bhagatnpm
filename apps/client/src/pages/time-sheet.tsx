@@ -10,6 +10,7 @@ import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
+import XLSX from "xlsx";
 import PageHeader from "../components/PageHeader";
 import PrintButton from "../components/PrintButton";
 import { ShowIf } from "../components/ShowIf";
@@ -74,6 +75,65 @@ export const TimeSheetPage = () => {
       }
     },
   });
+  const handleExport = async () => {
+    try {
+      const data = await client.timeSheet.getMany.mutate({
+        fromDate: new Date(
+          new Date(
+            new Date().setFullYear(
+              new Date().getFullYear(),
+              new Date().getMonth(),
+              1
+            )
+          ).setHours(0, 0, 0, 0)
+        ),
+        toDate: new Date(
+          new Date(
+            new Date().setFullYear(
+              new Date().getFullYear(),
+              new Date().getMonth() + 1,
+              1
+            )
+          ).setHours(0, 0, 0, 0)
+        ),
+      });
+      const timeSheets = data.items.map((item) => ({
+        "Emp Code": item.user.id,
+        "Emp Name":
+          item.user.personalInfo?.firstName && item.user.personalInfo.lastName
+            ? `${item.user.personalInfo?.firstName} ${item.user.personalInfo?.lastName}`
+            : item.user.name,
+        Date: item.inTime
+          ? new Intl.DateTimeFormat("en-US", {
+              year: "numeric",
+              month: "numeric",
+              day: "numeric",
+            }).format(new Date(item.inTime))
+          : "",
+        "Check-in": item.inTime
+          ? new Intl.DateTimeFormat("en-US", {
+              hour: "numeric",
+              minute: "numeric",
+            }).format(new Date(item.inTime))
+          : "",
+        "Check-out": item.outTime
+          ? new Intl.DateTimeFormat("en-US", {
+              hour: "numeric",
+              minute: "numeric",
+            }).format(new Date(item.outTime))
+          : "",
+        Status: item.status.name,
+      }));
+
+      const worksheet = XLSX.utils.json_to_sheet(timeSheets);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "time-sheet");
+      XLSX.writeFile(workbook, "time-sheet.xlsx", { compression: true });
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
   return (
     <Stack gap="3">
       <Grid.Row>
@@ -111,6 +171,9 @@ export const TimeSheetPage = () => {
           actions={
             <Stack orientation="horizontal" gap="3">
               <TimesheetDialog asyncList={value as AsyncListContextValue} />
+              <Button variant="primary" onClick={handleExport}>
+                Export
+              </Button>
               <PrintButton />
             </Stack>
           }
@@ -121,26 +184,29 @@ export const TimeSheetPage = () => {
           title={<PageHeader.Title />}
           actions={
             <Stack orientation="horizontal" gap="3">
+              <Button variant="primary" onClick={handleExport}>
+                Export
+              </Button>
               <PrintButton />
             </Stack>
           }
         />
       </ShowIf.Admin>
 
-      <Card>
+      <Card id="section-to-print">
         <DataGrid<TimeSheet>
           {...(value as AsyncListContextValue<TimeSheet>)}
           columns={[
             {
               id: "1",
               key: "userId",
-              label: "Emp code",
+              label: "Emp Code",
               renderCell: (item) => <>{item.user.id}</>,
             },
             {
               id: "2",
               key: "",
-              label: "Name",
+              label: "Emp Name",
               renderCell: (item) => (
                 <>
                   {item.user.personalInfo
