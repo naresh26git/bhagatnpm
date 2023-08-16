@@ -6,7 +6,7 @@ import { protectedProcedure } from "../../trpc";
 
 export type HelpDeskStatus = RouterOutput["helpDeskStatus"]["getMany"][0];
 
-export const getMany = protectedProcedure.query(async () => {
+export const getMany = protectedProcedure.mutation(async () => {
   try {
     const helpDeskStatus = await prisma.helpDeskStatus.findMany({
       select: {

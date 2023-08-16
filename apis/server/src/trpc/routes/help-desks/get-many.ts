@@ -98,7 +98,7 @@ export const getMany = protectedProcedure
             },
           },
         },
-        ...(input?.limit && input?.page
+        ...(input?.limit !== undefined && input?.page !== undefined
           ? {
               take: input.limit,
               skip: input.page * input.limit,

@@ -4,16 +4,11 @@ import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
-import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
 
-export type CreateUserDialogProps = {
-  asyncList: AsyncListContextValue;
-};
-
-export const CreateUserDialog = (props: CreateUserDialogProps) => {
+export const CreateUserDialog = () => {
   const auth = useAuthContext();
   const [role, setRole] = React.useState<"admin" | "employee">("employee");
   const [name, setName] = React.useState("");
@@ -30,8 +25,6 @@ export const CreateUserDialog = (props: CreateUserDialogProps) => {
         role,
         email,
       });
-
-      props.asyncList.refresh();
     } catch (error) {
       handleTRPCError(error, auth);
     }

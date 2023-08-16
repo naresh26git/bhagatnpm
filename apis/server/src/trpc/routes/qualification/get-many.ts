@@ -73,7 +73,7 @@ export const getMany = protectedProcedure
           },
           name: true,
         },
-        ...(input?.limit && input?.page
+        ...(input?.limit !== undefined && input?.page !== undefined
           ? {
               take: input.limit,
               skip: input.page * input.limit,

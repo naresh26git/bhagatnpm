@@ -103,7 +103,7 @@ export const getMany = protectedProcedure
           remarks: true,
           noOfDays: true,
         },
-        ...(input?.limit && input?.page
+        ...(input?.limit !== undefined && input?.page !== undefined
           ? {
               take: input.limit,
               skip: input.page * input.limit,

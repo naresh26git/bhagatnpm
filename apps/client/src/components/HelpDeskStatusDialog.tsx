@@ -1,10 +1,12 @@
+import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
-
 import { HelpDeskStatus } from "server/src/trpc/routes/helpdesk-status/get-many";
 import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Stack from "ui/Stack";
 import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
+import { useDialog } from "ui/hooks/UseDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
@@ -20,28 +22,17 @@ const HelpDeskStatusDialog = (props: HelpDeskStatusProps) => {
   const [status, setStatus] = React.useState<HelpDeskStatus[]>([]);
   const [statusId, setStatusId] = React.useState<number>();
   const [remarks, setRemarks] = React.useState("");
-  const [variantType, setVariantType] = React.useState("");
-  const value =
-    props.variant === "admin"
-      ? {
-          labelId: "update-helpdesk-status-model",
-          id: "update-helpdesk-status-model",
-        }
-      : {
-          labelId: "update-helpdesk-model",
-          id: "update-helpdesk-model",
-        };
+  const value = useDialog();
+
   const handleSubmit = async () => {
     try {
       if (statusId === undefined) return;
 
-      const inputParameters = {
+      await client.helpDesk.adminUpdate.mutate({
         id: props.helpDeskId,
         remarks: remarks,
         statusId: statusId,
-      };
-
-      await client.helpDesk.adminUpdate.mutate(inputParameters);
+      });
 
       props.asyncList.refresh();
     } catch (error) {
@@ -50,26 +41,31 @@ const HelpDeskStatusDialog = (props: HelpDeskStatusProps) => {
   };
 
   React.useEffect(() => {
-    setVariantType(props.variant);
-  }, [props.variant]);
-  React.useEffect(() => {
     (async () => {
-      const status = await client.helpDeskStatus.getMany.query();
+      const status = await client.helpDeskStatus.getMany.mutate();
+
       setStatus(status);
+
       const [firstStatus] = status;
+
       if (firstStatus === undefined) return;
+
       setStatusId(firstStatus.id);
     })();
   }, []);
+
   return (
     <>
-      <Dialog.Trigger {...value} variant="primary">
-        {props.variant === "admin" ? "AddHelpDeskStatus" : "Edit"}
+      <Dialog.Trigger {...value} variant="success">
+        <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
+      </Dialog.Trigger>
+      <Dialog.Trigger {...value} variant="danger">
+        <FontAwesomeIcon icon={faXmark}></FontAwesomeIcon>
       </Dialog.Trigger>
 
       <Dialog {...value}>
         <form onSubmit={handleSubmit} className="was-validated">
-          <Dialog.Header title="Add Helpdesk Status" />
+          <Dialog.Header title="Add Help-desk Status" />
           <Dialog.Body>
             <Stack gap="3">
               <Stack>
@@ -85,6 +81,7 @@ const HelpDeskStatusDialog = (props: HelpDeskStatusProps) => {
               </Stack>
               <Stack>
                 <label htmlFor="status">Status</label>
+
                 <select
                   className="form-control"
                   value={statusId}

@@ -81,7 +81,7 @@ export const getMany = protectedProcedure
           name: true,
           dateOfBirth: true,
         },
-        ...(input?.limit && input?.page
+        ...(input?.limit !== undefined && input?.page !== undefined
           ? {
               take: input.limit,
               skip: input.page * input.limit,
