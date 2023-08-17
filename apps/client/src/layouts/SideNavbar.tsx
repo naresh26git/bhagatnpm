@@ -124,7 +124,7 @@ export const SideNavbarLinks = (props: SideNavbarLinksProps) => {
       <Link to="help-desk" component={NavLink} style={getActiveStyles}>
         <Stack gap="2" orientation="horizontal" {...props}>
           <FontAwesomeIcon icon={faQuestionCircle} />
-          Help-desk
+          Help desk
         </Stack>
       </Link>
 

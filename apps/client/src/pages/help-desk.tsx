@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import {
   HelpDesk,
   InputParameters,
@@ -227,8 +228,11 @@ export const HelpDeskPage = () => {
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "help-desk");
       XLSX.writeFile(workbook, "help-desk.xlsx", { compression: true });
+
+      toast.success("Data successfully exported!");
     } catch (error) {
       console.log({ error });
+      toast.error("An error occurred!");
     }
   };
 

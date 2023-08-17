@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import {
   Identification,
   InputParameters,
@@ -85,7 +86,10 @@ const Identifications = () => {
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "identifications");
       XLSX.writeFile(workbook, "identifications.xlsx", { compression: true });
+
+      toast.success("Data successfully exported!");
     } catch (error) {
+      toast.error("An error occurred!");
       console.log({ error });
     }
   };
@@ -122,7 +126,7 @@ const Identifications = () => {
             }
           />
         </ShowIf.Admin>
-        <Card>
+        <Card className="d-print-block">
           <DataGrid<Identification>
             {...(value as AsyncListContextValue<Identification>)}
             columns={[

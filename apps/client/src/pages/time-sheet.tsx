@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import {
   InputParameters,
   TimeSheet,
@@ -132,7 +133,10 @@ export const TimeSheetPage = () => {
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "time-sheet");
       XLSX.writeFile(workbook, "time-sheet.xlsx", { compression: true });
+
+      toast.success("Data successfully exported!");
     } catch (error) {
+      toast.error("An error occurred!");
       console.log({ error });
     }
   };

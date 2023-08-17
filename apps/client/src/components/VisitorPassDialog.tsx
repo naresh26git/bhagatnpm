@@ -1,4 +1,5 @@
 import React from "react";
+import { toast } from "react-toastify";
 import { Company } from "server/dist/trpc/routes/company/get-many";
 import { Hr } from "server/dist/trpc/routes/hr/get-many";
 import Button from "ui/Button";
@@ -7,6 +8,7 @@ import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
+import { useDialog } from "ui/hooks/UseDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { uploadFileToBlob } from "../utils/azure-blob-upload";
@@ -60,7 +62,7 @@ export const VisitorPass = (props: VisitorPassDialogProps) => {
       let imageUrl;
 
       if (fileSelected) {
-        const { sasToken } = await client.sasToken.get.query();
+        const { sasToken } = await client.sasToken.get.mutate();
 
         imageUrl = await uploadFileToBlob(fileSelected, sasToken);
       }
@@ -86,15 +88,14 @@ export const VisitorPass = (props: VisitorPassDialogProps) => {
       });
 
       props.asyncList.refresh();
+      toast.success("Visitor pass added successfully!");
     } catch (error) {
+      toast.error("An error occurred!");
       handleTRPCError(error, auth);
     }
   };
 
-  const value = {
-    id: "create-info",
-    labelId: "create-info-label",
-  };
+  const value = useDialog();
 
   React.useEffect(() => {
     (async () => {

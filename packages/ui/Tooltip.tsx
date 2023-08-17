@@ -49,7 +49,7 @@ export const Provider = (props: ProviderProps) => {
     })();
   }, []);
 
-  return props.children;
+  return <>{props.children}</>;
 };
 
 Tooltip.Provider = Provider;

@@ -8,8 +8,9 @@ body,
 
 @media print {
   body {
-    visibility: hidden;
+    visibility: visible;
   }
+
   #section-to-print {
     visibility: visible;
     position: absolute;

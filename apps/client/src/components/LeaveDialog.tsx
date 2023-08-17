@@ -1,14 +1,15 @@
 import React from "react";
+import { toast } from "react-toastify";
 import { LeaveType } from "server/src/trpc/routes/leaves/leave-types/get-many";
 import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
+import { useDialog } from "ui/hooks/UseDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
-
 export type LeaveDialogProps = {
   asyncList: AsyncListContextValue;
 };
@@ -33,15 +34,14 @@ export const LeaveDialog = (props: LeaveDialogProps) => {
       });
 
       props.asyncList.refresh();
+      toast.success("Leave added successfully!");
     } catch (error) {
+      toast.error("An error occurred!");
       handleTRPCError(error, auth);
     }
   };
 
-  const value = {
-    id: "create-leave",
-    labelId: "create-leave-label",
-  };
+  const value = useDialog();
 
   React.useEffect(() => {
     (async () => {

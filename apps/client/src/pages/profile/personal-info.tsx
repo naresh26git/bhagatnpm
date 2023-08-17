@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import {
   InputParameters,
   PersonalInfo,
@@ -17,7 +18,6 @@ import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
-
 export const personalInfo = {
   uid: "1",
   userId: "1210",
@@ -130,7 +130,10 @@ export const PersonalInfoPage = () => {
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "personal-infos");
       XLSX.writeFile(workbook, "personal-infos.xlsx", { compression: true });
+
+      toast.success("Data successfully exported!");
     } catch (error) {
+      toast.error("An error occurred!");
       console.log({ error });
     }
   };
@@ -165,7 +168,7 @@ export const PersonalInfoPage = () => {
           }
         />
       </ShowIf.Admin>
-      <Card id="section-to-print">
+      <Card className="d-print-block">
         <DataGrid<PersonalInfo>
           {...(value as AsyncListContextValue<PersonalInfo>)}
           onRowClick={(item) =>

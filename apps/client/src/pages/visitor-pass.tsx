@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import {
   InputParameters,
   VisitorPass,
@@ -103,7 +104,10 @@ const VisitorPasses = () => {
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "visitor-passes");
       XLSX.writeFile(workbook, "visitor-passes.xlsx", { compression: true });
+
+      toast.success("Data successfully exported!");
     } catch (error) {
+      toast.error("An error occurred!");
       console.log({ error });
     }
   };

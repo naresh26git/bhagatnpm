@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import {
   InputParameters,
   Qualification,
@@ -15,7 +16,6 @@ import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
-
 const Qualifications = () => {
   const auth = useAuthContext();
 
@@ -85,7 +85,10 @@ const Qualifications = () => {
       XLSX.writeFile(workbook, "qualifications.xlsx", {
         compression: true,
       });
+
+      toast.success("Data successfully exported!");
     } catch (error) {
+      toast.error("An error occurred!");
       console.log({ error });
     }
   };
@@ -119,7 +122,7 @@ const Qualifications = () => {
           }
         />
       </ShowIf.Admin>
-      <Card>
+      <Card className="d-print-block">
         <DataGrid<Qualification>
           {...(value as AsyncListContextValue<Qualification>)}
           columns={[

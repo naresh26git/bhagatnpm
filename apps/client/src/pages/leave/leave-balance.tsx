@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import {
   InputParameters,
   Leave,
@@ -13,7 +14,6 @@ import PrintButton from "../../components/PrintButton";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
-
 export type LeaveItem = {
   uid: string;
   empcode: string;
@@ -116,7 +116,10 @@ export const LeaveBalancePage = () => {
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "leave-balance");
       XLSX.writeFile(workbook, "leave-balance.xlsx", { compression: true });
+
+      toast.success("Data successfully exported!");
     } catch (error) {
+      toast.error("An error occurred!");
       console.log({ error });
     }
   };

@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import {
   FamilyDetail,
   InputParameters,
@@ -121,7 +122,10 @@ export const FamilyPage = () => {
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "family-details");
       XLSX.writeFile(workbook, "family-details.xlsx", { compression: true });
+
+      toast.success("Data successfully exported!");
     } catch (error) {
+      toast.error("An error occurred!");
       console.log({ error });
     }
   };
@@ -155,7 +159,7 @@ export const FamilyPage = () => {
           }
         />
       </ShowIf.Admin>
-      <Card id="section-to-print">
+      <Card className="d-print-block">
         <DataGrid<FamilyDetail>
           {...(value as AsyncListContextValue<FamilyDetail>)}
           columns={[

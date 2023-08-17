@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { Leave } from "server/dist/trpc/routes/leaves/get-many";
 import Button from "ui/Button";
 import Card from "ui/Card";
@@ -221,7 +222,10 @@ export const LeaveViewPage = ({ value }: LeaveViewPageProps) => {
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "leaves");
       XLSX.writeFile(workbook, "leaves.xlsx", { compression: true });
+
+      toast.success("Data successfully exported!");
     } catch (error) {
+      toast.error("An error occurred!");
       console.log({ error });
     }
   };

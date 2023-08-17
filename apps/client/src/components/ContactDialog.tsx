@@ -1,9 +1,11 @@
 import React from "react";
+import { toast } from "react-toastify";
 import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
+import { useDialog } from "ui/hooks/UseDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
@@ -35,15 +37,16 @@ export const ContactDialog = (props: ContactDialogProps) => {
       });
 
       props.asyncList.refresh();
+
+      toast.success("Contact added successfully!");
     } catch (error) {
+      toast.error("An error occurred!");
+
       handleTRPCError(error, auth);
     }
   };
 
-  const value = {
-    id: "create-contact",
-    labelId: "create-conact-label",
-  };
+  const value = useDialog();
 
   return (
     <>

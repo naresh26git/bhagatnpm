@@ -1,6 +1,7 @@
 import { faCheck, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { toast } from "react-toastify";
 import { HelpDeskStatus } from "server/src/trpc/routes/helpdesk-status/get-many";
 import Button from "ui/Button";
 import Dialog from "ui/Dialog";
@@ -35,7 +36,10 @@ const HelpDeskStatusDialog = (props: HelpDeskStatusProps) => {
       });
 
       props.asyncList.refresh();
+
+      toast.success("Help Desk status successfully changed!");
     } catch (error) {
+      toast.error("An error occurred!");
       handleTRPCError(error, auth);
     }
   };
@@ -64,59 +68,56 @@ const HelpDeskStatusDialog = (props: HelpDeskStatusProps) => {
       </Dialog.Trigger>
 
       <Dialog {...value}>
-        <form onSubmit={handleSubmit} className="was-validated">
-          <Dialog.Header title="Add Help-desk Status" />
-          <Dialog.Body>
-            <Stack gap="3">
-              <Stack>
-                <label>Remarks</label>
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Remarks"
-                  value={remarks}
-                  onChange={(event) => setRemarks(event.target.value)}
-                  required
-                />
-              </Stack>
-              <Stack>
-                <label htmlFor="status">Status</label>
-
-                <select
-                  className="form-control"
-                  value={statusId}
-                  onChange={(event) =>
-                    setStatusId(parseInt(event.target.value))
-                  }
-                >
-                  {status.map((status) => {
-                    return <option value={status.id}>{status.name}</option>;
-                  })}
-                </select>
-              </Stack>
+        <Dialog.Header title="Add Help-desk Status" />
+        <Dialog.Body>
+          <Stack gap="3">
+            <Stack>
+              <label>Remarks</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Remarks"
+                value={remarks}
+                onChange={(event) => setRemarks(event.target.value)}
+                required
+              />
             </Stack>
-          </Dialog.Body>
-          <Dialog.Footer>
-            <div
-              style={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "space-evenly",
-                alignItems: "center",
-              }}
-            >
-              <Button
-                variant="primary"
-                className="center"
-                type="submit"
-                data-bs-toggle="modal"
-                data-bs-target={`#${value.id}`}
+            <Stack>
+              <label htmlFor="status">Status</label>
+
+              <select
+                className="form-control"
+                value={statusId}
+                onChange={(event) => setStatusId(parseInt(event.target.value))}
               >
-                Confirm
-              </Button>
-            </div>
-          </Dialog.Footer>
-        </form>
+                {status.map((status) => {
+                  return <option value={status.id}>{status.name}</option>;
+                })}
+              </select>
+            </Stack>
+          </Stack>
+        </Dialog.Body>
+        <Dialog.Footer>
+          <div
+            style={{
+              width: "100%",
+              display: "flex",
+              justifyContent: "space-evenly",
+              alignItems: "center",
+            }}
+          >
+            <Button
+              variant="primary"
+              className="center"
+              type="submit"
+              onClick={handleSubmit}
+              data-bs-toggle="modal"
+              data-bs-target={`#${value.id}`}
+            >
+              Confirm
+            </Button>
+          </div>
+        </Dialog.Footer>
       </Dialog>
     </>
   );

@@ -35,7 +35,7 @@ async function generateSasToken(): Promise<string> {
   return signature;
 }
 
-export const get = protectedProcedure.query(async () => {
+export const get = protectedProcedure.mutation(async () => {
   try {
     const sasToken = await generateSasToken();
 

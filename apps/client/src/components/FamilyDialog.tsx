@@ -1,14 +1,15 @@
 import React from "react";
+import { toast } from "react-toastify";
 import { RelationShip } from "server/src/trpc/routes/relationship/get-many";
 import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
+import { useDialog } from "ui/hooks/UseDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
-
 export type FamilyDialogProps = {
   asyncList: AsyncListContextValue;
 };
@@ -31,15 +32,15 @@ export const FamilyDialog = (props: FamilyDialogProps) => {
       });
 
       props.asyncList.refresh();
+
+      toast.success("Family details added successfully!");
     } catch (error) {
+      toast.error("An error occurred!");
       handleTRPCError(error, auth);
     }
   };
 
-  const value = {
-    id: "create-family-info",
-    labelId: "create-family-info-label",
-  };
+  const value = useDialog();
 
   React.useEffect(() => {
     (async () => {

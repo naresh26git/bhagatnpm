@@ -2,7 +2,7 @@
 
 - [ ] Add pay slip print - **Team**
 - [ ] Add passport ocr to personal info screen - **Vignesh**
-- [ ] Leave accept and reject is not working properly - **Sakthi**
+- [ ] Leave accept and reject is not working properly - **Sakthi&Vignesh**
 
 - [ ] Improve data grid to handle loading, error and no data states gracefully - **Team**
 - [ ] Add success, warning and error alerts for all tables - **Team**

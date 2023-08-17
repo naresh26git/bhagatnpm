@@ -1,13 +1,14 @@
 import React from "react";
+import { toast } from "react-toastify";
 import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
+import { useDialog } from "ui/hooks/UseDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
-
 export const CreateUserDialog = () => {
   const auth = useAuthContext();
   const [role, setRole] = React.useState<"admin" | "employee">("employee");
@@ -25,12 +26,14 @@ export const CreateUserDialog = () => {
         role,
         email,
       });
+      toast.success("User created successfully!");
     } catch (error) {
+      toast.error("An error occurred!");
       handleTRPCError(error, auth);
     }
   };
 
-  const value = { id: "create-user", labelId: "create-user-label" };
+  const value = useDialog();
 
   return (
     <>

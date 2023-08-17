@@ -1,6 +1,7 @@
 import { faCheck, faPencil, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
+import { toast } from "react-toastify";
 import { LeaveStatus } from "server/src/trpc/routes/leave-status/get-many";
 import Button from "ui/Button";
 import Dialog from "ui/Dialog";
@@ -27,6 +28,7 @@ const LeaveStatusDialog = (props: leaveStatusProps) => {
   const handleSubmit = async () => {
     try {
       if (statusId === undefined) return;
+      toast.success("Leave status changed successfully!");
 
       await client.leave.adminUpdate.mutate({
         id: props.leaveId,
@@ -36,6 +38,7 @@ const LeaveStatusDialog = (props: leaveStatusProps) => {
 
       props.asyncList.refresh();
     } catch (error) {
+      toast.error("An error occurred!");
       handleTRPCError(error, auth);
     }
   };

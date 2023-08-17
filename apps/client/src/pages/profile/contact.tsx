@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import {
   Address,
   InputParameters,
@@ -89,8 +90,10 @@ export const ContactDataPage = () => {
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "addresses");
       XLSX.writeFile(workbook, "addresses.xlsx", { compression: true });
+
+      toast.success("Data successfully exported!");
     } catch (error) {
-      console.log({ error });
+      toast.error("An error occurred!");
     }
   };
 
@@ -124,7 +127,7 @@ export const ContactDataPage = () => {
         />
       </ShowIf.Admin>
 
-      <Card>
+      <Card className="d-print-block">
         <DataGrid<Address>
           {...(value as AsyncListContextValue<Address>)}
           columns={[

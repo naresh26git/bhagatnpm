@@ -1,12 +1,13 @@
 import React from "react";
+import { toast } from "react-toastify";
 import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
+import { useDialog } from "ui/hooks/UseDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
-
 export const PayrollDialog = () => {
   const auth = useAuthContext();
   const [role, setRole] = React.useState<"admin" | "employee">("employee");
@@ -22,15 +23,15 @@ export const PayrollDialog = () => {
         salaryId,
         statusId,
       });
+      toast.success("Payroll added successfully!");
     } catch (error) {
       handleTRPCError(error, auth);
+      toast.error("An error occurred!");
     }
   };
 
-  const value = {
-    id: "create-payroll",
-    labelId: "create-payroll-label",
-  };
+  const value = useDialog();
+
   const handleStatus = (e: any) => {
     setStatusId(e.target.value);
   };

@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import {
   InputParameters,
   PayRoll,
@@ -101,8 +102,11 @@ export const PayRollPage = () => {
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "pay-roll");
       XLSX.writeFile(workbook, "pay-roll.xlsx", { compression: true });
+
+      toast.success("Data successfully exported!");
     } catch (error) {
       console.log({ error });
+      toast.error("An error occurred!");
     }
   };
 

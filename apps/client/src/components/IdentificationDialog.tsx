@@ -1,4 +1,5 @@
 import React from "react";
+import { toast } from "react-toastify";
 import { IdentificationTypes } from "server/src/trpc/routes/identification/identificationType/get-many";
 import Button from "ui/Button";
 import Dialog, { DialogHeader } from "ui/Dialog";
@@ -6,10 +7,10 @@ import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
+import { useDialog } from "ui/hooks/UseDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
-
 export type IdentificationDialogProps = {
   asyncList: AsyncListContextValue;
 };
@@ -30,15 +31,14 @@ export const IdentificationDialog = (props: IdentificationDialogProps) => {
       });
 
       props.asyncList.refresh();
+      toast.success("Identification added successfully!");
     } catch (error) {
+      toast.error("An error occurred!");
       handleTRPCError(error, auth);
     }
   };
 
-  const value = {
-    id: "create-identification",
-    labelId: "create-identification-label",
-  };
+  const value = useDialog();
 
   React.useEffect(() => {
     (async () => {

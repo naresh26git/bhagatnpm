@@ -1,14 +1,15 @@
 import React from "react";
+import { toast } from "react-toastify";
 import { HelpdeskCategories } from "server/src/trpc/routes/category/get-many";
 import Button from "ui/Button";
 import Dialog from "ui/Dialog";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
 import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
+import { useDialog } from "ui/hooks/UseDialog";
 import { useAuthContext } from "../hooks/UseAuth";
 import { client } from "../main";
 import { handleTRPCError } from "../utils/handle-trpc-error";
-
 export type HelpDeskDialogProps = {
   asyncList: AsyncListContextValue;
 };
@@ -31,12 +32,14 @@ export const HelpDeskDialog = (props: HelpDeskDialogProps) => {
       });
 
       props.asyncList.refresh();
+      toast.success("Help Desk added successfully!");
     } catch (error) {
+      toast.error("An error occurred!");
       handleTRPCError(error, auth);
     }
   };
 
-  const value = { id: "create-helpdesk", labelId: "create-helpdesk-label" };
+  const value = useDialog();
 
   React.useEffect(() => {
     (async () => {
