@@ -147,10 +147,10 @@ const PayRollDetailsDialog = (props: PayRollDetailsProps) => {
                           currency: "INR",
                           signDisplay: "never",
                         }).format(
-                          parseInt(
+                          Number(
                             props.payRollDetails.paySlipComponents[0].amount
                           ) +
-                            parseInt(
+                            Number(
                               props.payRollDetails.paySlipComponents[1].amount
                             )
                         )}

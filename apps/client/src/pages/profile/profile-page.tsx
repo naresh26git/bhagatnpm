@@ -2,6 +2,9 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { FamilyDetail } from "server/dist/trpc/routes/family-details/get";
+import { PersonalInfo } from "server/dist/trpc/routes/personal-infos/get";
+import { Qualification } from "server/dist/trpc/routes/qualification/get-recently-created";
 import Container from "ui/Container";
 import Dialog from "ui/Dialog";
 import Divider from "ui/Divider";
@@ -11,6 +14,7 @@ import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import PageHeader from "../../components/PageHeader";
 import PrintButton from "../../components/PrintButton";
+import { client } from "../../main";
 
 export const ProfilePage = () => {
   const [fatherName, setFatherName] = React.useState("");
@@ -33,6 +37,7 @@ export const ProfilePage = () => {
   const [country, setCountry] = React.useState("");
   const [zip, setZip] = React.useState("");
   const [department, setDepartment] = React.useState("");
+  const [designation, setDesignation] = React.useState("");
   const [workExprience, setWorkExprience] = React.useState("");
   const [shift, setShift] = React.useState("");
   const [officeEmailId, setOfficeEmailId] = React.useState("");
@@ -47,8 +52,43 @@ export const ProfilePage = () => {
   const [passingYear, SetPassingYear] = React.useState("");
   const [percentage, setPercentage] = React.useState("");
   const [state, setState] = React.useState("");
+  const [personalInfo, setPersonalInfo] = React.useState<PersonalInfo | null>(
+    null
+  );
+  const [familyDetail, setFamilyDetail] = React.useState<FamilyDetail | null>(
+    null
+  );
+  const [qualificationDetail, setQualificationDetail] =
+    React.useState<Qualification | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
+
+  React.useEffect(() => {
+    (async () => {
+      const personalInfo = await client.personalInfo.get.query(
+        location.state.userId
+      );
+      setPersonalInfo(personalInfo);
+    })();
+  }, []);
+  React.useEffect(() => {
+    (async () => {
+      const familyDetail = await client.familyDetail.get.query(
+        location.state.userId
+      );
+      setFamilyDetail(familyDetail);
+    })();
+  }, []);
+  React.useEffect(() => {
+    (async () => {
+      const qualificationDetail =
+        await client.qualifications.getRecentlyCreated.query(
+          location.state.userId
+        );
+      setQualificationDetail(qualificationDetail);
+    })();
+  }, []);
+
   return (
     <>
       <NavLink to="/account">
@@ -113,294 +153,327 @@ export const ProfilePage = () => {
           <Divider />
           <Grid.Row className="w-100 h-100" gutters="5">
             <Grid.Col cols="lg-6" className="h-10">
-              <Dialog.Body>
-                <Container className="h-100" style={{ maxWidth: "30rem" }}>
+              <Container className="h-100" style={{ maxWidth: "30rem" }}>
+                <Stack gap="5">
                   <Stack gap="3">
                     <Typography as="h6" className="alert alert-primary">
                       Personal details
                     </Typography>
+                    <Dialog.Body>
+                      <Grid.Row gutters="3">
+                        <Grid.Col cols={["12", "lg-6"]}>
+                          <div className="form-floating">
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="name"
+                              value={fatherName}
+                              onChange={(event) =>
+                                setFatherName(event.target.value)
+                              }
+                            />
+                            <label htmlFor="City">Father name</label>
+                          </div>
+                        </Grid.Col>
+                        <Grid.Col cols={["12", "lg-6"]}>
+                          <div className="form-floating">
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="name"
+                              value={motherName}
+                              onChange={(event) =>
+                                setMotherName(event.target.value)
+                              }
+                            />
+                            <label htmlFor="State">Mother name</label>
+                          </div>
+                        </Grid.Col>
+                        <Grid.Col cols={["12", "lg-6"]}>
+                          <div className="form-floating">
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="name"
+                              value={personalEmail}
+                              onChange={(event) =>
+                                setPersonalEmail(event.target.value)
+                              }
+                            />
+                            <label htmlFor="City">personal Email</label>
+                          </div>
+                        </Grid.Col>
+                        <Grid.Col cols={["12", "lg-6"]}>
+                          <div className="form-floating">
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="name"
+                              value={matrialStatus}
+                              onChange={(event) =>
+                                setMatrialStatus(event.target.value)
+                              }
+                            />
+                            <label htmlFor="State">Matrial status</label>
+                          </div>
+                        </Grid.Col>
+                        <Grid.Col cols={["12", "lg-6"]}>
+                          <div className="form-floating">
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="name"
+                              value={bloodGroup}
+                              onChange={(event) =>
+                                setBloodGroup(event.target.value)
+                              }
+                            />
+                            <label htmlFor="City">Blood group</label>
+                          </div>
+                        </Grid.Col>
+                        <Grid.Col cols={["12", "lg-6"]}>
+                          <div className="form-floating">
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="name"
+                              value={nationality}
+                              onChange={(event) =>
+                                setNationality(event.target.value)
+                              }
+                            />
+                            <label htmlFor="State">Nationality</label>
+                          </div>
+                        </Grid.Col>
+                        <Grid.Col cols={["12", "lg-6"]}>
+                          <div className="form-floating">
+                            <input
+                              type="text"
+                              className="form-control"
+                              id="name"
+                              value={gender}
+                              onChange={(event) =>
+                                setGender(event.target.value)
+                              }
+                            />
+                            <label htmlFor="City">Gender</label>
+                          </div>
+                        </Grid.Col>
 
-                    <Grid.Row gutters="3">
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={fatherName}
-                            onChange={(event) =>
-                              setFatherName(event.target.value)
-                            }
-                          />
-                          <label htmlFor="City">Father name</label>
-                        </div>
-                      </Grid.Col>
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={motherName}
-                            onChange={(event) =>
-                              setMotherName(event.target.value)
-                            }
-                          />
-                          <label htmlFor="State">Mother name</label>
-                        </div>
-                      </Grid.Col>
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={personalEmail}
-                            onChange={(event) =>
-                              setPersonalEmail(event.target.value)
-                            }
-                          />
-                          <label htmlFor="City">personal Email</label>
-                        </div>
-                      </Grid.Col>
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={matrialStatus}
-                            onChange={(event) =>
-                              setMatrialStatus(event.target.value)
-                            }
-                          />
-                          <label htmlFor="State">Matrial status</label>
-                        </div>
-                      </Grid.Col>
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={bloodGroup}
-                            onChange={(event) =>
-                              setBloodGroup(event.target.value)
-                            }
-                          />
-                          <label htmlFor="City">Blood group</label>
-                        </div>
-                      </Grid.Col>
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={nationality}
-                            onChange={(event) =>
-                              setNationality(event.target.value)
-                            }
-                          />
-                          <label htmlFor="State">Nationality</label>
-                        </div>
-                      </Grid.Col>
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={gender}
-                            onChange={(event) => setGender(event.target.value)}
-                          />
-                          <label htmlFor="City">Gender</label>
-                        </div>
-                      </Grid.Col>
-
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="date"
-                            className="form-control"
-                            value={dateOfBirth}
-                            onChange={(
-                              event: React.ChangeEvent<HTMLInputElement>
-                            ): void => setDateOfBirth(event.target.value)}
-                          />
-                          <label htmlFor="DateOfBirth">Date Of Birth</label>
-                        </div>
-                      </Grid.Col>
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={noticeDays}
-                            onChange={(event) =>
-                              setNoticeDays(event.target.value)
-                            }
-                          />
-                          <label htmlFor="City">Notice days</label>
-                        </div>
-                      </Grid.Col>
-
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="date"
-                            className="form-control"
-                            value={dateOfJoining}
-                            onChange={(
-                              event: React.ChangeEvent<HTMLInputElement>
-                            ): void => setDateOfJoining(event.target.value)}
-                          />
-                          <label htmlFor="Date Of Joining">
-                            Date Of Joining
-                          </label>
-                        </div>
-                      </Grid.Col>
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={employeeType}
-                            onChange={(event) =>
-                              setEmployeeType(event.target.value)
-                            }
-                          />
-                          <label htmlFor="City">Employee type</label>
-                        </div>
-                      </Grid.Col>
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={pfUan}
-                            onChange={(event) => setPfUan(event.target.value)}
-                          />
-                          <label htmlFor="State">PF UAN</label>
-                        </div>
-                      </Grid.Col>
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={biometricId}
-                            onChange={(event) =>
-                              setBiometricId(event.target.value)
-                            }
-                          />
-                          <label htmlFor="City">Biometric ID</label>
-                        </div>
-                      </Grid.Col>
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={reportingManager}
-                            onChange={(event) =>
-                              setReportingManager(event.target.value)
-                            }
-                          />
-                          <label htmlFor="State">Reporting manager</label>
-                        </div>
-                      </Grid.Col>
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={employeeCode}
-                            onChange={(event) =>
-                              setEmployeeCode(event.target.value)
-                            }
-                          />
-                          <label htmlFor="City">Employee code</label>
-                        </div>
-                      </Grid.Col>
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={employeeStatus}
-                            onChange={(event) =>
-                              setEmployeeStatus(event.target.value)
-                            }
-                          />
-                          <label htmlFor="State">Employee status</label>
-                        </div>
-                      </Grid.Col>
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={department}
-                            onChange={(event) =>
-                              setDepartment(event.target.value)
-                            }
-                          />
-                          <label htmlFor="City">Department</label>
-                        </div>
-                      </Grid.Col>
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={workExprience}
-                            onChange={(event) =>
-                              setWorkExprience(event.target.value)
-                            }
-                          />
-                          <label htmlFor="State">Work exprience</label>
-                        </div>
-                      </Grid.Col>
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={shift}
-                            onChange={(event) => setShift(event.target.value)}
-                          />
-                          <label htmlFor="City">Shift</label>
-                        </div>
-                      </Grid.Col>
-                      <Grid.Col cols={["12", "lg-6"]}>
-                        <div className="form-floating">
-                          <input
-                            type="text"
-                            className="form-control"
-                            id="name"
-                            value={officeEmailId}
-                            onChange={(event) =>
-                              setOfficeEmailId(event.target.value)
-                            }
-                          />
-                          <label htmlFor="State">Office email ID</label>
-                        </div>
-                      </Grid.Col>
-                    </Grid.Row>
+                        <Grid.Col cols={["12", "lg-6"]}>
+                          <div className="form-floating">
+                            <input
+                              type="date"
+                              className="form-control"
+                              value={dateOfBirth}
+                              onChange={(
+                                event: React.ChangeEvent<HTMLInputElement>
+                              ): void => setDateOfBirth(event.target.value)}
+                            />
+                            <label htmlFor="DateOfBirth">Date Of Birth</label>
+                          </div>
+                        </Grid.Col>
+                      </Grid.Row>
+                    </Dialog.Body>
                   </Stack>
-                </Container>
-              </Dialog.Body>
+
+                  <Stack.Item cols="12">
+                    <Stack gap="2">
+                      <Typography as="h6" className="alert alert-primary">
+                        Employee details
+                      </Typography>
+                      <Dialog.Body>
+                        <Grid.Row gutters="3">
+                          <Grid.Col cols={["12", "lg-6"]}>
+                            <div className="form-floating">
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="name"
+                                value={noticeDays}
+                                onChange={(event) =>
+                                  setNoticeDays(event.target.value)
+                                }
+                              />
+                              <label htmlFor="City">Notice days</label>
+                            </div>
+                          </Grid.Col>
+
+                          <Grid.Col cols={["12", "lg-6"]}>
+                            <div className="form-floating">
+                              <input
+                                type="date"
+                                className="form-control"
+                                value={dateOfJoining}
+                                onChange={(
+                                  event: React.ChangeEvent<HTMLInputElement>
+                                ): void => setDateOfJoining(event.target.value)}
+                              />
+                              <label htmlFor="Date Of Joining">
+                                Date Of Joining
+                              </label>
+                            </div>
+                          </Grid.Col>
+                          <Grid.Col cols={["12", "lg-6"]}>
+                            <div className="form-floating">
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="name"
+                                value={employeeType}
+                                onChange={(event) =>
+                                  setEmployeeType(event.target.value)
+                                }
+                              />
+                              <label htmlFor="City">Employee type</label>
+                            </div>
+                          </Grid.Col>
+                          <Grid.Col cols={["12", "lg-6"]}>
+                            <div className="form-floating">
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="name"
+                                value={pfUan}
+                                onChange={(event) =>
+                                  setPfUan(event.target.value)
+                                }
+                              />
+                              <label htmlFor="State">PF UAN</label>
+                            </div>
+                          </Grid.Col>
+                          <Grid.Col cols={["12", "lg-6"]}>
+                            <div className="form-floating">
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="name"
+                                value={biometricId}
+                                onChange={(event) =>
+                                  setBiometricId(event.target.value)
+                                }
+                              />
+                              <label htmlFor="City">Biometric ID</label>
+                            </div>
+                          </Grid.Col>
+                          <Grid.Col cols={["12", "lg-6"]}>
+                            <div className="form-floating">
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="name"
+                                value={reportingManager}
+                                onChange={(event) =>
+                                  setReportingManager(event.target.value)
+                                }
+                              />
+                              <label htmlFor="State">Reporting manager</label>
+                            </div>
+                          </Grid.Col>
+                          <Grid.Col cols={["12", "lg-6"]}>
+                            <div className="form-floating">
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="name"
+                                value={employeeCode}
+                                onChange={(event) =>
+                                  setEmployeeCode(event.target.value)
+                                }
+                              />
+                              <label htmlFor="City">Employee code</label>
+                            </div>
+                          </Grid.Col>
+                          <Grid.Col cols={["12", "lg-6"]}>
+                            <div className="form-floating">
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="name"
+                                value={employeeStatus}
+                                onChange={(event) =>
+                                  setEmployeeStatus(event.target.value)
+                                }
+                              />
+                              <label htmlFor="State">Employee status</label>
+                            </div>
+                          </Grid.Col>
+                          <Grid.Col cols={["12", "lg-6"]}>
+                            <div className="form-floating">
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="name"
+                                value={department}
+                                onChange={(event) =>
+                                  setDepartment(event.target.value)
+                                }
+                              />
+                              <label htmlFor="City">Department</label>
+                            </div>
+                          </Grid.Col>
+                          <Grid.Col cols={["12", "lg-6"]}>
+                            <div className="form-floating">
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="name"
+                                value={designation}
+                                onChange={(event) =>
+                                  setDepartment(event.target.value)
+                                }
+                              />
+                              <label htmlFor="City">Designation</label>
+                            </div>
+                          </Grid.Col>
+                          <Grid.Col cols={["12", "lg-6"]}>
+                            <div className="form-floating">
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="name"
+                                value={workExprience}
+                                onChange={(event) =>
+                                  setWorkExprience(event.target.value)
+                                }
+                              />
+                              <label htmlFor="State">Work exprience</label>
+                            </div>
+                          </Grid.Col>
+                          <Grid.Col cols={["12", "lg-6"]}>
+                            <div className="form-floating">
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="name"
+                                value={shift}
+                                onChange={(event) =>
+                                  setShift(event.target.value)
+                                }
+                              />
+                              <label htmlFor="City">Shift</label>
+                            </div>
+                          </Grid.Col>
+                          <Grid.Col cols={["12", "lg-6"]}>
+                            <div className="form-floating">
+                              <input
+                                type="text"
+                                className="form-control"
+                                id="name"
+                                value={officeEmailId}
+                                onChange={(event) =>
+                                  setOfficeEmailId(event.target.value)
+                                }
+                              />
+                              <label htmlFor="State">Office email ID</label>
+                            </div>
+                          </Grid.Col>
+                        </Grid.Row>
+                      </Dialog.Body>
+                    </Stack>
+                  </Stack.Item>
+                </Stack>
+              </Container>
             </Grid.Col>
             <Grid.Col cols={["12", "lg-6"]} className="h-100 ">
               <Container className="h-100" style={{ maxWidth: "30rem" }}>
@@ -509,7 +582,7 @@ export const ProfilePage = () => {
                     </Stack>
                   </Stack.Item>
 
-                  <Stack.Item cols="12">
+                  {/* <Stack.Item cols="12">
                     <Stack gap="2">
                       <Typography as="h6" className="alert alert-primary">
                         Bank details
@@ -580,7 +653,7 @@ export const ProfilePage = () => {
                         </Stack>
                       </Dialog.Body>
                     </Stack>
-                  </Stack.Item>
+                  </Stack.Item> */}
 
                   <Stack.Item cols="12">
                     <Stack gap="2">

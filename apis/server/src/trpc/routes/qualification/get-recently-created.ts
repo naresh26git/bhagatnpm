@@ -5,36 +5,27 @@ import { getErrorMessage } from "../../../utils/get-error-message";
 import { RouterOutput } from "../../router";
 import { protectedProcedure } from "../../trpc";
 
-export type FamilyDetail = RouterOutput["familyDetail"]["get"];
+export type Qualification =
+  RouterOutput["qualifications"]["getRecentlyCreated"];
 
-export const get = protectedProcedure
+export const getRecentlyCreated = protectedProcedure
   .input(z.number())
   .query(async ({ ctx, input }) => {
     try {
-      const familyDetail = await prisma.familyDetail.findMany({
+      const qualification = await prisma.qualification.findFirst({
         select: {
           id: true,
           user: {
             select: {
-              id: true,
-              name: true,
               personalInfo: {
                 select: {
-                  id: true,
                   firstName: true,
                   lastName: true,
                 },
               },
             },
           },
-          relationshipType: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
           name: true,
-          dateOfBirth: true,
         },
         where:
           ctx.role === "admin"
@@ -45,9 +36,8 @@ export const get = protectedProcedure
                 userId: ctx.userId,
               },
       });
-      8;
 
-      return familyDetail;
+      return qualification;
     } catch (error) {
       console.log(getErrorMessage(error));
 

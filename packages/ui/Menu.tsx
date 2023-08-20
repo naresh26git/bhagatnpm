@@ -41,14 +41,25 @@ export type MenuProps = {
   trigger: React.ReactNode;
   dropdown: React.ReactNode;
   options: Option<OptionAsKeys>[];
+  isSplitButton?: boolean;
 };
 
 export const Menu = (props: MenuProps) => {
   return (
     <MenuContext.Provider value={props}>
-      {props.trigger}
+      {props.isSplitButton ? (
+        <div className="btn-group">
+          {props.trigger}
 
-      {props.dropdown}
+          {props.dropdown}
+        </div>
+      ) : (
+        <>
+          {props.trigger}
+
+          {props.dropdown}
+        </>
+      )}
     </MenuContext.Provider>
   );
 };
@@ -62,13 +73,21 @@ export const getMenuTriggerClasses = (props: MenuTriggerProps) => {
 export type MenuTriggerProps = Partial<ButtonProps>;
 
 export const MenuTrigger = (props: MenuTriggerProps) => {
-  const buttonProps = { ...props };
+  const menu = useMenu();
+  const buttonProps = {
+    ...props,
+  };
 
   return (
     <Button
       {...buttonProps}
       type="button"
-      className={getMenuTriggerClasses(props)}
+      className={getMenuTriggerClasses({
+        ...props,
+        className: `${
+          menu.props.isSplitButton ? "dropdown-toggle-split" : ""
+        } ${props.className}`,
+      })}
       data-bs-toggle="dropdown"
       aria-expanded="false"
       tabIndex={0}

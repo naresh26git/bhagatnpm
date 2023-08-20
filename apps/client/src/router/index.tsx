@@ -15,20 +15,19 @@ const LazyAccountPage = React.lazy(() => import("../pages/profile/layout"));
 const LazyEmployeesPage = React.lazy(() => import("../pages/employees"));
 // TODO: Change the implementation to use the Router and Layout properly
 const LazyLeavePage = React.lazy(() => import("../pages/leave/layout"));
-const LazyUnderMaintainancePage = React.lazy(
-  () => import("../pages/under-maintainance")
+const LazyUnderMaintenancePage = React.lazy(
+  () => import("../pages/under-maintenance")
 );
-const LazyprofilePage = React.lazy(
+const LazyProfilePage = React.lazy(
   () => import("../pages/profile/profile-page")
 );
-
-const LazyExpensePage = React.lazy(() => import("../pages/expense"));
 const LazyTimeSheetPage = React.lazy(() => import("../pages/time-sheet"));
 const LazyHelpDeskPage = React.lazy(() => import("../pages/help-desk"));
 const LazyPayRollPage = React.lazy(() => import("../pages/pay-roll"));
-const LazyTravelPage = React.lazy(() => import("../pages/travel"));
-const LazyLoanPage = React.lazy(() => import("../pages/loan"));
 const LazyVisitorPassPage = React.lazy(() => import("../pages/visitor-pass"));
+// const LazyExpensePage = React.lazy(() => import("../pages/expense"));
+// const LazyTravelPage = React.lazy(() => import("../pages/travel"));
+// const LazyLoanPage = React.lazy(() => import("../pages/loan"));
 
 const LazyLoginPageWithFallback = () => (
   <React.Suspense fallback={"Loading..."}>
@@ -61,14 +60,14 @@ const LazyLeavePageWithFallback = () => (
 const LazyProfilePageWithFallback = () => (
   <React.Suspense fallback={"Loading..."}>
     <ProtectedRoute>
-      <LazyprofilePage />
+      <LazyProfilePage />
     </ProtectedRoute>
   </React.Suspense>
 );
-const LazyUnderMaintainancePageWithFallback = () => (
+const LazyUnderMaintenancePageWithFallback = () => (
   <React.Suspense fallback={"Loading..."}>
     <ProtectedRoute>
-      <LazyUnderMaintainancePage />
+      <LazyUnderMaintenancePage />
     </ProtectedRoute>
   </React.Suspense>
 );
@@ -80,24 +79,10 @@ const LazyTimeSheetPageWithFallback = () => (
     </ProtectedRoute>
   </React.Suspense>
 );
-const LazyLoanPageWithFallback = () => (
-  <React.Suspense fallback={"Loading..."}>
-    <ProtectedRoute>
-      <LazyLoanPage />
-    </ProtectedRoute>
-  </React.Suspense>
-);
 const LazyHelpDeskPageWithFallback = () => (
   <React.Suspense fallback={"Loading..."}>
     <ProtectedRoute>
       <LazyHelpDeskPage />
-    </ProtectedRoute>
-  </React.Suspense>
-);
-const LazyExpensePageWithFallback = () => (
-  <React.Suspense fallback={"Loading..."}>
-    <ProtectedRoute>
-      <LazyExpensePage />
     </ProtectedRoute>
   </React.Suspense>
 );
@@ -108,13 +93,6 @@ const LazyPayRollPageWithFallback = () => (
     </ProtectedRoute>
   </React.Suspense>
 );
-const LazyTravelPageWithFallback = () => (
-  <React.Suspense fallback={"Loading..."}>
-    <ProtectedRoute>
-      <LazyTravelPage />
-    </ProtectedRoute>
-  </React.Suspense>
-);
 const LazyVisitorPassPageWithFallback = () => (
   <React.Suspense fallback={"Loading..."}>
     <ProtectedRoute>
@@ -122,6 +100,27 @@ const LazyVisitorPassPageWithFallback = () => (
     </ProtectedRoute>
   </React.Suspense>
 );
+// const LazyLoanPageWithFallback = () => (
+//   <React.Suspense fallback={"Loading..."}>
+//     <ProtectedRoute>
+//       <LazyLoanPage />
+//     </ProtectedRoute>
+//   </React.Suspense>
+// );
+// const LazyExpensePageWithFallback = () => (
+//   <React.Suspense fallback={"Loading..."}>
+//     <ProtectedRoute>
+//       <LazyExpensePage />
+//     </ProtectedRoute>
+//   </React.Suspense>
+// );
+// const LazyTravelPageWithFallback = () => (
+//   <React.Suspense fallback={"Loading..."}>
+//     <ProtectedRoute>
+//       <LazyTravelPage />
+//     </ProtectedRoute>
+//   </React.Suspense>
+// );
 
 export type ProtectedRouteProps = {
   children: React.ReactNode;
@@ -214,26 +213,6 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: "loan/*",
-        element: <Outlet />,
-        children: [
-          {
-            path: "",
-            element: <LazyLoanPageWithFallback />,
-          },
-        ],
-      },
-      {
-        path: "expense/*",
-        element: <Outlet />,
-        children: [
-          {
-            path: "",
-            element: <LazyExpensePageWithFallback />,
-          },
-        ],
-      },
-      {
         path: "help-desk/*",
         element: <Outlet />,
         children: [
@@ -254,16 +233,6 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: "travel/*",
-        element: <Outlet />,
-        children: [
-          {
-            path: "",
-            element: <LazyTravelPageWithFallback />,
-          },
-        ],
-      },
-      {
         path: "visitor-pass/*",
         element: <Outlet />,
         children: [
@@ -273,9 +242,39 @@ export const router = createBrowserRouter([
           },
         ],
       },
+      // {
+      //   path: "loan/*",
+      //   element: <Outlet />,
+      //   children: [
+      //     {
+      //       path: "",
+      //       element: <LazyLoanPageWithFallback />,
+      //     },
+      //   ],
+      // },
+      // {
+      //   path: "expense/*",
+      //   element: <Outlet />,
+      //   children: [
+      //     {
+      //       path: "",
+      //       element: <LazyExpensePageWithFallback />,
+      //     },
+      //   ],
+      // },
+      // {
+      //   path: "travel/*",
+      //   element: <Outlet />,
+      //   children: [
+      //     {
+      //       path: "",
+      //       element: <LazyTravelPageWithFallback />,
+      //     },
+      //   ],
+      // },
       {
         path: "*",
-        element: <LazyUnderMaintainancePageWithFallback />,
+        element: <LazyUnderMaintenancePageWithFallback />,
       },
     ],
   },

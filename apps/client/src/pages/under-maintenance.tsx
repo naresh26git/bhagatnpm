@@ -1,6 +1,7 @@
 import Image from "ui/Image";
 import Typography from "ui/Typography";
-const UnderMaintainance = () => {
+
+const UnderMaintenance = () => {
   return (
     <>
       <Image
@@ -9,10 +10,10 @@ const UnderMaintainance = () => {
         className="rounded mx-auto d-block h-75"
       />
       <Typography as="h1" align="center">
-        This page is under maintainance
+        Work in progress
       </Typography>
     </>
   );
 };
 
-export default UnderMaintainance;
+export default UnderMaintenance;

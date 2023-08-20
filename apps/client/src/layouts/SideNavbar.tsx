@@ -93,80 +93,96 @@ export const SideNavbarLinks = (props: SideNavbarLinksProps) => {
     <Stack>
       <Link component={NavLink} to="/" style={getActiveStyles}>
         <Stack gap="2" orientation="horizontal" {...props}>
-          <FontAwesomeIcon icon={faHome} /> Home
-        </Stack>{" "}
+          <IconAlignment icon={<FontAwesomeIcon icon={faHome} />} />
+          <Typography as="span">Home</Typography>
+        </Stack>
       </Link>
 
       <Link component={NavLink} to="account" style={getActiveStyles}>
         <Stack gap="2" orientation="horizontal" {...props}>
-          <FontAwesomeIcon icon={faCircleUser} /> Profile
-        </Stack>{" "}
+          <IconAlignment icon={<FontAwesomeIcon icon={faCircleUser} />} />
+          <Typography as="span">Profile</Typography>
+        </Stack>
       </Link>
 
       <Link component={NavLink} to="leave" style={getActiveStyles}>
         <Stack gap="2" orientation="horizontal" {...props}>
-          <FontAwesomeIcon icon={faPersonWalkingArrowRight} /> Leave
+          <IconAlignment
+            icon={<FontAwesomeIcon icon={faPersonWalkingArrowRight} />}
+          />
+          <Typography as="span">Leave</Typography>
         </Stack>
       </Link>
 
       <Link to="time-sheet" component={NavLink} style={getActiveStyles}>
         <Stack gap="2" orientation="horizontal" {...props}>
-          <FontAwesomeIcon icon={faBusinessTime} /> Time management
+          <IconAlignment icon={<FontAwesomeIcon icon={faBusinessTime} />} />
+          <Typography as="span">Time management</Typography>
         </Stack>
       </Link>
 
       <Link to="pay-roll" component={NavLink} style={getActiveStyles}>
         <Stack gap="2" orientation="horizontal" {...props}>
-          <FontAwesomeIcon icon={faReceipt} /> Payroll
+          <IconAlignment icon={<FontAwesomeIcon icon={faReceipt} />} />
+          <Typography as="span">Payroll</Typography>
         </Stack>
       </Link>
 
       <Link to="help-desk" component={NavLink} style={getActiveStyles}>
         <Stack gap="2" orientation="horizontal" {...props}>
-          <FontAwesomeIcon icon={faQuestionCircle} />
-          Help desk
+          <IconAlignment icon={<FontAwesomeIcon icon={faQuestionCircle} />} />
+          <Typography as="span">Help desk</Typography>
         </Stack>
       </Link>
 
       <Link to="visitor-pass" component={NavLink} style={getActiveStyles}>
         <Stack gap="2" orientation="horizontal" {...props}>
-          <FontAwesomeIcon icon={faCircleXmark} /> Visitor pass
+          <IconAlignment icon={<FontAwesomeIcon icon={faCircleXmark} />} />
+          <Typography as="span">Visitor pass</Typography>
         </Stack>
       </Link>
 
       <Link component={NavLink} to="travel" style={getActiveStyles}>
         <Stack gap="2" orientation="horizontal" {...props}>
-          <FontAwesomeIcon icon={faPlaneDeparture} /> Travel
+          <IconAlignment icon={<FontAwesomeIcon icon={faPlaneDeparture} />} />
+          <Typography as="span">Travel</Typography>
         </Stack>
       </Link>
 
       <Link component={NavLink} to="expense" style={getActiveStyles}>
         <Stack gap="2" orientation="horizontal" {...props}>
-          <FontAwesomeIcon icon={faClipboard} /> Expense
+          <IconAlignment icon={<FontAwesomeIcon icon={faClipboard} />} />
+          <Typography as="span">Expense</Typography>
         </Stack>
       </Link>
 
       <Link component={NavLink} to="loan" style={getActiveStyles}>
         <Stack gap="2" orientation="horizontal" {...props}>
-          <FontAwesomeIcon icon={faLandmark} /> Loan
+          <IconAlignment icon={<FontAwesomeIcon icon={faLandmark} />} />
+          <Typography as="span">Loan</Typography>
         </Stack>
       </Link>
 
       <Link component={NavLink} to="announcement" style={getActiveStyles}>
         <Stack gap="2" orientation="horizontal" {...props}>
-          <FontAwesomeIcon icon={faBullhorn} /> Announcement
-        </Stack>{" "}
+          <IconAlignment icon={<FontAwesomeIcon icon={faBullhorn} />} />
+          <Typography as="span">Announcement</Typography>
+        </Stack>
       </Link>
 
       <Link to="alert" component={NavLink} style={getActiveStyles}>
         <Stack gap="2" orientation="horizontal" {...props}>
-          <FontAwesomeIcon icon={faTriangleExclamation} /> Alert
+          <IconAlignment
+            icon={<FontAwesomeIcon icon={faTriangleExclamation} />}
+          />
+          <Typography as="span">Alert</Typography>
         </Stack>
       </Link>
 
       <Link to="admin" component={NavLink} style={getActiveStyles}>
         <Stack gap="2" orientation="horizontal" {...props}>
-          <FontAwesomeIcon icon={faUser} /> Admin
+          <IconAlignment icon={<FontAwesomeIcon icon={faUser} />} />
+          <Typography as="span">Admin</Typography>
         </Stack>
       </Link>
 
@@ -177,10 +193,30 @@ export const SideNavbarLinks = (props: SideNavbarLinksProps) => {
         style={getActiveStyles}
       >
         <Stack gap="2" orientation="horizontal" {...props}>
-          <FontAwesomeIcon icon={faRightFromBracket} /> Logout
+          <IconAlignment icon={<FontAwesomeIcon icon={faRightFromBracket} />} />
+          <Typography as="span">Logout</Typography>
         </Stack>
       </Link>
     </Stack>
+  );
+};
+
+export const iconAlignmentStyles = {
+  minWidth: 20,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
+
+export type IconAlignmentProps = {
+  icon: React.ReactNode;
+};
+
+export const IconAlignment = (props: IconAlignmentProps) => {
+  return (
+    <div style={iconAlignmentStyles}>
+      <div>{props.icon}</div>
+    </div>
   );
 };
 
