@@ -60,12 +60,14 @@ const HelpDeskStatusDialog = (props: HelpDeskStatusProps) => {
 
   return (
     <>
-      <Dialog.Trigger {...value} variant="success">
-        <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
-      </Dialog.Trigger>
-      <Dialog.Trigger {...value} variant="danger">
-        <FontAwesomeIcon icon={faXmark}></FontAwesomeIcon>
-      </Dialog.Trigger>
+      <Stack orientation="horizontal" gap="3">
+        <Dialog.Trigger {...value} variant="success">
+          <FontAwesomeIcon icon={faCheck}></FontAwesomeIcon>
+        </Dialog.Trigger>
+        <Dialog.Trigger {...value} variant="danger">
+          <FontAwesomeIcon icon={faXmark}></FontAwesomeIcon>
+        </Dialog.Trigger>
+      </Stack>
 
       <Dialog {...value}>
         <Dialog.Header title="Add Help-desk Status" />
