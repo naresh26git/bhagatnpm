@@ -2,6 +2,7 @@ import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
+import { Address } from "server/dist/trpc/routes/addresses/get";
 import { FamilyDetail } from "server/dist/trpc/routes/family-details/get";
 import { PersonalInfo } from "server/dist/trpc/routes/personal-infos/get";
 import { Qualification } from "server/dist/trpc/routes/qualification/get-recently-created";
@@ -55,37 +56,74 @@ export const ProfilePage = () => {
   const [personalInfo, setPersonalInfo] = React.useState<PersonalInfo | null>(
     null
   );
-  const [familyDetail, setFamilyDetail] = React.useState<FamilyDetail | null>(
+  const [fatherDetails, setFatherDetails] = React.useState<FamilyDetail | null>(
+    null
+  );
+  const [motherDetails, setMotherDetails] = React.useState<FamilyDetail | null>(
     null
   );
   const [qualificationDetail, setQualificationDetail] =
     React.useState<Qualification | null>(null);
+
+  const [addressDetail, setAddressDetail] = React.useState<Address | null>(
+    null
+  );
+
   const navigate = useNavigate();
   const location = useLocation();
 
   React.useEffect(() => {
     (async () => {
-      const personalInfo = await client.personalInfo.get.query(
-        location.state.userId
+      const personalInfo = await client.personalInfo.get.mutate(
+        location.state.user.id
       );
+      console.log(personalInfo);
+
       setPersonalInfo(personalInfo);
     })();
   }, []);
+
   React.useEffect(() => {
     (async () => {
-      const familyDetail = await client.familyDetail.get.query(
-        location.state.userId
-      );
-      setFamilyDetail(familyDetail);
+      const fatherDetails = await client.familyDetail.get.mutate({
+        userId: location.state.user.id,
+        relationshipType: "father",
+      });
+
+      setFatherDetails(fatherDetails);
     })();
   }, []);
+
+  React.useEffect(() => {
+    (async () => {
+      const motherDetails = await client.familyDetail.get.mutate({
+        userId: location.state.user.id,
+        relationshipType: "mother",
+      });
+
+      setMotherDetails(motherDetails);
+    })();
+  }, []);
+
   React.useEffect(() => {
     (async () => {
       const qualificationDetail =
-        await client.qualifications.getRecentlyCreated.query(
-          location.state.userId
+        await client.qualification.getRecentlyCreated.mutate(
+          location.state.user.id
         );
+
       setQualificationDetail(qualificationDetail);
+    })();
+  }, []);
+
+  React.useEffect(() => {
+    (async () => {
+      const addressDetail = await client.address.get.mutate({
+        userId: location.state.user.id,
+        addressType: "residential",
+      });
+      console.log(addressDetail);
+      setAddressDetail(addressDetail);
     })();
   }, []);
 
@@ -167,7 +205,7 @@ export const ProfilePage = () => {
                               type="text"
                               className="form-control"
                               id="name"
-                              value={fatherName}
+                              value={fatherDetails?.name}
                               onChange={(event) =>
                                 setFatherName(event.target.value)
                               }
@@ -181,7 +219,7 @@ export const ProfilePage = () => {
                               type="text"
                               className="form-control"
                               id="name"
-                              value={motherName}
+                              value={motherDetails?.name}
                               onChange={(event) =>
                                 setMotherName(event.target.value)
                               }
@@ -189,35 +227,35 @@ export const ProfilePage = () => {
                             <label htmlFor="State">Mother name</label>
                           </div>
                         </Grid.Col>
-                        <Grid.Col cols={["12", "lg-6"]}>
+                        {/* <Grid.Col cols={["12", "lg-6"]}>
                           <div className="form-floating">
                             <input
                               type="text"
                               className="form-control"
                               id="name"
-                              value={personalEmail}
+                              value={personalInfo?.user.email ?? ""}
                               onChange={(event) =>
                                 setPersonalEmail(event.target.value)
                               }
                             />
                             <label htmlFor="City">personal Email</label>
                           </div>
-                        </Grid.Col>
-                        <Grid.Col cols={["12", "lg-6"]}>
+                        </Grid.Col> */}
+                        {/* <Grid.Col cols={["12", "lg-6"]}>
                           <div className="form-floating">
                             <input
                               type="text"
                               className="form-control"
                               id="name"
-                              value={matrialStatus}
+                              value={personalInfo.}
                               onChange={(event) =>
                                 setMatrialStatus(event.target.value)
                               }
                             />
                             <label htmlFor="State">Matrial status</label>
                           </div>
-                        </Grid.Col>
-                        <Grid.Col cols={["12", "lg-6"]}>
+                        </Grid.Col> */}
+                        {/* <Grid.Col cols={["12", "lg-6"]}>
                           <div className="form-floating">
                             <input
                               type="text"
@@ -230,8 +268,8 @@ export const ProfilePage = () => {
                             />
                             <label htmlFor="City">Blood group</label>
                           </div>
-                        </Grid.Col>
-                        <Grid.Col cols={["12", "lg-6"]}>
+                        </Grid.Col> */}
+                        {/* <Grid.Col cols={["12", "lg-6"]}>
                           <div className="form-floating">
                             <input
                               type="text"
@@ -244,8 +282,8 @@ export const ProfilePage = () => {
                             />
                             <label htmlFor="State">Nationality</label>
                           </div>
-                        </Grid.Col>
-                        <Grid.Col cols={["12", "lg-6"]}>
+                        </Grid.Col> */}
+                        {/* <Grid.Col cols={["12", "lg-6"]}>
                           <div className="form-floating">
                             <input
                               type="text"
@@ -258,14 +296,20 @@ export const ProfilePage = () => {
                             />
                             <label htmlFor="City">Gender</label>
                           </div>
-                        </Grid.Col>
+                        </Grid.Col> */}
 
                         <Grid.Col cols={["12", "lg-6"]}>
                           <div className="form-floating">
                             <input
-                              type="date"
+                              type="text"
                               className="form-control"
-                              value={dateOfBirth}
+                              value={
+                                personalInfo
+                                  ? new Date(
+                                      personalInfo.dateOfBirth
+                                    ).toLocaleDateString("en-US")
+                                  : ""
+                              }
                               onChange={(
                                 event: React.ChangeEvent<HTMLInputElement>
                               ): void => setDateOfBirth(event.target.value)}
@@ -284,7 +328,7 @@ export const ProfilePage = () => {
                       </Typography>
                       <Dialog.Body>
                         <Grid.Row gutters="3">
-                          <Grid.Col cols={["12", "lg-6"]}>
+                          {/* <Grid.Col cols={["12", "lg-6"]}>
                             <div className="form-floating">
                               <input
                                 type="text"
@@ -297,14 +341,20 @@ export const ProfilePage = () => {
                               />
                               <label htmlFor="City">Notice days</label>
                             </div>
-                          </Grid.Col>
+                          </Grid.Col> */}
 
                           <Grid.Col cols={["12", "lg-6"]}>
                             <div className="form-floating">
                               <input
-                                type="date"
+                                type="text"
                                 className="form-control"
-                                value={dateOfJoining}
+                                value={
+                                  personalInfo
+                                    ? new Date(
+                                        personalInfo.dateOfJoining
+                                      ).toLocaleDateString("en-US")
+                                    : ""
+                                }
                                 onChange={(
                                   event: React.ChangeEvent<HTMLInputElement>
                                 ): void => setDateOfJoining(event.target.value)}
@@ -314,7 +364,7 @@ export const ProfilePage = () => {
                               </label>
                             </div>
                           </Grid.Col>
-                          <Grid.Col cols={["12", "lg-6"]}>
+                          {/* <Grid.Col cols={["12", "lg-6"]}>
                             <div className="form-floating">
                               <input
                                 type="text"
@@ -327,8 +377,8 @@ export const ProfilePage = () => {
                               />
                               <label htmlFor="City">Employee type</label>
                             </div>
-                          </Grid.Col>
-                          <Grid.Col cols={["12", "lg-6"]}>
+                          </Grid.Col> */}
+                          {/* <Grid.Col cols={["12", "lg-6"]}>
                             <div className="form-floating">
                               <input
                                 type="text"
@@ -341,8 +391,8 @@ export const ProfilePage = () => {
                               />
                               <label htmlFor="State">PF UAN</label>
                             </div>
-                          </Grid.Col>
-                          <Grid.Col cols={["12", "lg-6"]}>
+                          </Grid.Col> */}
+                          {/* <Grid.Col cols={["12", "lg-6"]}>
                             <div className="form-floating">
                               <input
                                 type="text"
@@ -355,14 +405,14 @@ export const ProfilePage = () => {
                               />
                               <label htmlFor="City">Biometric ID</label>
                             </div>
-                          </Grid.Col>
+                          </Grid.Col> */}
                           <Grid.Col cols={["12", "lg-6"]}>
                             <div className="form-floating">
                               <input
                                 type="text"
                                 className="form-control"
                                 id="name"
-                                value={reportingManager}
+                                value={personalInfo?.reportingManager.name}
                                 onChange={(event) =>
                                   setReportingManager(event.target.value)
                                 }
@@ -376,7 +426,7 @@ export const ProfilePage = () => {
                                 type="text"
                                 className="form-control"
                                 id="name"
-                                value={employeeCode}
+                                value={personalInfo?.userId}
                                 onChange={(event) =>
                                   setEmployeeCode(event.target.value)
                                 }
@@ -384,27 +434,31 @@ export const ProfilePage = () => {
                               <label htmlFor="City">Employee code</label>
                             </div>
                           </Grid.Col>
-                          <Grid.Col cols={["12", "lg-6"]}>
+                          {/* <Grid.Col cols={["12", "lg-6"]}>
                             <div className="form-floating">
                               <input
                                 type="text"
                                 className="form-control"
                                 id="name"
-                                value={employeeStatus}
+                                value={
+                                  personalInfo?.user.status === undefined
+                                    ? personalInfo?.user.status
+                                    : ""
+                                }
                                 onChange={(event) =>
                                   setEmployeeStatus(event.target.value)
                                 }
                               />
                               <label htmlFor="State">Employee status</label>
                             </div>
-                          </Grid.Col>
+                          </Grid.Col> */}
                           <Grid.Col cols={["12", "lg-6"]}>
                             <div className="form-floating">
                               <input
                                 type="text"
                                 className="form-control"
                                 id="name"
-                                value={department}
+                                value={personalInfo?.department.name}
                                 onChange={(event) =>
                                   setDepartment(event.target.value)
                                 }
@@ -418,7 +472,7 @@ export const ProfilePage = () => {
                                 type="text"
                                 className="form-control"
                                 id="name"
-                                value={designation}
+                                value={personalInfo?.designation.name}
                                 onChange={(event) =>
                                   setDepartment(event.target.value)
                                 }
@@ -426,7 +480,7 @@ export const ProfilePage = () => {
                               <label htmlFor="City">Designation</label>
                             </div>
                           </Grid.Col>
-                          <Grid.Col cols={["12", "lg-6"]}>
+                          {/* <Grid.Col cols={["12", "lg-6"]}>
                             <div className="form-floating">
                               <input
                                 type="text"
@@ -439,8 +493,8 @@ export const ProfilePage = () => {
                               />
                               <label htmlFor="State">Work exprience</label>
                             </div>
-                          </Grid.Col>
-                          <Grid.Col cols={["12", "lg-6"]}>
+                          </Grid.Col> */}
+                          {/* <Grid.Col cols={["12", "lg-6"]}>
                             <div className="form-floating">
                               <input
                                 type="text"
@@ -453,14 +507,14 @@ export const ProfilePage = () => {
                               />
                               <label htmlFor="City">Shift</label>
                             </div>
-                          </Grid.Col>
+                          </Grid.Col> */}
                           <Grid.Col cols={["12", "lg-6"]}>
                             <div className="form-floating">
                               <input
                                 type="text"
                                 className="form-control"
                                 id="name"
-                                value={officeEmailId}
+                                value={personalInfo?.user.email ?? ""}
                                 onChange={(event) =>
                                   setOfficeEmailId(event.target.value)
                                 }
@@ -498,7 +552,7 @@ export const ProfilePage = () => {
                                   type="text"
                                   className="form-control"
                                   id="name"
-                                  value={currentAddress}
+                                  value={`${addressDetail?.street}, ${addressDetail?.city}, ${addressDetail?.pincode},${addressDetail?.state},`}
                                   onChange={(event) =>
                                     setCurrentAddress(event.target.value)
                                   }
@@ -512,7 +566,7 @@ export const ProfilePage = () => {
                                   type="text"
                                   className="form-control"
                                   id="name"
-                                  value={permanentAddress}
+                                  value={`${addressDetail?.street}, ${addressDetail?.city}, ${addressDetail?.pincode},${addressDetail?.state},`}
                                   onChange={(event) =>
                                     setPermanentAddress(event.target.value)
                                   }
@@ -526,7 +580,7 @@ export const ProfilePage = () => {
                                   type="text"
                                   className="form-control"
                                   id="name"
-                                  value={city}
+                                  value={addressDetail?.city}
                                   onChange={(event) =>
                                     setCity(event.target.value)
                                   }
@@ -540,7 +594,7 @@ export const ProfilePage = () => {
                                   type="text"
                                   className="form-control"
                                   id="name"
-                                  value={country}
+                                  value={addressDetail?.country}
                                   onChange={(event) =>
                                     setCountry(event.target.value)
                                   }
@@ -554,7 +608,7 @@ export const ProfilePage = () => {
                                   type="text"
                                   className="form-control"
                                   id="name"
-                                  value={zip}
+                                  value={addressDetail?.pincode}
                                   onChange={(event) =>
                                     setZip(event.target.value)
                                   }
@@ -568,7 +622,7 @@ export const ProfilePage = () => {
                                   type="text"
                                   className="form-control"
                                   id="name"
-                                  value={state}
+                                  value={addressDetail?.state}
                                   onChange={(event) =>
                                     setState(event.target.value)
                                   }
@@ -670,7 +724,7 @@ export const ProfilePage = () => {
                                   type="text"
                                   className="form-control"
                                   id="name"
-                                  value={degreeDiploma}
+                                  value={qualificationDetail?.name}
                                   onChange={(event) =>
                                     setDegreeDiploma(event.target.value)
                                   }
@@ -678,7 +732,7 @@ export const ProfilePage = () => {
                                 <label htmlFor="State">Degree/Diploma</label>
                               </div>
                             </Grid.Col>
-                            <Grid.Col cols={["12", "lg-6"]}>
+                            {/* <Grid.Col cols={["12", "lg-6"]}>
                               <div className="form-floating">
                                 <input
                                   type="text"
@@ -719,7 +773,7 @@ export const ProfilePage = () => {
                                 />
                                 <label htmlFor="City">Percentage</label>
                               </div>
-                            </Grid.Col>
+                            </Grid.Col> */}
                           </Grid.Row>
                         </Stack>
                       </Dialog.Body>

@@ -75,21 +75,22 @@ const LeaveStatusDialog = (props: leaveStatusProps) => {
 
   return (
     <>
-      <Dialog.Trigger {...value} variant="success">
-        {props.variant === "admin" ? (
-          <FontAwesomeIcon icon={faCheck} onClick={handleAccept} />
-        ) : (
-          <FontAwesomeIcon icon={faPencil} />
-        )}
-      </Dialog.Trigger>
-      <Dialog.Trigger {...value} variant="danger">
-        {props.variant === "admin" ? (
-          <FontAwesomeIcon icon={faXmark} onClick={handleReject} />
-        ) : (
-          <FontAwesomeIcon icon={faPencil} />
-        )}
-      </Dialog.Trigger>
-
+      <Stack orientation="horizontal" gap="2">
+        <Dialog.Trigger {...value} variant="success">
+          {props.variant === "admin" ? (
+            <FontAwesomeIcon icon={faCheck} onClick={handleAccept} />
+          ) : (
+            <FontAwesomeIcon icon={faPencil} />
+          )}
+        </Dialog.Trigger>
+        <Dialog.Trigger {...value} variant="danger">
+          {props.variant === "admin" ? (
+            <FontAwesomeIcon icon={faXmark} onClick={handleReject} />
+          ) : (
+            <FontAwesomeIcon icon={faPencil} />
+          )}
+        </Dialog.Trigger>
+      </Stack>
       <Dialog {...value}>
         <Dialog.Header title="Add Leave Status" />
         <Dialog.Body>

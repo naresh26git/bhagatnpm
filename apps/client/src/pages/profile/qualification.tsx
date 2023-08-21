@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+import { InputParameters as ImportQualificationInputParameters } from "server/dist/trpc/routes/qualification/import";
 import {
   InputParameters,
   Qualification,
@@ -6,6 +7,7 @@ import {
 import Button from "ui/Button";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
+import Menu from "ui/Menu";
 import Stack from "ui/Stack";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import XLSX from "xlsx";
@@ -16,6 +18,7 @@ import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
+
 const Qualifications = () => {
   const auth = useAuthContext();
 
@@ -29,7 +32,7 @@ const Qualifications = () => {
           page: states.paginationState.page,
         };
 
-        const qualification = await client.qualifications.getMany.mutate(
+        const qualification = await client.qualification.getMany.mutate(
           inputParameters
         );
 
@@ -47,9 +50,41 @@ const Qualifications = () => {
     },
   });
 
+  const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      if (!event.target.files) return;
+
+      const [file] = event.target.files;
+
+      if (!file) return;
+
+      await importQualification(file);
+
+      toast.success("File imported successfully!");
+    } catch (error) {
+      toast.error("An error occurred!");
+    } finally {
+      event.target.value = "";
+    }
+  };
+
+  const importQualification = async (file: File) => {
+    const fileContentsAsBuffer = await file.arrayBuffer();
+
+    const workbook = XLSX.read(fileContentsAsBuffer, { type: "buffer" });
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rawData = XLSX.utils.sheet_to_json(worksheet);
+
+    await client.qualification.import.mutate(
+      rawData.map((row: any) => ({
+        ...row,
+      })) as ImportQualificationInputParameters
+    );
+  };
+
   const handleExport = async () => {
     try {
-      const data = await client.qualifications.getMany.mutate({
+      const data = await client.qualification.getMany.mutate({
         fromDate: new Date(
           new Date(
             new Date().setFullYear(
@@ -93,6 +128,28 @@ const Qualifications = () => {
     }
   };
 
+  const handleExportFormatExport = async () => {
+    try {
+      const qualification = [
+        {
+          userId: 1,
+          name: "X",
+        },
+      ];
+
+      const worksheet = XLSX.utils.json_to_sheet(qualification);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "qualification");
+      XLSX.writeFile(workbook, "qualifications.xlsx", {
+        compression: true,
+      });
+
+      toast.success("Export format successfully exported!");
+    } catch (error) {
+      console.log({ error });
+      toast.error("An error occurred!");
+    }
+  };
   return (
     <Stack gap="3">
       <ShowIf.Employee>
@@ -117,6 +174,38 @@ const Qualifications = () => {
               <Button variant="primary" onClick={handleExport}>
                 Export
               </Button>
+              <Menu
+                isSplitButton
+                trigger={
+                  <>
+                    <label
+                      className="btn btn-primary"
+                      htmlFor="qualificationImportFile"
+                    >
+                      Import
+                    </label>
+                    <Menu.Trigger variant="primary">
+                      <span className="visually-hidden">Toggle Dropdown</span>
+                    </Menu.Trigger>
+                  </>
+                }
+                dropdown={<Menu.Dropdown />}
+                options={[
+                  {
+                    label: "Export format",
+                    onClick: handleExportFormatExport,
+                  },
+                ]}
+              />
+              <input
+                type="file"
+                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                style={{
+                  display: "none",
+                }}
+                id="qualificationImportFile"
+                onChange={onFileChange}
+              />
               <PrintButton />
             </Stack>
           }

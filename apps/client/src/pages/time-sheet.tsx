@@ -4,11 +4,13 @@ import {
   InputParameters,
   TimeSheet,
 } from "server/dist/trpc/routes/time-sheets/get-many";
+import { InputParameters as ImportTimeSheetInputParameters } from "server/dist/trpc/routes/time-sheets/import";
 import Badge from "ui/Badge";
 import Button from "ui/Button";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Grid from "ui/Grid";
+import Menu from "ui/Menu";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
@@ -181,6 +183,73 @@ export const TimeSheetPage = () => {
     }
   };
 
+  const handleExportFormatExport = async () => {
+    try {
+      const timeSheet = [
+        {
+          userId: 1,
+          inTime: new Intl.DateTimeFormat("en-US", {
+            hour: "numeric",
+            minute: "numeric",
+          }).format(new Date().setHours(9, 0, 0, 0)),
+          outTime: new Intl.DateTimeFormat("en-US", {
+            hour: "numeric",
+            minute: "numeric",
+          }).format(new Date().setHours(18, 0, 0, 0)),
+
+          status: "present",
+        },
+      ];
+
+      const worksheet = XLSX.utils.json_to_sheet(timeSheet);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "time-sheet");
+      XLSX.writeFile(workbook, "time-sheet.xlsx", {
+        compression: true,
+      });
+
+      toast.success("Export format successfully exported!");
+    } catch (error) {
+      console.log({ error });
+      toast.error("An error occurred!");
+    }
+  };
+
+  const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      if (!event.target.files) return;
+
+      const [file] = event.target.files;
+
+      if (!file) return;
+
+      await importTimeSheet(file);
+
+      toast.success("File imported successfully!");
+    } catch (error) {
+      toast.error("An error occurred!");
+    } finally {
+      event.target.value = "";
+    }
+  };
+
+  const importTimeSheet = (file: File) => {
+    const fileContentsAsBuffer = file.arrayBuffer();
+
+    const workbook = XLSX.read(fileContentsAsBuffer, { type: "buffer" });
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rawData = XLSX.utils.sheet_to_json(worksheet);
+
+    client.timeSheet.import.mutate(
+      rawData.map((row: any) => ({
+        ...row,
+        amount: Number(row?.amount),
+      })) as ImportTimeSheetInputParameters
+    );
+
+    console.log({ successfullyImported: true });
+  };
+
   return (
     <Stack gap="3">
       <Grid.Row>
@@ -243,6 +312,40 @@ export const TimeSheetPage = () => {
               <Button variant="primary" onClick={handleExport}>
                 Export
               </Button>
+
+              <ShowIf.Admin>
+                <Menu
+                  isSplitButton
+                  trigger={
+                    <>
+                      <label className="btn btn-primary" htmlFor="customFile">
+                        Import
+                      </label>
+                      <Menu.Trigger variant="primary">
+                        <span className="visually-hidden">Toggle Dropdown</span>
+                      </Menu.Trigger>
+                    </>
+                  }
+                  dropdown={<Menu.Dropdown />}
+                  options={[
+                    {
+                      label: "Export format",
+                      onClick: handleExportFormatExport,
+                    },
+                  ]}
+                />
+
+                <input
+                  type="file"
+                  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                  style={{
+                    display: "none",
+                  }}
+                  id="customFile"
+                  onChange={onFileChange}
+                />
+              </ShowIf.Admin>
+
               <PrintButton />
             </Stack>
           }

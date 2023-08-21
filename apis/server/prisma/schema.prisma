@@ -154,6 +154,7 @@ model Leave {
   updatedBy   User        @relation("LeaveUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
   user        User        @relation("LeaveOfUser", fields: [userId], references: [id], onUpdate: NoAction)
 
+  @@unique([userId, leaveTypeId, fromDate, toDate, noOfDays])
   @@map("leaves")
 }
 

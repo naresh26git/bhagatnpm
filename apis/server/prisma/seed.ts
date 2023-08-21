@@ -166,6 +166,8 @@ const main = async () => {
           name: "Mithunish",
           password: hashSalt("mithunish"),
           username: "mithunish",
+          email: "mithunish.p@clubitssolutions.com",
+          mobile: "9762123267",
           roleId: employeeRoleId,
           createdById: balajiUserId,
           updatedById: balajiUserId,
@@ -175,6 +177,8 @@ const main = async () => {
           name: "Mithunish",
           password: hashSalt("mithunish"),
           username: "mithunish",
+          email: "mithunish.p@clubitssolutions.com",
+          mobile: "9762123267",
           roleId: employeeRoleId,
           createdById: balajiUserId,
           updatedById: balajiUserId,
@@ -193,6 +197,8 @@ const main = async () => {
           name: "Murali",
           password: hashSalt("murali"),
           username: "murali",
+          email: "muralidharan.t@clubitssolutions.com",
+          mobile: "6385374777",
           roleId: employeeRoleId,
           createdById: balajiUserId,
           updatedById: balajiUserId,
@@ -202,6 +208,8 @@ const main = async () => {
           name: "Murali",
           password: hashSalt("murali"),
           username: "murali",
+          email: "muralidharan.t@clubitssolutions.com",
+          mobile: "6385374777",
           roleId: employeeRoleId,
           createdById: balajiUserId,
           updatedById: balajiUserId,
@@ -220,6 +228,8 @@ const main = async () => {
           name: "Sakthi",
           password: hashSalt("sakthi"),
           username: "sakthi",
+          email: "sakthi@clubitssolutions.com",
+          mobile: "9677629948",
           roleId: employeeRoleId,
           createdById: balajiUserId,
           updatedById: balajiUserId,
@@ -229,6 +239,8 @@ const main = async () => {
           name: "Sakthi",
           password: hashSalt("sakthi"),
           username: "sakthi",
+          email: "sakthi@clubitssolutions.com",
+          mobile: "9677629948",
           roleId: employeeRoleId,
           createdById: balajiUserId,
           updatedById: balajiUserId,
@@ -290,6 +302,68 @@ const main = async () => {
         },
         where: {
           username: "naveen",
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      const { id: vigneshUserId } = await tx.user.upsert({
+        create: {
+          name: "vignesh S",
+          password: hashSalt("vignesh"),
+          username: "vignesh",
+          email: "vignesh.s@clubitssolutions.com",
+          mobile: "7904261582",
+          roleId: employeeRoleId,
+          createdById: balajiUserId,
+          updatedById: balajiUserId,
+          statusId: defaultUserStatusId,
+        },
+        update: {
+          name: "vignesh S",
+          password: hashSalt("vignesh"),
+          username: "vignesh",
+          email: "vignesh.s@clubitssolutions.com",
+          mobile: "7904261582",
+          roleId: employeeRoleId,
+          createdById: balajiUserId,
+          updatedById: balajiUserId,
+          statusId: defaultUserStatusId,
+        },
+        where: {
+          username: "vignesh",
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      const { id: vishnupriyaUserId } = await tx.user.upsert({
+        create: {
+          name: "vishnupriya ",
+          password: hashSalt("vishnu"),
+          username: "vishnu",
+          email: "vishnu.e@clubitssolutions.com",
+          mobile: "9894153639",
+          roleId: employeeRoleId,
+          createdById: balajiUserId,
+          updatedById: balajiUserId,
+          statusId: defaultUserStatusId,
+        },
+        update: {
+          name: "vishnupriya ",
+          password: hashSalt("vishnu"),
+          username: "vishnu",
+          email: "vishnu.e@clubitssolutions.com",
+          mobile: "9894153639",
+          roleId: employeeRoleId,
+          createdById: balajiUserId,
+          updatedById: balajiUserId,
+          statusId: defaultUserStatusId,
+        },
+        where: {
+          username: "vishnu",
         },
         select: {
           id: true,
@@ -381,8 +455,8 @@ const main = async () => {
           },
           {
             imageUrl: "",
-            dateOfBirth: new Date(new Date().setFullYear(1995, 5, 25)),
-            dateOfJoining: new Date(new Date().setFullYear(2023, 4, 28)),
+            dateOfBirth: new Date(new Date().setFullYear(1995, 4, 25)),
+            dateOfJoining: new Date(new Date().setFullYear(2023, 3, 28)),
             firstName: "Murali",
             lastName: "Dharan",
             departmentId: developmentDepartmentId,
@@ -394,9 +468,9 @@ const main = async () => {
           },
           {
             imageUrl: "",
-            dateOfBirth: new Date(new Date().setFullYear(1998, 12, 23)),
-            dateOfJoining: new Date(new Date().setFullYear(2023, 4, 25)),
-            firstName: "Shiva",
+            dateOfBirth: new Date(new Date().setFullYear(1998, 11, 23)),
+            dateOfJoining: new Date(new Date().setFullYear(2023, 3, 25)),
+            firstName: "Siva",
             lastName: "Sakthi",
             departmentId: developmentDepartmentId,
             designationId: JuniorFullstackDeveloperDesignationId,
@@ -408,7 +482,7 @@ const main = async () => {
           {
             imageUrl: "",
             dateOfBirth: new Date(new Date().setFullYear(2000, 4, 4)),
-            dateOfJoining: new Date(new Date().setFullYear(2023, 5, 22)),
+            dateOfJoining: new Date(new Date().setFullYear(2023, 4, 22)),
             firstName: "Daniel",
             lastName: "Eben",
             departmentId: designDepartmentId,
@@ -421,7 +495,7 @@ const main = async () => {
           {
             imageUrl: "",
             dateOfBirth: new Date(new Date().setFullYear(2001, 10, 24)),
-            dateOfJoining: new Date(new Date().setFullYear(2023, 2, 22)),
+            dateOfJoining: new Date(new Date().setFullYear(2023, 1, 22)),
             firstName: "Naveen",
             lastName: "Kumar",
             departmentId: designDepartmentId,
@@ -430,6 +504,32 @@ const main = async () => {
             userId: naveenUserId,
             createdById: naveenUserId,
             updatedById: naveenUserId,
+          },
+          {
+            imageUrl: "",
+            dateOfBirth: new Date(new Date().setFullYear(1997, 2, 3)),
+            dateOfJoining: new Date(new Date().setFullYear(2021, 1, 10)),
+            firstName: "Vignesh",
+            lastName: "Selvam",
+            departmentId: developmentDepartmentId,
+            designationId: JuniorFullstackDeveloperDesignationId,
+            reportingManagerUserId: balajiUserId,
+            userId: vigneshUserId,
+            createdById: vigneshUserId,
+            updatedById: vigneshUserId,
+          },
+          {
+            imageUrl: "",
+            dateOfBirth: new Date(new Date().setFullYear(1998, 2, 5)),
+            dateOfJoining: new Date(new Date().setFullYear(2023, 1, 15)),
+            firstName: "Vishnu",
+            lastName: "Priya",
+            departmentId: developmentDepartmentId,
+            designationId: JuniorFullstackDeveloperDesignationId,
+            reportingManagerUserId: balajiUserId,
+            userId: vishnupriyaUserId,
+            createdById: vishnupriyaUserId,
+            updatedById: vishnupriyaUserId,
           },
         ].map((personalInfo) =>
           tx.personalInfo.upsert({
@@ -527,6 +627,28 @@ const main = async () => {
             userId: naveenUserId,
             addressTypeId: defaultAddressTypeId,
           },
+          {
+            city: "Namakkal",
+            country: "India",
+            pincode: "638183",
+            state: "Tamil Nadu",
+            street: "Kumarapalayam",
+            createdById: vigneshUserId,
+            updatedById: vigneshUserId,
+            userId: vigneshUserId,
+            addressTypeId: defaultAddressTypeId,
+          },
+          {
+            city: "Pondicherry",
+            country: "India",
+            pincode: "605013",
+            state: "Tamil Nadu",
+            street: "kosapalayam",
+            createdById: vishnupriyaUserId,
+            updatedById: vishnupriyaUserId,
+            userId: vishnupriyaUserId,
+            addressTypeId: defaultAddressTypeId,
+          },
         ].map((address) =>
           tx.address.create({
             data: address,
@@ -537,7 +659,10 @@ const main = async () => {
         )
       );
 
-      const [{ id: defaultRelationshipTypeId }] = await Promise.all(
+      const [
+        { id: defaultRelationshipTypeId },
+        { id: motherRelationshipTypeId },
+      ] = await Promise.all(
         [
           {
             name: "father",
@@ -635,6 +760,30 @@ const main = async () => {
             createdById: naveenUserId,
             updatedById: naveenUserId,
             userId: naveenUserId,
+          },
+          {
+            dateOfBirth: new Date(new Date().setFullYear(1968, 6, 20)),
+            name: "Selvam",
+            relationshipTypeId: defaultRelationshipTypeId,
+            createdById: vigneshUserId,
+            updatedById: vigneshUserId,
+            userId: vigneshUserId,
+          },
+          {
+            dateOfBirth: new Date(new Date().setFullYear(1975, 10, 22)),
+            name: "Kala S",
+            relationshipTypeId: motherRelationshipTypeId,
+            createdById: vigneshUserId,
+            updatedById: vigneshUserId,
+            userId: vigneshUserId,
+          },
+          {
+            dateOfBirth: new Date(new Date().setFullYear(1968, 2, 3)),
+            name: "Elumalai",
+            relationshipTypeId: defaultRelationshipTypeId,
+            createdById: vishnupriyaUserId,
+            updatedById: vishnupriyaUserId,
+            userId: vishnupriyaUserId,
           },
         ].map((familyDetail) =>
           tx.familyDetail.create({
@@ -743,6 +892,42 @@ const main = async () => {
             userId: naveenUserId,
             updatedById: naveenUserId,
             createdById: naveenUserId,
+            statusId: defaultTimeSheetStatusId,
+          },
+          {
+            inTime: new Date(
+              new Date(new Date().setDate(new Date().getDate() - 1)).setHours(
+                9,
+                0
+              )
+            ),
+            outTime: new Date(
+              new Date(new Date().setDate(new Date().getDate() - 1)).setHours(
+                17,
+                0
+              )
+            ),
+            userId: vigneshUserId,
+            updatedById: vigneshUserId,
+            createdById: vigneshUserId,
+            statusId: defaultTimeSheetStatusId,
+          },
+          {
+            inTime: new Date(
+              new Date(new Date().setDate(new Date().getDate() - 1)).setHours(
+                9,
+                0
+              )
+            ),
+            outTime: new Date(
+              new Date(new Date().setDate(new Date().getDate() - 1)).setHours(
+                17,
+                0
+              )
+            ),
+            userId: vishnupriyaUserId,
+            updatedById: vishnupriyaUserId,
+            createdById: vishnupriyaUserId,
             statusId: defaultTimeSheetStatusId,
           },
         ].map((timeSheet) =>
@@ -896,6 +1081,25 @@ const main = async () => {
             createdById: muraliUserId,
             updatedById: muraliUserId,
           },
+          {
+            name: "X",
+            userId: vigneshUserId,
+            createdById: vigneshUserId,
+            updatedById: vigneshUserId,
+          },
+
+          {
+            name: "XII",
+            userId: vigneshUserId,
+            createdById: vigneshUserId,
+            updatedById: vigneshUserId,
+          },
+          {
+            name: "B.Tech-InformationTechnology",
+            userId: vigneshUserId,
+            createdById: vigneshUserId,
+            updatedById: vigneshUserId,
+          },
         ].map((qualification) =>
           tx.qualification.upsert({
             create: qualification,
@@ -935,6 +1139,20 @@ const main = async () => {
             userId: muraliUserId,
             createdById: muraliUserId,
             updatedById: muraliUserId,
+          },
+          {
+            typeId: aadhaarIdentificationTypeId,
+            number: "309952716504",
+            userId: vigneshUserId,
+            createdById: vigneshUserId,
+            updatedById: vigneshUserId,
+          },
+          {
+            typeId: panIdentificationTypeId,
+            number: "AXRPV3985F",
+            userId: vigneshUserId,
+            createdById: vigneshUserId,
+            updatedById: vigneshUserId,
           },
         ].map((identification) =>
           tx.identification.upsert({
@@ -1069,6 +1287,7 @@ const main = async () => {
         { id: sakthiPayRollId },
         { id: danielPayRollId },
         { id: naveenPayRollId },
+        { id: vigneshPayRollId },
       ] = await Promise.all(
         [
           {
@@ -1099,6 +1318,14 @@ const main = async () => {
             year: new Date().getFullYear(),
             month: new Date().getMonth(),
             userId: naveenUserId,
+            createdById: balajiUserId,
+            updatedById: balajiUserId,
+            statusId: defaultPayRollStatusId,
+          },
+          {
+            year: new Date().getFullYear(),
+            month: new Date().getMonth(),
+            userId: vigneshUserId,
             createdById: balajiUserId,
             updatedById: balajiUserId,
             statusId: defaultPayRollStatusId,
@@ -1232,6 +1459,27 @@ const main = async () => {
             createdById: balajiUserId,
             updatedById: balajiUserId,
           },
+          {
+            payRollId: vigneshPayRollId,
+            componentTypeId: basicPaySlipComponentTypeId,
+            amount: 28000,
+            createdById: balajiUserId,
+            updatedById: balajiUserId,
+          },
+          {
+            payRollId: vigneshPayRollId,
+            componentTypeId: hraPaySlipComponentTypeId,
+            amount: 3000,
+            createdById: balajiUserId,
+            updatedById: balajiUserId,
+          },
+          {
+            payRollId: vigneshPayRollId,
+            componentTypeId: deductionPaySlipComponentTypeId,
+            amount: -2800,
+            createdById: balajiUserId,
+            updatedById: balajiUserId,
+          },
         ].map((paySlipComponent) =>
           tx.paySlipComponent.create({
             data: paySlipComponent,
@@ -1341,6 +1589,17 @@ const main = async () => {
             updatedById: naveenUserId,
             leaveTypeId: casualLeaveTypeId,
             userId: naveenUserId,
+            remarks: "Please consider.",
+            statusId: defaultLeaveStatusId,
+          },
+          {
+            fromDate: new Date(new Date().setDate(new Date().getDate() - 3)),
+            toDate: new Date(new Date().setDate(new Date().getDate() - 2)),
+            noOfDays: 1,
+            createdById: vigneshUserId,
+            updatedById: vigneshUserId,
+            leaveTypeId: sickLeaveTypeId,
+            userId: vigneshUserId,
             remarks: "Please consider.",
             statusId: defaultLeaveStatusId,
           },

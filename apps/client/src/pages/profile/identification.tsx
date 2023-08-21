@@ -3,9 +3,11 @@ import {
   Identification,
   InputParameters,
 } from "server/dist/trpc/routes/identification/get-many";
+import { InputParameters as ImportIdentificationInputParameters } from "server/dist/trpc/routes/identification/import";
 import Button from "ui/Button";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
+import Menu from "ui/Menu";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
@@ -48,6 +50,39 @@ const Identifications = () => {
       }
     },
   });
+
+  const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      if (!event.target.files) return;
+
+      const [file] = event.target.files;
+
+      if (!file) return;
+
+      await importIdentification(file);
+      toast.success("File imported successfully!");
+    } catch (error) {
+      toast.error("An error occurred!");
+    } finally {
+      event.target.value = "";
+    }
+  };
+
+  const importIdentification = (file: File) => {
+    const fileContentsAsBuffer = file.arrayBuffer();
+
+    const workbook = XLSX.read(fileContentsAsBuffer, { type: "buffer" });
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rawData = XLSX.utils.sheet_to_json(worksheet);
+
+    client.identification.import.mutate(
+      rawData.map((row: any) => ({
+        ...row,
+      })) as ImportIdentificationInputParameters
+    );
+
+    console.log({ successfullyImported: true });
+  };
 
   const handleExport = async () => {
     try {
@@ -94,6 +129,29 @@ const Identifications = () => {
     }
   };
 
+  const handleExportFormatExport = async () => {
+    try {
+      const identification = [
+        {
+          userId: 1,
+          type: "Aadhaar",
+          number: "10020200301203",
+        },
+      ];
+
+      const worksheet = XLSX.utils.json_to_sheet(identification);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "identifications");
+      XLSX.writeFile(workbook, "identifications.xlsx", {
+        compression: true,
+      });
+
+      toast.success("Export format successfully exported!");
+    } catch (error) {
+      console.log({ error });
+      toast.error("An error occurred!");
+    }
+  };
   return (
     <>
       <Stack gap="3">
@@ -108,6 +166,7 @@ const Identifications = () => {
                 <Button variant="primary" onClick={handleExport}>
                   Export
                 </Button>
+
                 <PrintButton />
               </Stack>
             }
@@ -121,6 +180,35 @@ const Identifications = () => {
                 <Button variant="primary" onClick={handleExport}>
                   Export
                 </Button>
+                <Menu
+                  isSplitButton
+                  trigger={
+                    <>
+                      <label className="btn btn-primary" htmlFor="customFile">
+                        Import
+                      </label>
+                      <Menu.Trigger variant="primary">
+                        <span className="visually-hidden">Toggle Dropdown</span>
+                      </Menu.Trigger>
+                    </>
+                  }
+                  dropdown={<Menu.Dropdown />}
+                  options={[
+                    {
+                      label: "Import format",
+                      onClick: handleExportFormatExport,
+                    },
+                  ]}
+                />
+                <input
+                  type="file"
+                  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                  style={{
+                    display: "none",
+                  }}
+                  id="customFile"
+                  onChange={onFileChange}
+                />
                 <PrintButton />
               </Stack>
             }

@@ -5,12 +5,11 @@ import { getErrorMessage } from "../../../utils/get-error-message";
 import { RouterOutput } from "../../router";
 import { protectedProcedure } from "../../trpc";
 
-export type Qualification =
-  RouterOutput["qualifications"]["getRecentlyCreated"];
+export type Qualification = RouterOutput["qualification"]["getRecentlyCreated"];
 
 export const getRecentlyCreated = protectedProcedure
   .input(z.number())
-  .query(async ({ ctx, input }) => {
+  .mutation(async ({ ctx, input }) => {
     try {
       const qualification = await prisma.qualification.findFirst({
         select: {

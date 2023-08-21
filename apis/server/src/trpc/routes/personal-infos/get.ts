@@ -9,13 +9,16 @@ export type PersonalInfo = RouterOutput["personalInfo"]["get"];
 
 export const get = protectedProcedure
   .input(z.number())
-  .query(async ({ ctx, input }) => {
+  .mutation(async ({ ctx, input }) => {
     try {
       const personalInfo = await prisma.personalInfo.findUnique({
         select: {
           id: true,
+          userId: true,
           user: {
             select: {
+              email: true,
+              mobile: true,
               status: {
                 select: {
                   name: true,

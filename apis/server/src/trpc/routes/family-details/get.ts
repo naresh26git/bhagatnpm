@@ -7,11 +7,16 @@ import { protectedProcedure } from "../../trpc";
 
 export type FamilyDetail = RouterOutput["familyDetail"]["get"];
 
+const inputParameters = z.object({
+  userId: z.number(),
+  relationshipType: z.string(),
+});
+
 export const get = protectedProcedure
-  .input(z.number())
-  .query(async ({ ctx, input }) => {
+  .input(inputParameters)
+  .mutation(async ({ ctx, input }) => {
     try {
-      const familyDetail = await prisma.familyDetail.findMany({
+      const familyDetail = await prisma.familyDetail.findFirst({
         select: {
           id: true,
           user: {
@@ -39,10 +44,16 @@ export const get = protectedProcedure
         where:
           ctx.role === "admin"
             ? {
-                userId: input,
+                userId: input.userId,
+                relationshipType: {
+                  name: input.relationshipType,
+                },
               }
             : {
                 userId: ctx.userId,
+                relationshipType: {
+                  name: input.relationshipType,
+                },
               },
       });
       8;

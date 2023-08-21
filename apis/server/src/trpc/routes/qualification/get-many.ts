@@ -26,7 +26,7 @@ const inputParameters = baseGetManyInputParameters.merge(
   })
 );
 export type Qualification =
-  RouterOutput["qualifications"]["getMany"]["items"][0];
+  RouterOutput["qualification"]["getMany"]["items"][0];
 
 export type InputParameters = z.infer<typeof inputParameters>;
 

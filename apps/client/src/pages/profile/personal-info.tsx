@@ -4,10 +4,12 @@ import {
   InputParameters,
   PersonalInfo,
 } from "server/dist/trpc/routes/personal-infos/get-many";
+import { InputParameters as ImportPersonalInfoInputParameters } from "server/dist/trpc/routes/personal-infos/import";
 import Avatar from "ui/Avatar";
 import Button from "ui/Button";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
+import { Menu } from "ui/Menu";
 import Stack from "ui/Stack";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import XLSX from "xlsx";
@@ -137,37 +139,131 @@ export const PersonalInfoPage = () => {
       console.log({ error });
     }
   };
+
+  const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      if (!event.target.files) return;
+
+      const [file] = event.target.files;
+
+      if (!file) return;
+
+      await importProfileInfo(file);
+
+      toast.success("File imported successfully!");
+    } catch (error) {
+      toast.error("An error occurred!");
+    } finally {
+      event.target.value = "";
+    }
+  };
+
+  const importProfileInfo = (file: File) => {
+    const fileContentsAsBuffer = file.arrayBuffer();
+
+    const workbook = XLSX.read(fileContentsAsBuffer, { type: "buffer" });
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rawData = XLSX.utils.sheet_to_json(worksheet);
+
+    client.personalInfo.import.mutate(
+      rawData.map((row: any) => ({
+        ...row,
+      })) as ImportPersonalInfoInputParameters
+    );
+
+    console.log({ successfullyImported: true });
+  };
+
+  const handleExportFormatExport = async () => {
+    try {
+      const personalInfo = [
+        {
+          userId: 1,
+          firstName: "Ram",
+          middleName: "Charan",
+          lastName: "Kumar",
+          dateOfBirth: new Intl.DateTimeFormat("en-US", {
+            month: "numeric",
+            year: "numeric",
+            day: "numeric",
+          }).format(new Date()),
+          dateOfJoining: new Intl.DateTimeFormat("en-US", {
+            month: "numeric",
+            year: "numeric",
+            day: "numeric",
+          }).format(new Date()),
+          jobTitle: "Junior Fullstack Developer",
+          department: "Developement",
+          reportingManagerId: 1,
+        },
+      ];
+
+      const worksheet = XLSX.utils.json_to_sheet(personalInfo);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "personal-info");
+      XLSX.writeFile(workbook, "personal-info.xlsx", {
+        compression: true,
+      });
+
+      toast.success("Export format successfully exported!");
+    } catch (error) {
+      console.log({ error });
+      toast.error("An error occurred!");
+    }
+  };
   const navigate = useNavigate();
 
   return (
     <Stack gap="3">
-      <ShowIf.Employee>
-        <PageHeader
-          title={<PageHeader.Title></PageHeader.Title>}
-          actions={
-            <Stack orientation="horizontal" gap="3">
+      <PageHeader
+        title={<PageHeader.Title />}
+        actions={
+          <Stack orientation="horizontal" gap="3">
+            <ShowIf.Employee>
               <PersonalInfoDialog asyncList={value as AsyncListContextValue} />
-              <Button variant="primary" onClick={handleExport}>
-                Export
-              </Button>
-              <PrintButton />
-            </Stack>
-          }
-        />
-      </ShowIf.Employee>
-      <ShowIf.Admin>
-        <PageHeader
-          title={<PageHeader.Title />}
-          actions={
-            <Stack orientation="horizontal" gap="3">
-              <Button variant="primary" onClick={handleExport}>
-                Export
-              </Button>
-              <PrintButton />
-            </Stack>
-          }
-        />
-      </ShowIf.Admin>
+            </ShowIf.Employee>
+            <Button variant="primary" onClick={handleExport}>
+              Export
+            </Button>
+
+            <ShowIf.Admin>
+              <Menu
+                isSplitButton
+                trigger={
+                  <>
+                    <label className="btn btn-primary" htmlFor="customFile">
+                      Import
+                    </label>
+                    <Menu.Trigger variant="primary">
+                      <span className="visually-hidden">Toggle Dropdown</span>
+                    </Menu.Trigger>
+                  </>
+                }
+                dropdown={<Menu.Dropdown />}
+                options={[
+                  {
+                    label: "Import format",
+                    onClick: handleExportFormatExport,
+                  },
+                ]}
+              />
+
+              <input
+                type="file"
+                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                style={{
+                  display: "none",
+                }}
+                id="customFile"
+                onChange={onFileChange}
+              />
+            </ShowIf.Admin>
+
+            <PrintButton />
+          </Stack>
+        }
+      />
+
       <Card className="d-print-block">
         <DataGrid<PersonalInfo>
           {...(value as AsyncListContextValue<PersonalInfo>)}

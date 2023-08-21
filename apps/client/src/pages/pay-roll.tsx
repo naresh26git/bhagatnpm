@@ -1,3 +1,4 @@
+import React from "react";
 import { toast } from "react-toastify";
 import {
   InputParameters,
@@ -8,6 +9,7 @@ import Button from "ui/Button";
 import Card from "ui/Card";
 import DataGrid from "ui/DataGrid";
 import Grid from "ui/Grid";
+import Menu from "ui/Menu";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
@@ -111,34 +113,62 @@ export const PayRollPage = () => {
   };
 
   const importPaySlipComponents = async (file: File) => {
+    const fileContentsAsBuffer = await file.arrayBuffer();
+
+    const workbook = XLSX.read(fileContentsAsBuffer, { type: "buffer" });
+    const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rawData = XLSX.utils.sheet_to_json(worksheet);
+
+    await client.payRoll.import.mutate(
+      rawData.map((row: any) => ({
+        ...row,
+        amount: Number(row?.amount),
+      })) as ImportPaySlipComponentsInputParameters
+    );
+  };
+
+  const handleExportFormatExport = async () => {
     try {
-      const fileContentsAsBuffer = await file.arrayBuffer();
+      const paySlipComponents = [
+        {
+          userId: 1,
+          year: new Date().getFullYear(),
+          month: new Date().getMonth(),
+          status: "success",
+          component: "Basic or HRA or Deduction",
+          amount: 10000,
+        },
+      ];
 
-      const workbook = XLSX.read(fileContentsAsBuffer, { type: "buffer" });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const rawData = XLSX.utils.sheet_to_json(worksheet);
+      const worksheet = XLSX.utils.json_to_sheet(paySlipComponents);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "pay-slip-components");
+      XLSX.writeFile(workbook, "pay-slip-components.xlsx", {
+        compression: true,
+      });
 
-      await client.payRoll.import.mutate(
-        rawData.map((row: any) => ({
-          ...row,
-          amount: Number(row?.amount),
-        })) as ImportPaySlipComponentsInputParameters
-      );
-
-      console.log({ successfullyImported: true });
+      toast.success("Export format successfully exported!");
     } catch (error) {
-      console.log({ error });
+      toast.error("An error occurred!");
     }
   };
 
-  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (!event.target.files) return;
+  const onFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      if (!event.target.files) return;
 
-    const [file] = event.target.files;
+      const [file] = event.target.files;
 
-    if (!file) return;
+      if (!file) return;
 
-    importPaySlipComponents(file);
+      await importPaySlipComponents(file);
+
+      toast.success("File imported successfully!");
+    } catch (error) {
+      toast.error("An error occurred!");
+    } finally {
+      event.target.value = "";
+    }
   };
 
   return (
@@ -191,18 +221,36 @@ export const PayRollPage = () => {
             </Button>
 
             <ShowIf.Admin>
-              <label className="btn btn-primary" htmlFor="customFile">
-                Import
-                <input
-                  type="file"
-                  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                  style={{
-                    display: "none",
-                  }}
-                  id="customFile"
-                  onChange={onFileChange}
-                />
-              </label>
+              <Menu
+                isSplitButton
+                trigger={
+                  <>
+                    <label className="btn btn-primary" htmlFor="customFile">
+                      Import
+                    </label>
+                    <Menu.Trigger variant="primary">
+                      <span className="visually-hidden">Toggle Dropdown</span>
+                    </Menu.Trigger>
+                  </>
+                }
+                dropdown={<Menu.Dropdown />}
+                options={[
+                  {
+                    label: "Export format",
+                    onClick: handleExportFormatExport,
+                  },
+                ]}
+              />
+
+              <input
+                type="file"
+                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                style={{
+                  display: "none",
+                }}
+                id="customFile"
+                onChange={onFileChange}
+              />
             </ShowIf.Admin>
 
             <PrintButton />

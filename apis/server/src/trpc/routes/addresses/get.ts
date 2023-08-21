@@ -7,11 +7,16 @@ import { protectedProcedure } from "../../trpc";
 
 export type Address = RouterOutput["address"]["get"];
 
+const inputParameters = z.object({
+  userId: z.number(),
+  addressType: z.string(),
+});
+
 export const get = protectedProcedure
-  .input(z.number())
-  .query(async ({ ctx, input }) => {
+  .input(inputParameters)
+  .mutation(async ({ ctx, input }) => {
     try {
-      const address = await prisma.address.findMany({
+      const address = await prisma.address.findFirst({
         select: {
           id: true,
           user: {
@@ -42,10 +47,16 @@ export const get = protectedProcedure
         where:
           ctx.role === "admin"
             ? {
-                userId: input,
+                userId: input.userId,
+                addressType: {
+                  name: input.addressType,
+                },
               }
             : {
                 userId: ctx.userId,
+                addressType: {
+                  name: input.addressType,
+                },
               },
       });
 
