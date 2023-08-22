@@ -68,19 +68,19 @@ const Identifications = () => {
     }
   };
 
-  const importIdentification = (file: File) => {
-    const fileContentsAsBuffer = file.arrayBuffer();
+  const importIdentification = async (file: File) => {
+    const fileContentsAsBuffer = await file.arrayBuffer();
 
     const workbook = XLSX.read(fileContentsAsBuffer, { type: "buffer" });
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
     const rawData = XLSX.utils.sheet_to_json(worksheet);
 
-    client.identification.import.mutate(
+    await client.identification.import.mutate(
       rawData.map((row: any) => ({
         ...row,
       })) as ImportIdentificationInputParameters
     );
-
+    console.log(rawData);
     console.log({ successfullyImported: true });
   };
 
@@ -133,9 +133,9 @@ const Identifications = () => {
     try {
       const identification = [
         {
-          userId: 1,
-          type: "Aadhaar",
-          number: "10020200301203",
+          userId: 6,
+          type: "PAN",
+          number: "HHGCP5478P",
         },
       ];
 
@@ -184,7 +184,10 @@ const Identifications = () => {
                   isSplitButton
                   trigger={
                     <>
-                      <label className="btn btn-primary" htmlFor="customFile">
+                      <label
+                        className="btn btn-primary"
+                        htmlFor="importIdentification"
+                      >
                         Import
                       </label>
                       <Menu.Trigger variant="primary">
@@ -206,7 +209,7 @@ const Identifications = () => {
                   style={{
                     display: "none",
                   }}
-                  id="customFile"
+                  id="importIdentification"
                   onChange={onFileChange}
                 />
                 <PrintButton />

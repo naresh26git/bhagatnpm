@@ -21,7 +21,43 @@ export const importIdentification = adminOnlyProcedure
   .input(inputParameters)
   .mutation(async ({ ctx, input }) => {
     try {
-      return await prisma.$transaction(async (tx) => {});
+      return await prisma.$transaction(async (tx) => {
+        await Promise.all(
+          input.map(async (item) => {
+            const { id: typeId } = await tx.identificationType.findFirstOrThrow(
+              {
+                select: {
+                  id: true,
+                },
+                where: {
+                  name: item.type,
+                },
+              }
+            );
+
+            const { type, ...restOfItem } = item;
+
+            const identification = {
+              ...restOfItem,
+
+              typeId,
+              createdById: ctx.userId,
+              updatedById: ctx.userId,
+            };
+
+            return tx.identification.upsert({
+              create: identification,
+              update: identification,
+              where: {
+                userId_typeId: {
+                  userId: identification.userId,
+                  typeId,
+                },
+              },
+            });
+          })
+        );
+      });
     } catch (error) {
       console.log(getErrorMessage(error));
 
