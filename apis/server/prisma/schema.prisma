@@ -323,7 +323,7 @@ model Identification {
   updatedBy   User               @relation("IdentificationUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
   user        User               @relation("IdentificationOfUser", fields: [userId], references: [id], onUpdate: NoAction)
 
-  @@unique([typeId, userId])
+  @@unique([userId, typeId])
   @@map("identifications")
 }
 
