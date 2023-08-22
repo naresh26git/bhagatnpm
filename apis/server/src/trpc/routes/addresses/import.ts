@@ -13,7 +13,7 @@ const inputParameters = z.array(
     city: z.string(),
     state: z.string(),
     country: z.string(),
-    pinCode: z.string(),
+    pincode: z.string(),
   })
 );
 
@@ -25,7 +25,42 @@ export const importAddress = adminOnlyProcedure
   .input(inputParameters)
   .mutation(async ({ ctx, input }) => {
     try {
-      return await prisma.$transaction(async (tx) => {});
+      return await prisma.$transaction(async (tx) => {
+        await Promise.all(
+          input.map(async (item) => {
+            const { id: addressTypeId } = await tx.addressType.findFirstOrThrow(
+              {
+                select: {
+                  id: true,
+                },
+                where: {
+                  name: item.addressType,
+                },
+              }
+            );
+
+            const { addressType, ...restOfItem } = item;
+
+            const address = {
+              ...restOfItem,
+              addressTypeId,
+              createdById: ctx.userId,
+              updatedById: ctx.userId,
+            };
+
+            return tx.address.upsert({
+              create: address,
+              update: address,
+              where: {
+                userId_addressTypeId: {
+                  userId: address.userId,
+                  addressTypeId,
+                },
+              },
+            });
+          })
+        );
+      });
     } catch (error) {
       console.log(getErrorMessage(error));
 

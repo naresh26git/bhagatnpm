@@ -20,6 +20,7 @@ import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
+
 export const personalInfo = {
   uid: "1",
   userId: "1210",
@@ -158,27 +159,25 @@ export const PersonalInfoPage = () => {
     }
   };
 
-  const importProfileInfo = (file: File) => {
-    const fileContentsAsBuffer = file.arrayBuffer();
+  const importProfileInfo = async (file: File) => {
+    const fileContentsAsBuffer = await file.arrayBuffer();
 
     const workbook = XLSX.read(fileContentsAsBuffer, { type: "buffer" });
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
     const rawData = XLSX.utils.sheet_to_json(worksheet);
 
-    client.personalInfo.import.mutate(
+    await client.personalInfo.import.mutate(
       rawData.map((row: any) => ({
         ...row,
       })) as ImportPersonalInfoInputParameters
     );
-
-    console.log({ successfullyImported: true });
   };
 
   const handleExportFormatExport = async () => {
     try {
       const personalInfo = [
         {
-          userId: 1,
+          userId: 9,
           firstName: "Ram",
           middleName: "Charan",
           lastName: "Kumar",
@@ -186,15 +185,15 @@ export const PersonalInfoPage = () => {
             month: "numeric",
             year: "numeric",
             day: "numeric",
-          }).format(new Date()),
+          }).format(new Date(1998, 6, 22)),
           dateOfJoining: new Intl.DateTimeFormat("en-US", {
             month: "numeric",
             year: "numeric",
             day: "numeric",
-          }).format(new Date()),
-          jobTitle: "Junior Fullstack Developer",
-          department: "Developement",
-          reportingManagerId: 1,
+          }).format(new Date(2023, 6, 13)),
+          designation: "Junior Fullstack Developer",
+          department: "Development",
+          reportingManagerUserId: 2,
         },
       ];
 
@@ -231,7 +230,10 @@ export const PersonalInfoPage = () => {
                 isSplitButton
                 trigger={
                   <>
-                    <label className="btn btn-primary" htmlFor="customFile">
+                    <label
+                      className="btn btn-primary"
+                      htmlFor="importPersonalInfoFile"
+                    >
                       Import
                     </label>
                     <Menu.Trigger variant="primary">
@@ -254,7 +256,7 @@ export const PersonalInfoPage = () => {
                 style={{
                   display: "none",
                 }}
-                id="customFile"
+                id="importPersonalInfoFile"
                 onChange={onFileChange}
               />
             </ShowIf.Admin>

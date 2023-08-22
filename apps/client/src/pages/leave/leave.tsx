@@ -297,7 +297,6 @@ export const LeaveViewPage = ({ value }: LeaveViewPageProps) => {
     await client.leave.import.mutate(
       rawData.map((row: any) => ({
         ...row,
-        amount: Number(row?.amount),
       })) as ImportLeaveInputParameters
     );
   };

@@ -99,21 +99,20 @@ export const FamilyPage = () => {
     }
   };
 
-  const importFamilyDetail = (file: File) => {
-    const fileContentsAsBuffer = file.arrayBuffer();
+  const importFamilyDetail = async (file: File) => {
+    const fileContentsAsBuffer = await file.arrayBuffer();
 
     const workbook = XLSX.read(fileContentsAsBuffer, { type: "buffer" });
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
     const rawData = XLSX.utils.sheet_to_json(worksheet);
 
-    client.familyDetail.import.mutate(
+    await client.familyDetail.import.mutate(
       rawData.map((row: any) => ({
         ...row,
       })) as ImportFamilyDetailInputParameters
     );
-
-    console.log({ successfullyImported: true });
   };
+
   const handleExport = async () => {
     try {
       const data = await client.familyDetail.getMany.mutate({
@@ -168,9 +167,9 @@ export const FamilyPage = () => {
     try {
       const familyDetails = [
         {
-          userId: 1,
-          relationShipType: "father",
-          name: "Rajesh",
+          userId: 4,
+          relationShipType: "mother",
+          name: "Nirmala",
           dateOfBirth: new Intl.DateTimeFormat("en-US", {
             month: "numeric",
             year: "numeric",
@@ -221,7 +220,10 @@ export const FamilyPage = () => {
                 isSplitButton
                 trigger={
                   <>
-                    <label className="btn btn-primary" htmlFor="customFile">
+                    <label
+                      className="btn btn-primary"
+                      htmlFor="importFamilyDetailsFile"
+                    >
                       Import
                     </label>
                     <Menu.Trigger variant="primary">
@@ -243,7 +245,7 @@ export const FamilyPage = () => {
                 style={{
                   display: "none",
                 }}
-                id="customFile"
+                id="importFamilyDetailsFile"
                 onChange={onFileChange}
               />
               <PrintButton />

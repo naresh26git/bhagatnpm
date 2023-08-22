@@ -187,16 +187,21 @@ export const TimeSheetPage = () => {
     try {
       const timeSheet = [
         {
-          userId: 1,
+          userId: 5,
           inTime: new Intl.DateTimeFormat("en-US", {
+            month: "numeric",
+            year: "numeric",
+            day: "numeric",
             hour: "numeric",
             minute: "numeric",
           }).format(new Date().setHours(9, 0, 0, 0)),
           outTime: new Intl.DateTimeFormat("en-US", {
+            month: "numeric",
+            year: "numeric",
+            day: "numeric",
             hour: "numeric",
             minute: "numeric",
           }).format(new Date().setHours(18, 0, 0, 0)),
-
           status: "present",
         },
       ];
@@ -233,21 +238,18 @@ export const TimeSheetPage = () => {
     }
   };
 
-  const importTimeSheet = (file: File) => {
-    const fileContentsAsBuffer = file.arrayBuffer();
+  const importTimeSheet = async (file: File) => {
+    const fileContentsAsBuffer = await file.arrayBuffer();
 
     const workbook = XLSX.read(fileContentsAsBuffer, { type: "buffer" });
     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
     const rawData = XLSX.utils.sheet_to_json(worksheet);
 
-    client.timeSheet.import.mutate(
+    await client.timeSheet.import.mutate(
       rawData.map((row: any) => ({
         ...row,
-        amount: Number(row?.amount),
       })) as ImportTimeSheetInputParameters
     );
-
-    console.log({ successfullyImported: true });
   };
 
   return (
@@ -318,7 +320,10 @@ export const TimeSheetPage = () => {
                   isSplitButton
                   trigger={
                     <>
-                      <label className="btn btn-primary" htmlFor="customFile">
+                      <label
+                        className="btn btn-primary"
+                        htmlFor="importTimeSheetFile"
+                      >
                         Import
                       </label>
                       <Menu.Trigger variant="primary">
@@ -329,7 +334,7 @@ export const TimeSheetPage = () => {
                   dropdown={<Menu.Dropdown />}
                   options={[
                     {
-                      label: "Export format",
+                      label: "Import format",
                       onClick: handleExportFormatExport,
                     },
                   ]}
@@ -341,7 +346,7 @@ export const TimeSheetPage = () => {
                   style={{
                     display: "none",
                   }}
-                  id="customFile"
+                  id="importTimeSheetFile"
                   onChange={onFileChange}
                 />
               </ShowIf.Admin>

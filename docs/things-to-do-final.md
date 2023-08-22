@@ -3,23 +3,22 @@
 - Easy category
   - [x] Page under maintenance should be work in progress - Murali
   - [x] Travel, expense and loan should be work in progress - Murali
-  - [ ] Add toast for all imports - Vishnupriya
+  - [x] Add toast for all imports - Vishnupriya
   - [x] Remove bank details from personal details details page - **Vignesh**
-
 
 - Medium category
   - [x] Personal details details page - only show information - Vignesh
   - [x] Dropdowns are not working properly - Vishnupriya & Mithunish
 
 - Hard category
-  - [x] *Add export import format for all tables* - Mithunish & Sakthi
-    - [x] *Address* - Murali
-    - [x] *Family details* - Sakthi
-    - [x] *Qualification* - Vishnupriya
-    - [x] *Leave* - Mithunish
-    - [x] *Identification* - Team
-    - [x] *Time sheet* - Team
-  - [ ] Add import for all tables - Mithunish & Sakthi
+  - [x] Add export import format for all tables - Team
+    - [x] Address - Murali
+    - [x] Family details - Sakthi
+    - [x] Qualification - Vishnupriya
+    - [x] Leave - Mithunish
+    - [x] Identification - Team
+    - [x] Time sheet - Team
+  - [x] Add import for all tables - Team
 
 - Very Hard category
   - [ ] Print for all tables - Mithunish

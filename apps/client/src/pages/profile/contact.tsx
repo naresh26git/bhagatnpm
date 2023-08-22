@@ -134,13 +134,13 @@ export const ContactDataPage = () => {
     try {
       const contactDetails = [
         {
-          userId: 1,
-          addressType: "Residential",
-          street: "Nehru street",
-          city: "Cuddalore",
+          userId: 9,
+          addressType: "others",
+          street: "Kavadiyankadu",
+          city: "kumarapalayam",
           state: "Tamil Nadu",
           country: "India",
-          pincode: "609106",
+          pincode: "638183",
         },
       ];
 
@@ -157,6 +157,7 @@ export const ContactDataPage = () => {
       toast.error("An error occurred!");
     }
   };
+
   return (
     <Stack gap="3">
       <ShowIf.Employee>
@@ -185,7 +186,10 @@ export const ContactDataPage = () => {
                 isSplitButton
                 trigger={
                   <>
-                    <label className="btn btn-primary" htmlFor="customFile">
+                    <label
+                      className="btn btn-primary"
+                      htmlFor="importContactFile"
+                    >
                       Import
                     </label>
                     <Menu.Trigger variant="primary">
@@ -208,7 +212,7 @@ export const ContactDataPage = () => {
                 style={{
                   display: "none",
                 }}
-                id="customFile"
+                id="importContactFile"
                 onChange={onFileChange}
               />
 

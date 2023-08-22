@@ -104,6 +104,7 @@ model FamilyDetail {
   updatedBy          User             @relation("FamilyDetailUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
   user               User             @relation("FamilyDetailOfUser", fields: [userId], references: [id], onUpdate: NoAction)
 
+  @@unique([userId, relationshipTypeId, name])
   @@map("family_details")
 }
 
@@ -420,6 +421,7 @@ model TimeSheet {
   updatedBy   User            @relation("TimeSheetUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
   user        User            @relation("TimeSheetOfUser", fields: [userId], references: [id], onUpdate: NoAction)
 
+  @@unique([userId, inTime, outTime])
   @@map("time_sheets")
 }
 
