@@ -40,6 +40,7 @@ model Address {
   updatedBy     User        @relation("AddressUpdatedByUser", fields: [updatedById], references: [id], onUpdate: NoAction)
   user          User        @relation("AddressOfUser", fields: [userId], references: [id], onUpdate: NoAction)
 
+  @@unique([userId, addressTypeId])
   @@map("addresses")
 }
 
