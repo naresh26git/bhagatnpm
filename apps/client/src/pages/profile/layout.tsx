@@ -1,3 +1,4 @@
+import React from "react";
 import Button from "ui/Button";
 import Grid from "ui/Grid";
 import Stack from "ui/Stack";
@@ -10,7 +11,10 @@ import Identifications from "./identification";
 import Payslip from "./payslip";
 import PersonalInfoPage from "./personal-info";
 import Qualifications from "./qualification";
+
 export const Layout = () => {
+  const [activeTabId, setActiveTabId] = React.useState(0);
+
   return (
     <>
       <Stack gap="3">
@@ -21,7 +25,6 @@ export const Layout = () => {
           />
         </ShowIf.Admin>
 
-        {/* <PageHeader title={<PageHeader.Title>Account</PageHeader.Title>} /> */}
         <Grid.Row>
           <Grid.Col className="py-2" cols={["12", "md-2"]}>
             <input
@@ -66,32 +69,19 @@ export const Layout = () => {
             </Grid.Col>
           </Grid.Row>
         </Grid.Row>
-        <ul className="nav nav-tabs" id="myTab" role="tablist">
-          {/* <li className="nav-item" role="presentation">
-            <button
-              className="nav-link active"
-              id="overall-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#overall"
-              type="button"
-              role="tab"
-              aria-controls="overall"
-              aria-selected="true"
-            >
-              Overall
-            </button>
-          </li> */}
 
+        <ul className="nav nav-tabs" id="myTab" role="tablist">
           <li className="nav-item" role="presentation">
             <button
-              className="nav-link active"
-              id="personalinformation-tab"
+              className={`nav-link ${activeTabId === 0 ? "active" : ""}`}
+              id="personal-information-tab"
               data-bs-toggle="tab"
-              data-bs-target="#personalinformation"
+              data-bs-target="#personal-information"
               type="button"
               role="tab"
-              aria-controls="personalinformation"
+              aria-controls="personal-information"
               aria-selected="true"
+              onClick={() => setActiveTabId(0)}
             >
               Personal Info
             </button>
@@ -99,7 +89,7 @@ export const Layout = () => {
 
           <li className="nav-item" role="presentation">
             <button
-              className="nav-link"
+              className={`nav-link ${activeTabId === 1 ? "active" : ""}`}
               id="contact-tab"
               data-bs-toggle="tab"
               data-bs-target="#contact"
@@ -107,6 +97,7 @@ export const Layout = () => {
               role="tab"
               aria-controls="contact"
               aria-selected="false"
+              onClick={() => setActiveTabId(1)}
             >
               Contact
             </button>
@@ -114,7 +105,7 @@ export const Layout = () => {
 
           <li className="nav-item" role="presentation">
             <button
-              className="nav-link"
+              className={`nav-link ${activeTabId === 2 ? "active" : ""}`}
               id="family-tab"
               data-bs-toggle="tab"
               data-bs-target="#family"
@@ -122,13 +113,15 @@ export const Layout = () => {
               role="tab"
               aria-controls="family"
               aria-selected="false"
+              onClick={() => setActiveTabId(2)}
             >
               Family
             </button>
           </li>
+
           <li className="nav-item" role="presentation">
             <button
-              className="nav-link"
+              className={`nav-link ${activeTabId === 3 ? "active" : ""}`}
               id="qualification-tab"
               data-bs-toggle="tab"
               data-bs-target="#qualification"
@@ -136,13 +129,15 @@ export const Layout = () => {
               role="tab"
               aria-controls="qualification"
               aria-selected="false"
+              onClick={() => setActiveTabId(3)}
             >
               Qualification
             </button>
           </li>
+
           <li className="nav-item" role="presentation">
             <button
-              className="nav-link"
+              className={`nav-link ${activeTabId === 4 ? "active" : ""}`}
               id="identification-tab"
               data-bs-toggle="tab"
               data-bs-target="#identification"
@@ -150,13 +145,15 @@ export const Layout = () => {
               role="tab"
               aria-controls="identification"
               aria-selected="false"
+              onClick={() => setActiveTabId(4)}
             >
               Identification
             </button>
           </li>
+
           <li className="nav-item" role="presentation">
             <button
-              className="nav-link"
+              className={`nav-link ${activeTabId === 5 ? "active" : ""}`}
               id="payslip-tab"
               data-bs-toggle="tab"
               data-bs-target="#payslip"
@@ -164,6 +161,7 @@ export const Layout = () => {
               role="tab"
               aria-controls="payslip"
               aria-selected="false"
+              onClick={() => setActiveTabId(5)}
             >
               Payslip
             </button>
@@ -172,31 +170,20 @@ export const Layout = () => {
 
         <div className="tab-content" id="myTabContent">
           <div
-            className="tab-pane fade show active"
-            id="overall"
+            className={`tab-pane fade ${
+              activeTabId === 0 ? "show active" : ""
+            }`}
+            id="personal-information"
             role="tabpanel"
-            aria-labelledby="overall-tab"
-          >
-            {/* <Stack gap="3">
-              <PersonalInfoPage />
-
-              <ContactDataPage />
-
-              <FamilyPage />
-            </Stack> */}
-          </div>
-
-          <div
-            className="tab-pane fade show active"
-            id="personalinformation"
-            role="tabpanel"
-            aria-labelledby="personalinformation-tab"
+            aria-labelledby="personal-information-tab"
           >
             <PersonalInfoPage />
           </div>
 
           <div
-            className="tab-pane fade"
+            className={`tab-pane fade ${
+              activeTabId === 1 ? "show active" : ""
+            }`}
             id="contact"
             role="tabpanel"
             aria-labelledby="contact-tab"
@@ -205,15 +192,20 @@ export const Layout = () => {
           </div>
 
           <div
-            className="tab-pane fade"
+            className={`tab-pane fade ${
+              activeTabId === 2 ? "show active" : ""
+            }`}
             id="family"
             role="tabpanel"
             aria-labelledby="family-tab"
           >
             <FamilyPage />
           </div>
+
           <div
-            className="tab-pane fade"
+            className={`tab-pane fade ${
+              activeTabId === 3 ? "show active" : ""
+            }`}
             id="qualification"
             role="tabpanel"
             aria-labelledby="qualification-tab"
@@ -222,15 +214,20 @@ export const Layout = () => {
           </div>
 
           <div
-            className="tab-pane fade"
+            className={`tab-pane fade ${
+              activeTabId === 4 ? "show active" : ""
+            }`}
             id="identification"
             role="tabpanel"
             aria-labelledby="identification-tab"
           >
             <Identifications />
           </div>
+
           <div
-            className="tab-pane fade"
+            className={`tab-pane fade ${
+              activeTabId === 5 ? "show active" : ""
+            }`}
             id="payslip"
             role="tabpanel"
             aria-labelledby="payslip-tab"

@@ -55,9 +55,15 @@ export const leaves = [
 ];
 export type LeaveViewPageProps = {
   value: AsyncListContextValue;
+  tabId: number;
+  activeTabId: number;
 };
 
-export const LeaveViewPage = ({ value }: LeaveViewPageProps) => {
+export const LeaveViewPage = ({
+  value,
+  tabId,
+  activeTabId,
+}: LeaveViewPageProps) => {
   const auth = useAuthContext();
 
   const columns = [
@@ -351,7 +357,7 @@ export const LeaveViewPage = ({ value }: LeaveViewPageProps) => {
           </Stack>
         }
       />
-      <Card id="section-to-print">
+      <Card id={tabId === activeTabId ? "section-to-print" : ""}>
         <DataGrid<Leave>
           {...(value as AsyncListContextValue<Leave>)}
           columns={columns.filter((column) => {

@@ -48,9 +48,15 @@ export const leaveBalances = [
   { ...leaveBalance, uid: "13" },
 ];
 
-export type LeaveBalancePageProps = {};
+export type LeaveBalancePageProps = {
+  tabId: number;
+  activeTabId: number;
+};
 
-export const LeaveBalancePage = () => {
+export const LeaveBalancePage = ({
+  tabId,
+  activeTabId,
+}: LeaveBalancePageProps) => {
   const auth = useAuthContext();
 
   const value = useAsyncList<Leave, InputParameters["sortBy"]>({
@@ -137,7 +143,7 @@ export const LeaveBalancePage = () => {
           </Stack>
         }
       />
-      <Card id="section-to-print">
+      <Card id={tabId === activeTabId ? "section-to-print" : ""}>
         <DataGrid<Leave>
           {...(value as AsyncListContextValue<Leave>)}
           columns={[

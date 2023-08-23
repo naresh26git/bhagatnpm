@@ -1,3 +1,4 @@
+import React from "react";
 import { InputParameters, Leave } from "server/src/trpc/routes/leaves/get-many";
 import Button from "ui/Button";
 import Grid from "ui/Grid";
@@ -14,6 +15,8 @@ import LeaveBalancePage from "./leave-balance";
 
 export const LeaveTabs = () => {
   const auth = useAuthContext();
+  const [activeTabId, setActiveTabId] = React.useState(0);
+
   const leaveValue = useAsyncList<Leave, InputParameters["sortBy"]>({
     load: async ({ states }) => {
       try {
@@ -69,6 +72,7 @@ export const LeaveTabs = () => {
             </Button>
           </Grid.Col>
         </Grid.Row>
+
         <ShowIf.Employee>
           <PageHeader
             title={<PageHeader.Title></PageHeader.Title>}
@@ -77,34 +81,19 @@ export const LeaveTabs = () => {
             }
           />
         </ShowIf.Employee>
-        {/* <PageHeader title={<PageHeader.Title>Account</PageHeader.Title>} /> */}
 
         <ul className="nav nav-tabs" id="myTab" role="tablist">
-          {/* <li className="nav-item" role="presentation">
-            <button
-              className="nav-link active"
-              id="overall-tab"
-              data-bs-toggle="tab"
-              data-bs-target="#overall"
-              type="button"
-              role="tab"
-              aria-controls="overall"
-              aria-selected="true"
-            >
-              Overall
-            </button>
-          </li> */}
-
           <li className="nav-item" role="presentation">
             <button
-              className="nav-link active"
-              id="viewleave-tab"
+              className={`nav-link ${activeTabId === 0 ? "active" : ""}`}
+              id="leave-tab"
               data-bs-toggle="tab"
-              data-bs-target="#viewleave"
+              data-bs-target="#leave-tab-content"
               type="button"
               role="tab"
-              aria-controls="viewleave"
+              aria-controls="leave-tab-content"
               aria-selected="true"
+              onClick={() => setActiveTabId(0)}
             >
               Leaves
             </button>
@@ -112,14 +101,15 @@ export const LeaveTabs = () => {
 
           <li className="nav-item" role="presentation">
             <button
-              className="nav-link"
-              id="leavebalance-tab"
+              className={`nav-link ${activeTabId === 1 ? "active" : ""}`}
+              id="leave-balance-tab"
               data-bs-toggle="tab"
-              data-bs-target="#leavebalance"
+              data-bs-target="#leave-balance-tab-content"
               type="button"
               role="tab"
-              aria-controls="leavebalance"
+              aria-controls="leave-balance-tab-content"
               aria-selected="false"
+              onClick={() => setActiveTabId(1)}
             >
               Balance
             </button>
@@ -127,33 +117,34 @@ export const LeaveTabs = () => {
         </ul>
 
         <div className="tab-content" id="myTabContent">
-          {/* <div
-            className="tab-pane fade show active"
-            id="overall"
-            role="tabpanel"
-            aria-labelledby="overall-tab"
-          >
-            <Stack gap="3">
-              <LeaveViewPage />
-
-              <LeaveBalancePage />
-            </Stack>
-          </div> */}
           <div
-            className="tab-pane fade show active"
-            id="viewleave"
+            className={`tab-pane fade ${
+              activeTabId === 0 ? "show active" : ""
+            }`}
+            id="leave-tab-content"
             role="tabpanel"
-            aria-labelledby="viewleave-tab"
+            aria-labelledby="leave-tab"
           >
-            <LeaveViewPage value={leaveValue as AsyncListContextValue} />
+            {activeTabId === 0 ? (
+              <LeaveViewPage
+                tabId={0}
+                activeTabId={activeTabId}
+                value={leaveValue as AsyncListContextValue}
+              />
+            ) : null}
+            {activeTabId === 1 ? (
+              <LeaveBalancePage tabId={1} activeTabId={activeTabId} />
+            ) : null}
           </div>
           <div
-            className="tab-pane fade"
-            id="leavebalance"
+            className={`tab-pane fade ${
+              activeTabId === 1 ? "show active" : ""
+            }`}
+            id="leave-balance-tab-content"
             role="tabpanel"
-            aria-labelledby="leavebalance-tab"
+            aria-labelledby="leave-balance-tab"
           >
-            <LeaveBalancePage />
+            <LeaveBalancePage tabId={1} activeTabId={activeTabId} />
           </div>
         </div>
       </Stack>
