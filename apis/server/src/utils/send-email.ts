@@ -3,14 +3,13 @@ import {
   EmailMessage,
   KnownEmailSendStatus,
 } from "@azure/communication-email";
+import envVariables from "../environment/variables";
 
-const connectionString =
-  "endpoint=https://clubitscommunicationservicepoc.unitedstates.communication.azure.com/;accesskey=KrJ/gpA33LjSAqVPHKakGBMFA6XDzoOmr2HXjiqWYUt81zftV1OK94G5qBiDh5fiWkRx7hmpLvb5iF2X8WHoIA==";
+const connectionString = `endpoint=${envVariables.AZURE_EMAIL_SERVICE_ENDPOINT};accesskey=${envVariables.AZURE_EMAIL_SERVICE_ACCESS_KEY}`;
 
 const emailClient = new EmailClient(connectionString);
 
-export const senderAddress =
-  "<clubitsemailtest@37daa15c-805f-4460-8751-90f9369902cd.azurecomm.net>";
+export const senderAddress = envVariables.AZURE_EMAIL_SERVICE_SENDER_ADDRESS;
 
 export const sendEmail = async (message: EmailMessage) => {
   const poller = await emailClient.beginSend(message);

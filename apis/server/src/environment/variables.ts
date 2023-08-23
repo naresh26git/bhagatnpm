@@ -13,6 +13,11 @@ export const envVariables = z.object({
   COOKIE_SECURE: z.preprocess(toBoolean, z.boolean()),
   COOKIE_HTTP_ONLY: z.preprocess(toBoolean, z.boolean()),
   COOKIE_SAME_SITE: z.preprocess(toBoolean, z.boolean()),
+  AZURE_BLOB_STORAGE_KEY: z.string(),
+  AZURE_BLOB_ACCOUNT_NAME: z.string(),
+  AZURE_EMAIL_SERVICE_ACCESS_KEY: z.string(),
+  AZURE_EMAIL_SERVICE_ENDPOINT: z.string(),
+  AZURE_EMAIL_SERVICE_SENDER_ADDRESS: z.string(),
 });
 
 declare global {

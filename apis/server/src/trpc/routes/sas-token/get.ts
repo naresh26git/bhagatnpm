@@ -5,13 +5,13 @@ import {
   generateAccountSASQueryParameters,
 } from "@azure/storage-blob";
 import { TRPCError } from "@trpc/server";
+import envVariables from "../../../environment/variables";
 import { getErrorMessage } from "../../../utils/get-error-message";
 import { protectedProcedure } from "../../trpc";
 
-const accountName = "clubitsstoragepoc";
+const accountName = envVariables.AZURE_BLOB_ACCOUNT_NAME;
 
-const accountKey =
-  "mCRghfh0IfVp3tvL14/9hNNQbjW3kxiAeMS64NRjj07XP0eCpaFrAJPRcl0ZQqiGLGAdAA1AsuDo+AStgEQOIQ==";
+const accountKey = envVariables.AZURE_BLOB_STORAGE_KEY;
 
 async function generateSasToken(): Promise<string> {
   const sharedKeyCredential = new StorageSharedKeyCredential(

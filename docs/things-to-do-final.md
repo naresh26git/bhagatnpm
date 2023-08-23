@@ -5,6 +5,7 @@
   - [x] Travel, expense and loan should be work in progress - Murali
   - [x] Add toast for all imports - Vishnupriya
   - [x] Remove bank details from personal details details page - **Vignesh**
+  - [x] Revoke storage access keys and add it to the environment file - Mithunish & Vignesh
 
 - Medium category
   - [x] Personal details details page - only show information - Vignesh
