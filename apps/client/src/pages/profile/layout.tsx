@@ -15,13 +15,44 @@ import Qualifications from "./qualification";
 export const Layout = () => {
   const [activeTabId, setActiveTabId] = React.useState(0);
 
+  const handlePrint = () => {
+    const tabContent = document.querySelector(
+      `#section-to-print-${activeTabId}`
+    );
+    if (tabContent) {
+      const printWindow = window.open("", "Print");
+      printWindow?.document.open();
+      printWindow?.document.write(`
+        <html>
+          <head>
+            <title>Print</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+          </head>
+          <body>
+            ${tabContent.innerHTML}
+          </body>
+        </html>
+      `);
+      printWindow?.document.close();
+      printWindow?.print();
+    }
+  };
+
   return (
     <>
       <Stack gap="3">
         <ShowIf.Admin>
           <PageHeader
             title={<PageHeader.Title></PageHeader.Title>}
-            actions={<CreateUserDialog />}
+            actions={
+              <Stack orientation="horizontal" gap="3">
+                <CreateUserDialog />
+
+                <Button variant="primary" onClick={handlePrint}>
+                  Print
+                </Button>
+              </Stack>
+            }
           />
         </ShowIf.Admin>
 
@@ -177,7 +208,7 @@ export const Layout = () => {
             role="tabpanel"
             aria-labelledby="personal-information-tab"
           >
-            <PersonalInfoPage />
+            <PersonalInfoPage tabId={0} activeTabId={activeTabId} />
           </div>
 
           <div
@@ -188,7 +219,7 @@ export const Layout = () => {
             role="tabpanel"
             aria-labelledby="contact-tab"
           >
-            <ContactDataPage />
+            <ContactDataPage tabId={1} activeTabId={activeTabId} />
           </div>
 
           <div
@@ -199,7 +230,7 @@ export const Layout = () => {
             role="tabpanel"
             aria-labelledby="family-tab"
           >
-            <FamilyPage />
+            <FamilyPage tabId={2} activeTabId={activeTabId} />
           </div>
 
           <div
@@ -210,7 +241,7 @@ export const Layout = () => {
             role="tabpanel"
             aria-labelledby="qualification-tab"
           >
-            <Qualifications />
+            <Qualifications tabId={3} activeTabId={activeTabId} />
           </div>
 
           <div
@@ -221,7 +252,7 @@ export const Layout = () => {
             role="tabpanel"
             aria-labelledby="identification-tab"
           >
-            <Identifications />
+            <Identifications tabId={4} activeTabId={activeTabId} />
           </div>
 
           <div
@@ -232,7 +263,7 @@ export const Layout = () => {
             role="tabpanel"
             aria-labelledby="payslip-tab"
           >
-            <Payslip />
+            <Payslip tabId={5} activeTabId={activeTabId} />
           </div>
         </div>
       </Stack>

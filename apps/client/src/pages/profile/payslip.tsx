@@ -9,12 +9,15 @@ import Typography from "ui/Typography";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import PageHeader from "../../components/PageHeader";
 import PayRollDetailsDialog from "../../components/PayRollDetailsDialog";
-import PrintButton from "../../components/PrintButton";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
 
-const Payslip = () => {
+export type PayslipDataPageProps = {
+  tabId: number;
+  activeTabId: number;
+};
+const Payslip = ({ tabId, activeTabId }: PayslipDataPageProps) => {
   const auth = useAuthContext();
   const value = useAsyncList<PayRoll, InputParameters["sortBy"]>({
     load: async ({ states }) => {
@@ -49,12 +52,9 @@ const Payslip = () => {
           actions={<QualificationDialog />}
         />
       </ShowIf.Employee> */}
-      <PageHeader
-        title={<PageHeader.Title></PageHeader.Title>}
-        actions={<PrintButton />}
-      />
+      <PageHeader title={<PageHeader.Title></PageHeader.Title>} />
 
-      <Card>
+      <Card id={`section-to-print-${tabId}`}>
         <DataGrid<PayRoll>
           {...(value as AsyncListContextValue<PayRoll>)}
           columns={[

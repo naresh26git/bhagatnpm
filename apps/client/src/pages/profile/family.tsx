@@ -14,7 +14,6 @@ import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import XLSX from "xlsx";
 import FamilyDialog from "../../components/FamilyDialog";
 import PageHeader from "../../components/PageHeader";
-import PrintButton from "../../components/PrintButton";
 import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
@@ -26,7 +25,10 @@ export type Family = {
   name: string;
   dob: string;
 };
-
+export type FamilyDataPageProps = {
+  tabId: number;
+  activeTabId: number;
+};
 export const family = {
   uid: "1",
   empcode: "1210",
@@ -52,7 +54,7 @@ export const families = [
 ];
 export type FamilyPageProps = {};
 
-export const FamilyPage = () => {
+export const FamilyPage = ({ tabId, activeTabId }: FamilyDataPageProps) => {
   const auth = useAuthContext();
 
   const value = useAsyncList<FamilyDetail, InputParameters["sortBy"]>({
@@ -203,7 +205,6 @@ export const FamilyPage = () => {
               <Button variant="primary" onClick={handleExport}>
                 Export
               </Button>
-              <PrintButton />
             </Stack>
           }
         />
@@ -248,12 +249,11 @@ export const FamilyPage = () => {
                 id="importFamilyDetailsFile"
                 onChange={onFileChange}
               />
-              <PrintButton />
             </Stack>
           }
         />
       </ShowIf.Admin>
-      <Card className="d-print-block">
+      <Card id={`section-to-print-${tabId}`}>
         <DataGrid<FamilyDetail>
           {...(value as AsyncListContextValue<FamilyDetail>)}
           columns={[

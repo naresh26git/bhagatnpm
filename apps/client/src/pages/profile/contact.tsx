@@ -14,15 +14,20 @@ import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import XLSX from "xlsx";
 import ContactDialog from "../../components/ContactDialog";
 import PageHeader from "../../components/PageHeader";
-import PrintButton from "../../components/PrintButton";
 import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
 
-export type contactDataPageProps = {};
+export type ContactDataPageProps = {
+  tabId: number;
+  activeTabId: number;
+};
 
-export const ContactDataPage = () => {
+export const ContactDataPage = ({
+  tabId,
+  activeTabId,
+}: ContactDataPageProps) => {
   const auth = useAuthContext();
 
   const value = useAsyncList<Address, InputParameters["sortBy"]>({
@@ -169,7 +174,6 @@ export const ContactDataPage = () => {
               <Button variant="primary" onClick={handleExport}>
                 Export
               </Button>
-              <PrintButton />
             </Stack>
           }
         />
@@ -215,14 +219,12 @@ export const ContactDataPage = () => {
                 id="importContactFile"
                 onChange={onFileChange}
               />
-
-              <PrintButton />
             </Stack>
           }
         />
       </ShowIf.Admin>
 
-      <Card className="d-print-block">
+      <Card id={`section-to-print-${tabId}`}>
         <DataGrid<Address>
           {...(value as AsyncListContextValue<Address>)}
           columns={[

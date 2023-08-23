@@ -10,10 +10,10 @@ import Stack from "ui/Stack";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import XLSX from "xlsx";
 import PageHeader from "../../components/PageHeader";
-import PrintButton from "../../components/PrintButton";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
+
 export type LeaveItem = {
   uid: string;
   empcode: string;
@@ -139,11 +139,10 @@ export const LeaveBalancePage = ({
             <Button variant="primary" onClick={handleExport}>
               Export
             </Button>
-            <PrintButton />
           </Stack>
         }
       />
-      <Card id={tabId === activeTabId ? "section-to-print" : ""}>
+      <Card id={`section-to-print-${tabId}`}>
         <DataGrid<Leave>
           {...(value as AsyncListContextValue<Leave>)}
           columns={[

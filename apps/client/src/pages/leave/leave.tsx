@@ -11,7 +11,6 @@ import { AsyncListContextValue } from "ui/hooks/UseAsyncList";
 import XLSX from "xlsx";
 import LeaveStatusDialog from "../../components/LeaveStatusDialog";
 import PageHeader from "../../components/PageHeader";
-import PrintButton from "../../components/PrintButton";
 import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
@@ -352,12 +351,10 @@ export const LeaveViewPage = ({
                 onChange={onFileChange}
               />
             </ShowIf.Admin>
-
-            <PrintButton />
           </Stack>
         }
       />
-      <Card id={tabId === activeTabId ? "section-to-print" : ""}>
+      <Card id={`section-to-print-${tabId}`}>
         <DataGrid<Leave>
           {...(value as AsyncListContextValue<Leave>)}
           columns={columns.filter((column) => {

@@ -12,14 +12,17 @@ import Stack from "ui/Stack";
 import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import XLSX from "xlsx";
 import PageHeader from "../../components/PageHeader";
-import PrintButton from "../../components/PrintButton";
 import QualificationDialog from "../../components/QualificationDialog";
 import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
 
-const Qualifications = () => {
+export type QualificationPageProps = {
+  tabId: number;
+  activeTabId: number;
+};
+const Qualifications = ({ tabId, activeTabId }: QualificationPageProps) => {
   const auth = useAuthContext();
 
   const value = useAsyncList<Qualification, InputParameters["sortBy"]>({
@@ -161,7 +164,6 @@ const Qualifications = () => {
               <Button variant="primary" onClick={handleExport}>
                 Export
               </Button>
-              <PrintButton />
             </Stack>
           }
         />
@@ -206,12 +208,11 @@ const Qualifications = () => {
                 id="qualificationImportFile"
                 onChange={onFileChange}
               />
-              <PrintButton />
             </Stack>
           }
         />
       </ShowIf.Admin>
-      <Card className="d-print-block">
+      <Card id={`section-to-print-${tabId}`}>
         <DataGrid<Qualification>
           {...(value as AsyncListContextValue<Qualification>)}
           columns={[

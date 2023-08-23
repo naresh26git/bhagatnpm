@@ -41,9 +41,47 @@ export const LeaveTabs = () => {
     },
   });
 
+  const handlePrint = () => {
+    const tabContent = document.querySelector(
+      `#section-to-print-${activeTabId}`
+    );
+    if (tabContent) {
+      const printWindow = window.open("", "Print");
+      printWindow?.document.open();
+      printWindow?.document.write(`
+        <html>
+          <head>
+            <title>Print</title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+          </head>
+          <body>
+            ${tabContent.innerHTML}
+          </body>
+        </html>
+      `);
+      printWindow?.document.close();
+      printWindow?.print();
+    }
+  };
+
   return (
     <>
       <Stack gap="3">
+        <PageHeader
+          title={<PageHeader.Title></PageHeader.Title>}
+          actions={
+            <Stack orientation="horizontal" gap="3">
+              <ShowIf.Employee>
+                <LeaveDialog asyncList={leaveValue as AsyncListContextValue} />
+              </ShowIf.Employee>
+
+              <Button variant="primary" onClick={handlePrint}>
+                Print
+              </Button>
+            </Stack>
+          }
+        />
+
         <Grid.Row>
           <Grid.Col className="py-2" cols={["12", "md-2"]}>
             <input
@@ -72,15 +110,6 @@ export const LeaveTabs = () => {
             </Button>
           </Grid.Col>
         </Grid.Row>
-
-        <ShowIf.Employee>
-          <PageHeader
-            title={<PageHeader.Title></PageHeader.Title>}
-            actions={
-              <LeaveDialog asyncList={leaveValue as AsyncListContextValue} />
-            }
-          />
-        </ShowIf.Employee>
 
         <ul className="nav nav-tabs" id="myTab" role="tablist">
           <li className="nav-item" role="presentation">
@@ -125,16 +154,11 @@ export const LeaveTabs = () => {
             role="tabpanel"
             aria-labelledby="leave-tab"
           >
-            {activeTabId === 0 ? (
-              <LeaveViewPage
-                tabId={0}
-                activeTabId={activeTabId}
-                value={leaveValue as AsyncListContextValue}
-              />
-            ) : null}
-            {activeTabId === 1 ? (
-              <LeaveBalancePage tabId={1} activeTabId={activeTabId} />
-            ) : null}
+            <LeaveViewPage
+              tabId={0}
+              activeTabId={activeTabId}
+              value={leaveValue as AsyncListContextValue}
+            />
           </div>
           <div
             className={`tab-pane fade ${

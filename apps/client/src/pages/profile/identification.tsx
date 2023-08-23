@@ -14,13 +14,20 @@ import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import XLSX from "xlsx";
 import IdentificationDialog from "../../components/IdentificationDialog";
 import PageHeader from "../../components/PageHeader";
-import PrintButton from "../../components/PrintButton";
 import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
 import { handleTRPCError } from "../../utils/handle-trpc-error";
 
-const Identifications = () => {
+export type IdentificationDataPageProps = {
+  tabId: number;
+  activeTabId: number;
+};
+
+const Identifications = ({
+  tabId,
+  activeTabId,
+}: IdentificationDataPageProps) => {
   const auth = useAuthContext();
 
   const value = useAsyncList<Identification, InputParameters["sortBy"]>({
@@ -166,8 +173,6 @@ const Identifications = () => {
                 <Button variant="primary" onClick={handleExport}>
                   Export
                 </Button>
-
-                <PrintButton />
               </Stack>
             }
           />
@@ -212,12 +217,11 @@ const Identifications = () => {
                   id="importIdentification"
                   onChange={onFileChange}
                 />
-                <PrintButton />
               </Stack>
             }
           />
         </ShowIf.Admin>
-        <Card className="d-print-block">
+        <Card id={`section-to-print-${tabId}`}>
           <DataGrid<Identification>
             {...(value as AsyncListContextValue<Identification>)}
             columns={[

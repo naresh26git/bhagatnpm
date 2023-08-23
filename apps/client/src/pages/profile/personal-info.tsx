@@ -15,7 +15,6 @@ import { AsyncListContextValue, useAsyncList } from "ui/hooks/UseAsyncList";
 import XLSX from "xlsx";
 import PageHeader from "../../components/PageHeader";
 import PersonalInfoDialog from "../../components/PersonalInfoDialog";
-import PrintButton from "../../components/PrintButton";
 import ShowIf from "../../components/ShowIf";
 import { useAuthContext } from "../../hooks/UseAuth";
 import { client } from "../../main";
@@ -54,9 +53,15 @@ export const personalInfos = [
   { ...personalInfo, uid: "13" },
 ];
 
-export type PersonalInfoPageProps = {};
+export type PersonalInfoPageProps = {
+  tabId: number;
+  activeTabId: number;
+};
 
-export const PersonalInfoPage = () => {
+export const PersonalInfoPage = ({
+  tabId,
+  activeTabId,
+}: PersonalInfoPageProps) => {
   const auth = useAuthContext();
 
   const value = useAsyncList<PersonalInfo, InputParameters["sortBy"]>({
@@ -260,13 +265,11 @@ export const PersonalInfoPage = () => {
                 onChange={onFileChange}
               />
             </ShowIf.Admin>
-
-            <PrintButton />
           </Stack>
         }
       />
 
-      <Card className="d-print-block">
+      <Card id={`section-to-print-${tabId}`}>
         <DataGrid<PersonalInfo>
           {...(value as AsyncListContextValue<PersonalInfo>)}
           onRowClick={(item) =>
