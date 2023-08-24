@@ -1,48 +1,71 @@
 import { PayRoll } from "server/src/trpc/routes/pay-rolls/get-many";
-import Card from "ui/Card";
+import Button from "ui/Button";
 import Dialog from "ui/Dialog";
+import Divider from "ui/Divider";
 import Grid from "ui/Grid";
+import Hidden from "ui/Hidden";
 import Link from "ui/Link";
 import Stack from "ui/Stack";
 import Typography from "ui/Typography";
+import { useDialog } from "ui/hooks/useDialog";
 
 export type PayRollDetailsProps = {
   payRollDetails: PayRoll;
 };
 
+const handlePrint = () => {
+  const tabContent = document.querySelector(`#section-to-print-payslip`);
+  if (tabContent) {
+    const printWindow = window.open("", "Print");
+    printWindow?.document.open();
+    printWindow?.document.write(`
+      <html>
+        <head>
+          <title>Print</title>
+          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+        </head>
+        <body>
+          ${tabContent.innerHTML}
+        </body>
+      </html>
+    `);
+    printWindow?.document.close();
+    printWindow?.print();
+  }
+};
+
 const PayRollDetailsDialog = (props: PayRollDetailsProps) => {
-  const value = {
-    id: `payroll-details${props.payRollDetails.id}`,
-    labelId: `payroll-details-label${props.payRollDetails.id}`,
-  };
+  const value = useDialog();
 
   return (
     <>
       <Dialog.Trigger {...value} color="primary" className="border-0">
         <Link>Payslip</Link>
       </Dialog.Trigger>
-      <Dialog {...value}>
+
+      <Dialog {...value} modalDialogSize="lg">
         <Dialog.Header title="" className="border-0"></Dialog.Header>
-        <Dialog.Body>
-          <Grid.Row>
-            <Grid.Col cols="4">
+
+        <Dialog.Body id="section-to-print-payslip">
+          <Grid.Row className="mb-2">
+            <Grid.Col cols={["lg-4", "md-6", "12"]}>
               <Stack orientation="horizontal">
                 <Typography color="secondary">Emp Code:&nbsp;</Typography>
-                <Typography fontSize="6">
-                  {props.payRollDetails.user.id}
-                </Typography>
+                <Typography>{props.payRollDetails.user.id}</Typography>
               </Stack>
             </Grid.Col>
-            <Grid.Col cols="4">
+
+            <Grid.Col cols={["lg-4", "md-6", "12"]}>
               <Stack orientation="horizontal">
                 <Typography color="secondary">Name:&nbsp;</Typography>
-                <Typography fontSize="6">
+                <Typography>
                   {props.payRollDetails.user.personalInfo?.firstName}{" "}
                   {props.payRollDetails.user.personalInfo?.lastName}
                 </Typography>
               </Stack>
             </Grid.Col>
-            <Grid.Col cols="4">
+
+            <Grid.Col cols={["lg-4", "md-6", "12"]}>
               <Stack orientation="horizontal">
                 <Typography color="secondary">Period:&nbsp;</Typography>
                 <Typography>
@@ -59,7 +82,8 @@ const PayRollDetailsDialog = (props: PayRollDetailsProps) => {
                 </Typography>
               </Stack>
             </Grid.Col>
-            <Grid.Col cols="5">
+
+            <Grid.Col cols={["12", "lg-6"]}>
               <Stack orientation="horizontal">
                 <Typography color="secondary">Department:&nbsp;</Typography>
                 <Typography>
@@ -67,7 +91,8 @@ const PayRollDetailsDialog = (props: PayRollDetailsProps) => {
                 </Typography>
               </Stack>
             </Grid.Col>
-            <Grid.Col cols="12">
+
+            <Grid.Col cols={["12", "lg-6"]}>
               <Stack orientation="horizontal">
                 <Typography color="secondary">Designation:&nbsp;</Typography>
                 <Typography>
@@ -76,135 +101,128 @@ const PayRollDetailsDialog = (props: PayRollDetailsProps) => {
               </Stack>
             </Grid.Col>
           </Grid.Row>
-          <Card className="border-0">
-            <Card.Body>
-              <Stack gap="3">
-                <div className="border-bottom"></div>
-                <Grid.Row>
-                  <Grid.Col cols="7">
-                    <Stack gap="3">
-                      <Typography color="primary" fontWeight="bold">
-                        Earning
-                      </Typography>
-                      <Stack justifyContent="between" orientation="horizontal">
-                        <Typography fontWeight="bold">Basic</Typography>
-                        <Typography>
-                          {new Intl.NumberFormat("en-US", {
-                            style: "currency",
-                            currency: "INR",
-                          }).format(
-                            Number(
-                              props.payRollDetails.paySlipComponents[0].amount
-                            )
-                          )}
-                        </Typography>
-                      </Stack>
-                      <Stack justifyContent="between" orientation="horizontal">
-                        <Typography fontWeight="bold">HRA</Typography>
-                        <Typography>
-                          {new Intl.NumberFormat("en-US", {
-                            style: "currency",
-                            currency: "INR",
-                          }).format(
-                            Number(
-                              props.payRollDetails.paySlipComponents[1].amount
-                            )
-                          )}
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  </Grid.Col>
-                  <Grid.Col cols="5">
-                    <Stack gap="3">
-                      <Typography color="primary" fontWeight="bold">
-                        Deductions
-                      </Typography>
-                      <Stack justifyContent="between" orientation="horizontal">
-                        <Typography fontWeight="bold">Deductions</Typography>
-                        <Typography>
-                          {new Intl.NumberFormat("en-US", {
-                            style: "currency",
-                            currency: "INR",
-                            signDisplay: "never",
-                          }).format(
-                            Number(
-                              props.payRollDetails.paySlipComponents[2].amount
-                            )
-                          )}
-                        </Typography>
-                      </Stack>
-                    </Stack>
-                  </Grid.Col>
-                </Grid.Row>
-                <Grid.Row>
-                  <Grid.Col cols="7">
-                    <Stack justifyContent="between" orientation="horizontal">
-                      <Typography fontWeight="bold">Total</Typography>
-                      <Typography>
-                        {" "}
-                        {new Intl.NumberFormat("en-US", {
-                          style: "currency",
-                          currency: "INR",
-                          signDisplay: "never",
-                        }).format(
-                          Number(
-                            props.payRollDetails.paySlipComponents[0].amount
-                          ) +
-                            Number(
-                              props.payRollDetails.paySlipComponents[1].amount
-                            )
-                        )}
-                      </Typography>
-                    </Stack>
-                  </Grid.Col>
-                  <Grid.Col cols="5">
-                    <Stack justifyContent="between" orientation="horizontal">
-                      <Typography fontWeight="bold">Total</Typography>
-                      <Typography>
-                        {" "}
-                        {new Intl.NumberFormat("en-US", {
-                          style: "currency",
-                          currency: "INR",
-                          signDisplay: "never",
-                        }).format(
-                          Number(
-                            props.payRollDetails.paySlipComponents[2].amount
-                          )
-                        )}
-                      </Typography>
-                    </Stack>
-                  </Grid.Col>
-                </Grid.Row>
-                <div className="border-bottom"></div>
-                <Grid.Row>
-                  <Grid.Col cols="7">
-                    <Stack justifyContent="between" orientation="horizontal">
-                      <Typography fontWeight="bold" color="primary">
-                        Net Pay
-                      </Typography>
-                      <Typography>
-                        {" "}
-                        {new Intl.NumberFormat("en-US", {
-                          style: "currency",
-                          currency: "INR",
-                        }).format(
-                          Number(
-                            props.payRollDetails.paySlipComponents.reduce(
-                              (acc, curr) => {
-                                return acc + Number(curr.amount);
-                              },
-                              0
-                            )
-                          )
-                        )}
-                      </Typography>
-                    </Stack>
-                  </Grid.Col>
-                </Grid.Row>
+          <Divider />
+
+          <Grid.Row className="m-2 my-4">
+            <Grid.Col cols={["md-7", "12"]}>
+              <Stack>
+                <Typography color="primary" fontWeight="bold">
+                  Earning
+                </Typography>
+                <Stack justifyContent="between" orientation="horizontal">
+                  <Typography fontWeight="bold">Basic</Typography>
+                  <Typography>
+                    {new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "INR",
+                    }).format(
+                      Number(props.payRollDetails.paySlipComponents[0].amount)
+                    )}
+                  </Typography>
+                </Stack>
+
+                <Stack justifyContent="between" orientation="horizontal">
+                  <Typography fontWeight="bold">HRA</Typography>
+                  <Typography>
+                    {new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "INR",
+                    }).format(
+                      Number(props.payRollDetails.paySlipComponents[1].amount)
+                    )}
+                  </Typography>
+                </Stack>
+
+                <Stack justifyContent="between" orientation="horizontal">
+                  <Typography fontWeight="bold">Total</Typography>
+                  <Typography>
+                    {" "}
+                    {new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "INR",
+                      signDisplay: "never",
+                    }).format(
+                      Number(props.payRollDetails.paySlipComponents[0].amount) +
+                        Number(props.payRollDetails.paySlipComponents[1].amount)
+                    )}
+                  </Typography>
+                </Stack>
               </Stack>
-            </Card.Body>
-          </Card>
+            </Grid.Col>
+
+            <Hidden shownFor={"auto"} hiddenFor={"md"}>
+              <br />
+            </Hidden>
+
+            <Grid.Col cols={["md-5", "12"]}>
+              <Stack>
+                <Typography color="primary" fontWeight="bold">
+                  Deductions
+                </Typography>
+                <Stack justifyContent="between" orientation="horizontal">
+                  <Typography fontWeight="bold">Deductions</Typography>
+                  <Typography>
+                    {new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "INR",
+                      signDisplay: "never",
+                    }).format(
+                      Number(props.payRollDetails.paySlipComponents[2].amount)
+                    )}
+                  </Typography>
+                </Stack>
+
+                <Stack justifyContent="between" orientation="horizontal">
+                  <Typography fontWeight="bold">Total</Typography>
+                  <Typography>
+                    {" "}
+                    {new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "INR",
+                      signDisplay: "never",
+                    }).format(
+                      Number(props.payRollDetails.paySlipComponents[2].amount)
+                    )}
+                  </Typography>
+                </Stack>
+              </Stack>
+            </Grid.Col>
+          </Grid.Row>
+
+          <Divider className="mt-2 mb-4" />
+
+          <Grid.Row>
+            <Grid.Col cols="7">
+              <Stack justifyContent="between" orientation="horizontal">
+                <Typography fontWeight="bold" color="primary">
+                  Net Pay
+                </Typography>
+                <Typography>
+                  {" "}
+                  {new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "INR",
+                  }).format(
+                    Number(
+                      props.payRollDetails.paySlipComponents.reduce(
+                        (acc, curr) => {
+                          return acc + Number(curr.amount);
+                        },
+                        0
+                      )
+                    )
+                  )}
+                </Typography>
+              </Stack>
+            </Grid.Col>
+          </Grid.Row>
         </Dialog.Body>
+
+        <Dialog.Footer className="border-0">
+          <Button variant="primary" onClick={handlePrint} className="m-auto">
+            Print
+          </Button>
+        </Dialog.Footer>
       </Dialog>
     </>
   );

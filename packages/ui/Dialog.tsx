@@ -13,9 +13,30 @@ export const getDialogClasses = (props: DialogProps) => {
   return `${dialogBaseClasses} ${props.className}`;
 };
 
+export const modalDialogBaseClasses = "modal-dialog" as const;
+
+export const modalDialogSizesMap = {
+  sm: "modal-sm",
+  lg: "modal-lg",
+  xl: "modal-xl",
+  fullscreen: "fullscreen",
+  "fullscreen-sm-down": "modal-fullscreen-sm-down",
+  "fullscreen-md-down": "modal-fullscreen-md-down",
+  "fullscreen-lg-down": "modal-fullscreen-lg-down",
+  "fullscreen-xl-down": "modal-fullscreen-xl-down",
+  "fullscreen-xxl-down": "modal-fullscreen-xxl-down",
+} as const;
+
+export const getModalDialogClasses = (props: DialogProps) => {
+  return `${modalDialogBaseClasses} ${
+    modalDialogSizesMap[props?.modalDialogSize!]
+  }`;
+};
+
 export type DialogProps = JSX.IntrinsicElements["div"] &
   DialogContextValue & {
     children: React.ReactNode;
+    modalDialogSize?: keyof typeof modalDialogSizesMap;
   };
 
 export const Dialog = (props: DialogProps) => {
@@ -32,7 +53,7 @@ export const Dialog = (props: DialogProps) => {
         aria-labelledby={props.labelId}
         aria-hidden="true"
       >
-        <Box as="div" className="modal-dialog">
+        <Box as="div" className={getModalDialogClasses(props)}>
           <Box as="div" className="modal-content">
             {props.children}
           </Box>

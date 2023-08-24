@@ -93,7 +93,10 @@ export const FamilyPage = ({ tabId, activeTabId }: FamilyDataPageProps) => {
       if (!file) return;
 
       await importFamilyDetail(file);
+
       toast.success("File imported successfully!");
+
+      await value.refresh();
     } catch (error) {
       toast.error("An error occurred!");
     } finally {

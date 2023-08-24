@@ -67,7 +67,10 @@ const Identifications = ({
       if (!file) return;
 
       await importIdentification(file);
+
       toast.success("File imported successfully!");
+
+      await value.refresh();
     } catch (error) {
       toast.error("An error occurred!");
     } finally {

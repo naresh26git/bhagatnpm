@@ -6,6 +6,9 @@
   - [x] Add toast for all imports - Vishnupriya
   - [x] Remove bank details from personal details details page - **Vignesh**
   - [x] Revoke storage access keys and add it to the environment file - Mithunish & Vignesh
+  - [x] Refactor the responsiveness of payslip modal - **Sakthi&Mithunish**
+  - [x] Add pay slip print - **Vishnupriya**
+  - [x] Add refresh list after import for all tables - **Team**
 
 - Medium category
   - [x] Personal details details page - only show information - Vignesh
@@ -30,13 +33,11 @@
 
 ## Things to do final
 
-- [ ] Add pay slip print - **Team**
 - [ ] Add passport ocr to personal info screen - **Vignesh**
 - [ ] Leave accept and reject is not working properly - **Sakthi&Vignesh**
 
 - [ ] Improve data grid to handle loading, error and no data states gracefully - **Team**
 - [ ] Add success, warning and error alerts for all tables - **Team**
-- [ ] Refactor the responsiveness of payslip modal - **Sakthi**
 - [ ] Search option for every table - **Mithunish**
 - [ ] Use react-hook-form validations for all forms - **Vishnupriya**
 

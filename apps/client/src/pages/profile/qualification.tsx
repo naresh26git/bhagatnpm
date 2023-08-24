@@ -64,6 +64,8 @@ const Qualifications = ({ tabId, activeTabId }: QualificationPageProps) => {
       await importQualification(file);
 
       toast.success("File imported successfully!");
+
+      await value.refresh();
     } catch (error) {
       toast.error("An error occurred!");
     } finally {

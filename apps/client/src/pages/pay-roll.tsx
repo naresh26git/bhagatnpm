@@ -164,6 +164,8 @@ export const PayRollPage = () => {
       await importPaySlipComponents(file);
 
       toast.success("File imported successfully!");
+
+      await value.refresh();
     } catch (error) {
       toast.error("An error occurred!");
     } finally {
