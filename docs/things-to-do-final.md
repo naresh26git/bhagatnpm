@@ -22,7 +22,7 @@
   - [x] Add import for all tables - Team
 
 - Very Hard category
-  - [ ] Print for all tables - Mithunish
+  - [x] Print for all tables - Mithunish
   - [x] Alignment of menu items - Vignesh
 
 - Final priority
