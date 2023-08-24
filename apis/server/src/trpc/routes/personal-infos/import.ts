@@ -9,7 +9,7 @@ const inputParameters = z.array(
   z.object({
     userId: z.number(),
     firstName: z.string(),
-    middleName: z.string(),
+    middleName: z.string().optional(),
     lastName: z.string(),
     dateOfBirth: z.string(),
     dateOfJoining: z.string(),
