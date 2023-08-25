@@ -66,27 +66,10 @@ export const IdentificationDialog = (props: IdentificationDialogProps) => {
       </Dialog.Trigger>
 
       <Dialog {...value}>
-        <DialogHeader title="VisitorPass" />
+        <DialogHeader title="Identification" />
         <Dialog.Body>
           <Stack gap="3">
             <Grid.Row gutters="3">
-              <Grid.Col cols={["12", "lg-6"]}>
-                <label htmlFor="First Name">
-                  <Typography fontWeight="bolder">
-                    Identification Name
-                  </Typography>{" "}
-                </label>
-                <div>
-                  <input
-                    type="text"
-                    className="form-control"
-                    id="number"
-                    value={number}
-                    onChange={(event) => setNumber(event.target.value)}
-                  />
-                </div>
-              </Grid.Col>
-
               <Grid.Col cols={["12", "lg-6"]}>
                 <label htmlFor="username">
                   <Typography fontWeight="bolder">
@@ -110,6 +93,23 @@ export const IdentificationDialog = (props: IdentificationDialogProps) => {
                   </select>
                 </div>
               </Grid.Col>
+
+              <Grid.Col cols={["12", "lg-6"]}>
+                <label htmlFor="First Name">
+                  <Typography fontWeight="bolder">
+                    Identification Number
+                  </Typography>{" "}
+                </label>
+                <div>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="number"
+                    value={number}
+                    onChange={(event) => setNumber(event.target.value)}
+                  />
+                </div>
+              </Grid.Col>
             </Grid.Row>
           </Stack>
         </Dialog.Body>
@@ -122,13 +122,6 @@ export const IdentificationDialog = (props: IdentificationDialogProps) => {
               alignItems: "center",
             }}
           >
-            <Button
-              variant="outline-primary"
-              data-bs-toggle="modal"
-              data-bs-target={`#${value.id}`}
-            >
-              Cancel
-            </Button>
             <Button
               variant="primary"
               className="center"

@@ -21,11 +21,12 @@ export const QualificationDialog = (props: QualificationProps) => {
     try {
       if (name === undefined) return;
 
-      await client.qualifications.set.mutate({
+      await client.qualification.set.mutate({
         name,
       });
 
       props.asyncList.refresh();
+
       toast.success("Qualification added successfully!");
     } catch (error) {
       toast.error("An error occurred!");
