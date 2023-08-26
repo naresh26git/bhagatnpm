@@ -4,7 +4,8 @@ pipeline {
     stages {
         stage('SCM Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/clubitsbhagath/my-node-app.git'
+                git branch: 'main', url: 'https://github.com/Bhagathclubits/HRMS-deployment.git'
+                sh 'ls'
             }
         }
 
@@ -26,20 +27,20 @@ pipeline {
             steps {
                 script {
                     def approvalEmail = emailext (
-                        to: 'bala.d@clubitssolutions.com',
+                        to: 'bhagath.sr@gmail.com',
                         subject: 'Deployment Approval',
                         body: 'Please approve the deployment by replying to this email.',
-                        replyTo: 'bala.d@clubitssolutions.com'
+                        replyTo: 'bhagath.sr@gmail.com'
                     )
 
                     timeout(time: 1, unit: 'HOURS') {
                         waitUntil {
                             return mail(
-                                filter: 'from:bala.d@clubitssolutions.com',
+                                filter: 'from:bhagath.sr@gmail.com',
                                 subject: approvalEmail.subject,
                                 hasText: approvalEmail.body
                             ).any {
-                                mail -> mail.replyTo.contains('bala.d@clubitssolutions.com')
+                                mail -> mail.replyTo.contains('bhagath.sr@gmail.com')
                             }
                         }
                     }
