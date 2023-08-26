@@ -1,6 +1,5 @@
 pipeline {
     agent any
-    
     stages {
         stage('SCM Checkout') {
             steps {
@@ -9,7 +8,7 @@ pipeline {
                     branches: [[name: '*/main']],
                     userRemoteConfigs: [[
                         url: 'https://github.com/clubitsbhagath/HRMS-deployment.git',
-                        credentialsId: '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'
+                        credentialsId: 'gitzz'
                     ]]
                 ])
             }
@@ -39,25 +38,33 @@ pipeline {
                     )
 
                     timeout(time: 1, unit: 'HOURS') {
+                        def approvalReceived = false
                         waitUntil {
-                            // Implement email approval logic here
+                            def inbox = emailext.getInbox('bhagath.sr@gmail.com')
+                            inbox.each { email ->
+                                if (email.subject.contains('Deployment Approved')) {
+                                    approvalReceived = true
+                                }
+                            }
+                            return approvalReceived
                         }
+                    }
+
+                    if (approvalReceived) {
+                        echo 'Deployment approved! Proceeding with deployment...'
+                        sh 'docker build -t my-node-app .'
+                        sh 'docker login -u dockadministrator -p ${dockerPassword}'
+                        sh 'docker push dockadministrator/my-node-app'
+                        sh 'docker run -d -p 8090:3000 --name nodeapp my-node-app'
+                    } else {
+                        error 'Deployment approval not received. Stopping deployment.'
                     }
                 }
             }
         }
         
-        stage('Docker Build and Deployment') {
-            agent {
-                docker { image 'node' }
-            }
-            steps {
-                sh 'docker build -t my-node-app .'
-                sh 'docker login -u dockadministrator -p ${dockerPassword}'
-                sh 'docker push dockadministrator/my-node-app'
-                sh 'docker run -d -p 8090:3000 --name nodeapp my-node-app'
-            }
-        }
+        // Add other stages as needed
+        
     }
     
     post {
