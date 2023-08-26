@@ -1,30 +1,33 @@
 pipeline {
     agent any
-
+    
     stages {
         stage('SCM Checkout') {
             steps {
-                checkout([$class: 'GitSCM',
-                          branches: [[name: '*/main']],
-                          userRemoteConfigs: [[url: 'https://github.com/clubitsbhagath/HRMS-deployment.git',
-                                              credentialsId: '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']]])
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: '*/main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/clubitsbhagath/HRMS-deployment.git',
+                        credentialsId: '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'
+                    ]]
+                ])
             }
         }
-
+        
         stage('Node.js Build') {
+            agent {
+                docker { image 'node' }
+            }
             steps {
-                container('node') {
-                    script {
-                        sh 'npm install'
-                        sh 'npm install -g yarn'
-                        sh 'yarn install'
-                        sh 'yarn workspace server build:server'
-                        sh 'yarn workspace server start'
-                    }
-                }
+                sh 'npm install'
+                sh 'npm install -g yarn'
+                sh 'yarn install'
+                sh 'yarn workspace server build:server'
+                sh 'yarn workspace server start'
             }
         }
-
+        
         stage('Email Approval') {
             steps {
                 script {
@@ -43,31 +46,27 @@ pipeline {
                 }
             }
         }
-
+        
         stage('Docker Build and Deployment') {
+            agent {
+                docker { image 'node' }
+            }
             steps {
-                container('node') {
-                    script {
-                        // Docker build and deployment steps
-                        sh 'docker build -t my-node-app .'
-                        sh 'docker login -u dockadministrator -p ${dockerPassword}'
-                        sh 'docker push dockadministrator/my-node-app'
-                        sh 'docker run -d -p 8090:3000 --name nodeapp my-node-app'
-                    }
-                }
+                sh 'docker build -t my-node-app .'
+                sh 'docker login -u dockadministrator -p ${dockerPassword}'
+                sh 'docker push dockadministrator/my-node-app'
+                sh 'docker run -d -p 8090:3000 --name nodeapp my-node-app'
             }
         }
     }
-
+    
     post {
         success {
-            script {
-                emailext body: 'Your deployment was successful.',
-                         recipientProviders: [[$class: 'CulpritsRecipientProvider']],
-                         subject: 'Deployment Success',
-                         to: 'bhagath.sr@gmail.com',
-                         attachLog: true
-            }
+            emailext body: 'Your deployment was successful.',
+                     recipientProviders: [[$class: 'CulpritsRecipientProvider']],
+                     subject: 'Deployment Success',
+                     to: 'bhagath.sr@gmail.com',
+                     attachLog: true
         }
         always {
             script {
