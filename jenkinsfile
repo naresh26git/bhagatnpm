@@ -4,8 +4,10 @@ pipeline {
     stages {
         stage('SCM Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/Bhagathclubits/HRMS-deployment.git'
-                sh 'ls'
+                checkout([$class: 'GitSCM',
+                          branches: [[name: '*/main']],
+                          userRemoteConfigs: [[url: 'https://github.com/clubitsbhagath/HRMS-deployment.git',
+                                              credentialsId: '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']]])
             }
         }
 
@@ -35,13 +37,7 @@ pipeline {
 
                     timeout(time: 1, unit: 'HOURS') {
                         waitUntil {
-                            return mail(
-                                filter: 'from:bhagath.sr@gmail.com',
-                                subject: approvalEmail.subject,
-                                hasText: approvalEmail.body
-                            ).any {
-                                mail -> mail.replyTo.contains('bhagath.sr@gmail.com')
-                            }
+                            // Implement email approval logic here
                         }
                     }
                 }
@@ -52,13 +48,10 @@ pipeline {
             steps {
                 container('node') {
                     script {
+                        // Docker build and deployment steps
                         sh 'docker build -t my-node-app .'
-
                         sh 'docker login -u dockadministrator -p ${dockerPassword}'
-                        withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerPassword')]) {
-                            sh 'docker push dockadministrator/my-node-app'
-                        }
-
+                        sh 'docker push dockadministrator/my-node-app'
                         sh 'docker run -d -p 8090:3000 --name nodeapp my-node-app'
                     }
                 }
@@ -72,13 +65,13 @@ pipeline {
                 emailext body: 'Your deployment was successful.',
                          recipientProviders: [[$class: 'CulpritsRecipientProvider']],
                          subject: 'Deployment Success',
-                         to: 'bala.d@clubitssolutions.com',
+                         to: 'bhagath.sr@gmail.com',
                          attachLog: true
             }
         }
         always {
             script {
-                if (sh(returnStatus: true, script: 'docker ps -a --format "{{.Names}}" | grep -w nodeapp') == 0) {
+                if (sh(returnStatus: true, script: "docker ps -a --format '{{.Names}}' | grep -w nodeapp") == 0) {
                     sh 'docker rm -f nodeapp'
                 }
             }
