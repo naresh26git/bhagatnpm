@@ -1,36 +1,42 @@
 pipeline {
     agent any
+
     stages {
         stage('SCM Checkout') {
             steps {
-                checkout([
-                    $class: 'GitSCM',
-                    branches: [[name: '*/main']],
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/clubitsbhagath/HRMS-deployment.git',
-                        credentialsId: 'gitzz'
-                    ]]
-                ])
+                catchError {
+                    checkout([$class: 'GitSCM',
+                        branches: [[name: 'main']],
+                        userRemoteConfigs: [[
+                            url: 'https://github.com/clubitsbhagath/HRMS-deployment.git',
+                            credentialsId: 'gitzz'
+                        ]]
+                    ])
+                }
             }
         }
-        
+
         stage('Node.js Build') {
             agent {
                 docker { image 'node' }
             }
             steps {
-                sh 'npm install'
-                sh 'npm install -g yarn'
-                sh 'yarn install'
-                sh 'yarn workspace server build:server'
-                sh 'yarn workspace server start'
+                dir('server') {
+                    sh 'npm install --cache .npm'
+                    sh 'npm install -g yarn'
+                    sh 'yarn install'
+                    sh 'yarn workspace server build:server'
+                    sh 'yarn workspace server start'
+                }
             }
         }
-        
+
         stage('Email Approval') {
             steps {
                 script {
-                    def approvalEmail = emailext (
+                    def approvalReceived = false
+
+                    def approvalEmail = mail (
                         to: 'bhagath.sr@gmail.com',
                         subject: 'Deployment Approval',
                         body: 'Please approve the deployment by replying to this email.',
@@ -38,24 +44,27 @@ pipeline {
                     )
 
                     timeout(time: 1, unit: 'HOURS') {
-                        def approvalReceived = false
                         waitUntil {
-                            def inbox = emailext.getInbox('bhagath.sr@gmail.com')
+                            def inbox = emailext.getInbox()
                             inbox.each { email ->
                                 if (email.subject.contains('Deployment Approved')) {
                                     approvalReceived = true
+                                    return true
                                 }
                             }
-                            return approvalReceived
+                            return false
                         }
                     }
 
                     if (approvalReceived) {
                         echo 'Deployment approved! Proceeding with deployment...'
-                        sh 'docker build -t my-node-app .'
-                        sh 'docker login -u dockadministrator -p ${dockerPassword}'
-                        sh 'docker push dockadministrator/my-node-app'
-                        sh 'docker run -d -p 8090:3000 --name nodeapp my-node-app'
+
+                        withCredentials([string(variable: 'dockerPassword', credentialsId: 'dockerPassword')]) {
+                            docker.build('my-node-app').inside {
+                                sh 'docker push dockadministrator/my-node-app'
+                                sh 'docker run -d -p 8090:3000 --name nodeapp my-node-app'
+                            }
+                        }
                     } else {
                         error 'Deployment approval not received. Stopping deployment.'
                     }
@@ -64,16 +73,14 @@ pipeline {
         }
         
         // Add other stages as needed
-        
     }
-    
+
     post {
         success {
-            emailext body: 'Your deployment was successful.',
-                     recipientProviders: [[$class: 'CulpritsRecipientProvider']],
-                     subject: 'Deployment Success',
-                     to: 'bhagath.sr@gmail.com',
-                     attachLog: true
+            mail body: 'Your deployment was successful.',
+                 subject: 'Deployment Success',
+                 to: 'bhagath.sr@gmail.com',
+                 attachLog: true
         }
         always {
             script {
@@ -84,3 +91,4 @@ pipeline {
         }
     }
 }
+
