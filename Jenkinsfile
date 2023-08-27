@@ -79,8 +79,7 @@ pipeline {
         success {
             mail body: 'Your deployment was successful.',
                  subject: 'Deployment Success',
-                 to: 'bhagath.sr@gmail.com',
-                 
+                 to: 'bhagath.sr@gmail.com'
         }
         always {
             script {
@@ -91,4 +90,3 @@ pipeline {
         }
     }
 }
-
