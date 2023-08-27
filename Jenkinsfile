@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('SCM Checkout') {
             steps {
-                catchError {
+                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                     checkout([$class: 'GitSCM',
                         branches: [[name: 'main']],
                         userRemoteConfigs: [[
@@ -26,53 +26,20 @@ pipeline {
                     sh 'npm install -g yarn'
                     sh 'yarn install'
                     sh 'yarn workspace server build:server'
-                    sh 'yarn workspace server start'
                 }
             }
         }
 
-        stage('Email Approval') {
+        stage('Run Node.js Application') {
+            agent {
+                docker { image 'node' }
+            }
             steps {
                 script {
-                    def approvalReceived = false
-
-                    def approvalEmail = mail (
-                        to: 'bhagath.sr@gmail.com',
-                        subject: 'Deployment Approval',
-                        body: 'Please approve the deployment by replying to this email.',
-                        replyTo: 'bhagath.sr@gmail.com'
-                    )
-
-                    timeout(time: 1, unit: 'HOURS') {
-                        waitUntil {
-                            def inbox = emailext.getInbox()
-                            inbox.each { email ->
-                                if (email.subject.contains('Deployment Approved')) {
-                                    approvalReceived = true
-                                    return true
-                                }
-                            }
-                            return false
-                        }
-                    }
-
-                    if (approvalReceived) {
-                        echo 'Deployment approved! Proceeding with deployment...'
-
-                        withCredentials([string(variable: 'dockerPassword', credentialsId: 'dockerPassword')]) {
-                            docker.build('my-node-app').inside {
-                                sh 'docker push dockadministrator/my-node-app'
-                                sh 'docker run -d -p 8090:3000 --name nodeapp my-node-app'
-                            }
-                        }
-                    } else {
-                        error 'Deployment approval not received. Stopping deployment.'
-                    }
+                    def appContainer = docker.image('my-node-app').run('-p', '8090:3000', '--name', 'nodeapp', '-d')
                 }
             }
         }
-        
-        // Add other stages as needed
     }
 
     post {
@@ -81,10 +48,17 @@ pipeline {
                  subject: 'Deployment Success',
                  to: 'bhagath.sr@gmail.com'
         }
+        failure {
+            mail body: 'Your deployment has failed.',
+                 subject: 'Deployment Failure',
+                 to: 'bhagath.sr@gmail.com'
+        }
         always {
             script {
-                if (sh(returnStatus: true, script: "docker ps -a --format '{{.Names}}' | grep -w nodeapp") == 0) {
-                    sh 'docker rm -f nodeapp'
+                def appContainer = docker.image('my-node-app').container('nodeapp')
+                if (appContainer) {
+                    appContainer.stop()
+                    appContainer.remove(force: true)
                 }
             }
         }
