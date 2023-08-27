@@ -80,7 +80,7 @@ pipeline {
             mail body: 'Your deployment was successful.',
                  subject: 'Deployment Success',
                  to: 'bhagath.sr@gmail.com',
-                 attachLog: true
+                 
         }
         always {
             script {
