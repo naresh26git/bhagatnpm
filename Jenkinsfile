@@ -16,35 +16,17 @@ pipeline {
             }
         }
 
-        stage('Node.js Build') {
-            agent {
-                docker { image 'node' }
-            }
-            steps {
-                dir('server') {
-                    script {
-                        def npmCacheDir = '/var/lib/jenkins/workspace/.npm-cache'
-                      
-                        sh "npm config set cache $npmCacheDir"
-                        sh "npm install -g yarn"
-                        sh "yarn install"
-                        sh "yarn workspace server build:server"
-                    }
-                }
-            }
-        }
-
-        stage('Run Node.js Application') {
-            agent {
-                docker { image 'my-node-app' } // Use the correct image name
-            }
-            steps {
-                script {
-                    def appContainer = docker.image('my-node-app').run('-p', '8090:3000', '--name', 'nodeapp', '-d')
-                }
-            }
+        stage('Build the Docker image') {
+          steps {
+            sh 'sudo docker build -t my-node /var/lib/jenkins/workspace/HRMS-project'
+            sh 'sudo docker tag my-node node/HRMS-project:latest'
+            sh 'sudo docker tag my-node node/HRMS-project:${BUILD_NUMBER}'
         }
     }
+
+    }
+
+}
 
     post {
         success {
@@ -56,15 +38,6 @@ pipeline {
             mail body: 'Your deployment has failed.',
                  subject: 'Deployment Failure',
                  to: 'bhagath.sr@gmail.com'
-        }
-        always {
-            script {
-                def appContainer = docker.image('my-node-app').container('nodeapp')
-                if (appContainer) {
-                    appContainer.stop()
-                    appContainer.remove(force: true)
-                }
-            }
         }
     }
 }
