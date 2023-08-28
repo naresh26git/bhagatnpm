@@ -22,8 +22,7 @@ pipeline {
             }
             steps {
                 dir('server') {
-                    sh 'mkdir -p ~/.npm' // Create the .npm directory in the user's home directory
-                    sh 'npm config set cache ~/.npm' // Set npm cache to the created directory
+                    sh 'npm config set cache /var/lib/jenkins/workspace/.npm' // Set npm cache to the workspace directory
                     sh 'npm install -g yarn'
                     sh 'yarn install'
                     sh 'yarn workspace server build:server'
@@ -65,3 +64,4 @@ pipeline {
         }
     }
 }
+
