@@ -20,11 +20,20 @@ pipeline {
             steps {
                 script {
                     sh 'docker build -t my-node /var/lib/jenkins/workspace/HRMS-pipeline'
-                    sh 'docker tag my-node node/hrms-pipeline:latest'
-                    sh "docker tag my-node node/hrms-pipeline:latest"
+                    sh 'docker tag my-node dockeadministrator/hrms-pipeline:latest'
+                    sh "docker tag my-node dockeadministrator/hrms-pipeline:${BUILD_NUMBER}"
                 }
             }
-        }
+
+stage('Build the Docker image') {
+            steps {
+                script {
+                    
+                    sh 'docker image push dockeadministrator/hrms-pipeline:latest'
+                    sh "docker image push dockeadministrator/hrms-pipeline:${BUILD_NUMBER}"
+                }
+            }
+        }  
     }
 
     post {
