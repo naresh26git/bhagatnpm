@@ -31,7 +31,7 @@ pipeline {
 
         stage('Run Node.js Application') {
             agent {
-                docker { image 'node' }
+                docker { image 'my-node-app' } // Use the correct image name
             }
             steps {
                 script {
