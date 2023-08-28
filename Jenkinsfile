@@ -22,7 +22,6 @@ pipeline {
             }
             steps {
                 dir('server') {
-                    sh 'npm install --cache .npm'
                     sh 'npm install -g yarn'
                     sh 'yarn install'
                     sh 'yarn workspace server build:server'
