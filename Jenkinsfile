@@ -13,8 +13,8 @@ pipeline {
                         ]]
                     ])
                 }
-            }
-        }
+            
+        
 
         stage('Build the Docker image') {
             steps {
@@ -35,7 +35,7 @@ stage('Build the Docker image') {
             }
         }  
     }
-
+            }
     post {
         success {
             mail body: 'Your deployment was successful.',
