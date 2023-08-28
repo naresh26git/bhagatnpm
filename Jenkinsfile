@@ -24,7 +24,7 @@ pipeline {
                 dir('server') {
                     script {
                         def npmCacheDir = '/var/lib/jenkins/workspace/.npm-cache'
-                        sh "sudo mkdir -p $npmCacheDir"
+                      
                         sh "npm config set cache $npmCacheDir"
                         sh "npm install -g yarn"
                         sh "yarn install"
