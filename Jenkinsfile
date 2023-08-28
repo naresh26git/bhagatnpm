@@ -19,9 +19,9 @@ pipeline {
         stage('Build the Docker image') {
             steps {
                 script {
-                    sh 'docker build -t my-node /var/lib/jenkins/workspace/HRMS-project'
-                    sh 'docker tag my-node node/HRMS-project:latest'
-                    sh "docker tag my-node node/HRMS-project:${BUILD_NUMBER}"
+                    sh 'sudo docker build -t my-node /var/lib/jenkins/workspace/HRMS-project'
+                    sh 'sudo docker tag my-node node/HRMS-project:latest'
+                    sh "sudo docker tag my-node node/HRMS-project:${BUILD_NUMBER}"
                 }
             }
         }
@@ -40,3 +40,4 @@ pipeline {
         }
     }
 }
+
