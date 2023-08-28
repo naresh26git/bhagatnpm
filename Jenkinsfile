@@ -22,10 +22,14 @@ pipeline {
             }
             steps {
                 dir('server') {
-                    sh 'npm config set cache /var/lib/jenkins/workspace/.npm' // Set npm cache to the workspace directory
-                    sh 'npm install -g yarn'
-                    sh 'yarn install'
-                    sh 'yarn workspace server build:server'
+                    script {
+                        def npmCacheDir = '/var/lib/jenkins/workspace/.npm-cache'
+                        sh "mkdir -p $npmCacheDir"
+                        sh "npm config set cache $npmCacheDir"
+                        sh "npm install -g yarn"
+                        sh "yarn install"
+                        sh "yarn workspace server build:server"
+                    }
                 }
             }
         }
@@ -64,4 +68,3 @@ pipeline {
         }
     }
 }
-
