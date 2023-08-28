@@ -49,4 +49,4 @@ stage('Build the Docker image') {
         }
     }
 }
-
+    }
