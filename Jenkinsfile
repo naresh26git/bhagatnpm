@@ -20,10 +20,8 @@ pipeline {
             steps {
                 script {
                     sh 'docker build -t my-node /var/lib/jenkins/workspace/HRMS-pipeline'
-                    sh 'docker tag my-node dockadministrator/hrms-pipeline:latest'
-                    sh "docker tag my-node dockadministrator/hrms-pipeline:${BUILD_NUMBER}"
-                    sh 'docker image push dockadministrator/hrms-pipeline:latest'
-                    sh "docker image push dockadministrator/hrms-pipeline:${BUILD_NUMBER}"
+                    sh 'docker tag my-node node/hrms-pipeline:latest'
+                    sh "docker tag my-node node/hrms-pipeline:${BUILD_NUMBER}" // Use the build number here
                 }
             }
         }
@@ -31,12 +29,12 @@ pipeline {
 
     post {
         success {
-            mail body: 'HRMS deployment was successful.',
+            mail body: 'Your deployment was successful.',
                  subject: 'Deployment Success',
                  to: 'bhagath.sr@gmail.com'
         }
         failure {
-            mail body: 'HRMS deployment has failed.',
+            mail body: 'Your deployment has failed.',
                  subject: 'Deployment Failure',
                  to: 'bhagath.sr@gmail.com'
         }
