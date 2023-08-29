@@ -13,8 +13,8 @@ pipeline {
                         ]]
                     ])
                 }
-            
-        
+            }
+        }
 
         stage('Build the Docker image') {
             steps {
@@ -22,31 +22,23 @@ pipeline {
                     sh 'docker build -t my-node /var/lib/jenkins/workspace/HRMS-pipeline'
                     sh 'docker tag my-node dockeadministrator/hrms-pipeline:latest'
                     sh "docker tag my-node dockeadministrator/hrms-pipeline:${BUILD_NUMBER}"
-                }
-            }
-
-stage('Build the Docker image') {
-            steps {
-                script {
-                    
                     sh 'docker image push dockeadministrator/hrms-pipeline:latest'
                     sh "docker image push dockeadministrator/hrms-pipeline:${BUILD_NUMBER}"
                 }
             }
-        }  
+        }
     }
-            }
+
     post {
         success {
-            mail body: 'Your deployment was successful.',
+            mail body: 'HRMS deployment was successful.',
                  subject: 'Deployment Success',
                  to: 'bhagath.sr@gmail.com'
         }
         failure {
-            mail body: 'Your deployment has failed.',
+            mail body: 'HRMS deployment has failed.',
                  subject: 'Deployment Failure',
                  to: 'bhagath.sr@gmail.com'
         }
     }
 }
-    }
