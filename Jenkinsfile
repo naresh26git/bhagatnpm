@@ -29,12 +29,12 @@ pipeline {
 
     post {
         success {
-            mail body: 'HRMS deployment was successful.',
+            mail body: 'Dear balaji your HRMS deployment was successful.',
                  subject: 'Deployment Success',
                  to: 'bhagath.sr@gmail.com'
         }
         failure {
-            mail body: 'HRMS deployment has failed.',
+            mail body: 'Dear balaji your HRMS deployment has failed.',
                  subject: 'Deployment Failure',
                  to: 'bhagath.sr@gmail.com'
         }
