@@ -67,16 +67,4 @@ pipeline {
             mail body: 'Your deployment has failed.',
                  subject: 'Dear Balaji your Deployment has Failed',
                  to: 'bhagath.sr@gmail.com'
-        }
-    }
-
-    always {
-        script {
-            def appContainer = docker.image('my-node-app').container('nodeapp')
-            if (appContainer) {
-                appContainer.stop()
-                appContainer.remove(force: true)
-            }
-        }
-    }
-}
+       
