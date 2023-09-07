@@ -67,4 +67,6 @@ pipeline {
             mail body: 'Your deployment has failed.',
                  subject: 'Dear Balaji your Deployment has Failed',
                  to: 'bhagath.sr@gmail.com'
-       
+        }
+    }
+}
