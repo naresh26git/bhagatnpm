@@ -70,3 +70,14 @@ pipeline {
         }
     }
 }
+
+// The always block for Docker container management
+always {
+    script {
+        def appContainer = docker.image('my-node-app').container('nodeapp')
+        if (appContainer) {
+            appContainer.stop()
+            appContainer.remove(force: true)
+        }
+    }
+}
