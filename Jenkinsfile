@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     stages {
-        stage('SCM Checkout - First GitHub Account') {
+        stage('SCM Checkout') {
             steps {
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                     checkout([$class: 'GitSCM',
@@ -16,30 +16,14 @@ pipeline {
             }
         }
 
-        stage('Node.js Build and Start') {
-            agent {
-                docker {
-                    image 'node' // Define the Node.js Docker image
-                    args '-u root' // Optional: Run the container as root if necessary
-                }
-            }
-            steps {
-                script {
-                    sh 'npm install'
-                    sh 'npm install -g yarn'
-                    sh 'yarn install'
-                    sh 'yarn workspace server build:server'
-                    sh 'yarn workspace server start'
-                }
-            }
-        }
-
         stage('Build the Docker image') {
             steps {
                 script {
                     sh 'docker build -t my-node /var/lib/jenkins/workspace/HRMS-pipeline'
                     sh 'docker tag my-node node/hrms-pipeline:latest'
-                    sh "docker tag my-node node/hrms-pipeline:${BUILD_NUMBER}"
+                    sh "docker tag my-node node/hrms-pipeline:${BUILD_NUMBER}" // Use the build number here
+
+                    // Store the current Docker image name for rollback
                     env.CURRENT_IMAGE_NAME = "node/hrms-pipeline:${BUILD_NUMBER}"
                 }
             }
@@ -59,10 +43,13 @@ pipeline {
                         sh "echo ${BUILD_NUMBER} > current_version.txt"
                     } catch (Exception e) {
                         echo "Deployment or testing/validation failed. Initiating rollback..."
-                        currentBuild.result = 'FAILURE'
-                        sh "docker stop my-node"
-                        sh "docker rm my-node"
-                        sh "docker run -d --name my-node ${env.CURRENT_IMAGE_NAME}"
+                        currentBuild.result = 'FAILURE' // Mark the build as FAILURE
+
+                        // Implement rollback logic here
+                        sh "docker stop my-node" // Stop the current container
+                        sh "docker rm my-node"   // Remove the current container
+                        sh "docker run -d --name my-node ${env.CURRENT_IMAGE_NAME}" // Start the previous container
+
                         error("Rollback completed. Deployment failed.")
                     }
                 }
@@ -72,13 +59,13 @@ pipeline {
 
     post {
         success {
-            mail body: 'Dear Balaji, your deployment was successful.',
+            mail body: 'Dear Balaji your deployment was successful.',
                  subject: 'Deployment Success',
                  to: 'bhagath.sr@gmail.com'
         }
         failure {
             mail body: 'Your deployment has failed.',
-                 subject: 'Dear Balaji, your Deployment has Failed',
+                 subject: 'Dear Balaji your Deployment has Failed',
                  to: 'bhagath.sr@gmail.com'
         }
     }
