@@ -16,20 +16,6 @@ pipeline {
             }
         }
 
-        stage('SCM Checkout - Second GitHub Account') {
-            steps {
-                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                    checkout([$class: 'GitSCM',
-                        branches: [[name: 'main']],
-                        userRemoteConfigs: [[
-                            url: 'https://github.com/clubits-solutions/clubits.git',
-                            credentialsId: 'secondGithubCredentials'
-                        ]]
-                    ])
-                }
-            }
-        }
-
         stage('Node.js Build and Start') {
             agent {
                 docker {
