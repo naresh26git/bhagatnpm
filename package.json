@@ -20,6 +20,5 @@
     "apps/*",
     "packages/*"
   ],
-  "main": "src/app.js" // Add this line with the correct path to your entry point
+  "main": "src/app.js"
 }
-
