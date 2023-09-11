@@ -16,6 +16,7 @@ COPY . /app
 # Expose the port on which your Node.js app listens
 EXPOSE 3000
 
-# Copy the app.js file from the apps directory to the working directory inside the container
-COPY apps/app.js ./
+# Start the Node.js application
+CMD ["node", "src/app.js"]  # Update the path to app.js
+
 
