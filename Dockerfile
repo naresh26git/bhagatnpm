@@ -16,10 +16,6 @@ COPY . /app
 # Expose the port on which your Node.js app listens
 EXPOSE 3000
 
-# Adjust the COPY command to copy app.js from the correct location
-COPY apps/app.js ./   # Assuming app.js is located in the apps directory
-
-# Start the Node.js application
-CMD ["node", "app.js"]
-
+# Copy the app.js file from the apps directory to the working directory inside the container
+COPY apps/app.js ./
 
