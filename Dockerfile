@@ -10,8 +10,10 @@ COPY package*.json ./
 # Install application dependencies
 RUN npm install
 
-# Use ADD to copy the Node.js application from the host's /opt directory to the container's /app directory
-ADD /opt /app
+# Copy and extract the Node.js application from the tarball
+COPY node_app.tar.gz /app/
+RUN tar -xzvf node_app.tar.gz
+RUN rm node_app.tar.gz
 
 # Expose the port on which your Node.js app listens
 EXPOSE 3000
