@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Check out your code from your repository
+                // Check out your code from the repository
                 checkout([$class: 'GitSCM',
                     branches: [[name: 'main']],
                     userRemoteConfigs: [[
@@ -21,13 +21,21 @@ pipeline {
 
         stage('Build and Package') {
             steps {
-                // Your build and packaging steps as before
+                // Build and package your application
+                // Example: Compile, bundle, or build your code
+                sh 'npm install'  // Replace with your build commands
+                sh 'npm run build'  // Replace with your build commands
             }
         }
 
         stage('Docker Build') {
             steps {
-                // Build Docker image as before
+                // Build a Docker image with the specified version
+                script {
+                    def customImageName = "my-static-web-app:${params.DEPLOY_VERSION}" // Use the specified version
+                    
+                    sh "docker build -t ${customImageName} ."
+                }
             }
         }
 
