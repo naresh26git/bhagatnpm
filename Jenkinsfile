@@ -15,9 +15,11 @@ pipeline {
 
         stage('Install Node.js and npm') {
             steps {
-                sh 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash'
-                sh 'source ~/.nvm/nvm.sh && nvm install 14.17.6'
-                sh 'source ~/.nvm/nvm.sh && nvm use 14.17.6'
+                script {
+                    sh 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash'
+                    sh 'source ~/.nvm/nvm.sh && nvm install 14.17.6'
+                    sh 'source ~/.nvm/nvm.sh && nvm use 14.17.6'
+                }
             }
         }
 
@@ -29,7 +31,8 @@ pipeline {
 
         stage('Install Yarn and Build') {
             steps {
-                sh '/full/path/to/npm install -g yarn'
+                sh 'npm install -g yarn' // Install Yarn globally
+
                 sh 'yarn install'
                 sh 'yarn workspace client unsafe:build'
                 sh 'rm -r apis/server/public'
@@ -45,7 +48,7 @@ pipeline {
                     def customImageTag = "myapp:${env.BUILD_NUMBER}"
                     
                     // Authenticate with Docker Hub
-                    withCredentials([usernamePassword(credentialsId: dockerPass, passwordVariable: 'cluBIT$123*', usernameVariable: 'dockadministrator')]) {
+                    withCredentials([usernamePassword(credentialsId: 'dockerPass', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
                         sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
                     }
 
@@ -61,7 +64,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 // Replace 'successful ' with your actual deployment command
-                sh 'successful '
+                sh 'successful'
             }
         }
     }
