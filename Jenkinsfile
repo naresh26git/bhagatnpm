@@ -12,7 +12,7 @@ pipeline {
                 checkout([$class: 'GitSCM',
                     branches: [[name: 'main']],
                     userRemoteConfigs: [[
-                        url: 'https://github.com/Bhagathclubits/HRMS-deployment.git',
+                        url: 'https://github.com/Bhagathclubits/HRMS-deploy',
                         credentialsId: 'gitzz'
                     ]]
                 ])
