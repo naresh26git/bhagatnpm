@@ -21,21 +21,21 @@ pipeline {
             }
         }
 
+        stage('Install AWS CLI') {
+            steps {
+                sh 'pip install awscli'
+            }
+        }
+
         stage('Install Yarn and Build') {
             steps {
-                sh 'npm install yarn' // Install Yarn locally
-                sh 'yarn install' // Use locally installed Yarn
+                sh '/full/path/to/npm install -g yarn'
+                sh 'yarn install'
                 sh 'yarn workspace client unsafe:build'
                 sh 'rm -r apis/server/public'
                 sh 'mkdir apis/server/public'
                 sh 'cp -r apps/client/dist/ apis/server/public/'
                 sh 'yarn workspace server build:ts'
-            }
-        }
-
-        stage('Install AWS CLI') {
-            steps {
-                sh 'pip install awscli'
             }
         }
 
@@ -69,11 +69,17 @@ pipeline {
     post {
         success {
             // This block is executed if the pipeline is successful
-            // You can add post-build actions or notifications here
+            emailext subject: "Pipeline Success - ${currentBuild.fullDisplayName}",
+                body: "The Jenkins pipeline has completed successfully.",
+                to: "bhagath.sr@gmail.com",
+                recipientProviders: [[$class: 'CulpritsRecipientProvider']]
         }
         failure {
             // This block is executed if the pipeline fails
-            // You can add failure notifications or cleanup steps here
+            emailext subject: "Pipeline Failure - ${currentBuild.fullDisplayName}",
+                body: "The Jenkins pipeline has failed.",
+                to: "bhagath.sr@gmail.com",
+                recipientProviders: [[$class: 'CulpritsRecipientProvider']]
         }
     }
 }
