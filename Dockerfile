@@ -10,13 +10,13 @@ COPY package*.json ./
 # Install application dependencies
 RUN npm install
 
-# Copy the Node.js application from the /opt directory to the working directory
-COPY /opt/node_app.tar.gz /app/
+# Copy the Node.js application from the /opt directory in Jenkins workspace
+COPY /var/lib/jenkins/workspace/HRMS-pipeline/opt/node_app.tar.gz /app/
 
-# Extract the Node.js application
+# Extract the Node.js application from the tarball
 RUN tar -xzvf node_app.tar.gz
 
-# Remove the tarball
+# Remove the tarball file
 RUN rm node_app.tar.gz
 
 # Expose the port on which your Node.js app listens
