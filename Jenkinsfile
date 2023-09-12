@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_IMAGE_NAME = "node/hrms-pipeline"
+    }
+
     stages {
         stage('SCM Checkout') {
             steps {
@@ -19,12 +23,11 @@ pipeline {
         stage('Build the Docker image') {
             steps {
                 script {
-                    sh 'docker build -t my-node /var/lib/jenkins/workspace/HRMS-pipeline'
-                    sh 'docker tag my-node node/hrms-pipeline:latest'
-                    sh "docker tag my-node node/hrms-pipeline:${BUILD_NUMBER}" // Use the build number here
+                    // Build the Docker image from the current directory
+                    sh "docker build -t ${DOCKER_IMAGE_NAME}:${BUILD_NUMBER} ."
 
-                    // Store the current Docker image name for rollback
-                    env.CURRENT_IMAGE_NAME = "node/hrms-pipeline:${BUILD_NUMBER}"
+                    // Tag the image as "latest"
+                    sh "docker tag ${DOCKER_IMAGE_NAME}:${BUILD_NUMBER} ${DOCKER_IMAGE_NAME}:latest"
                 }
             }
         }
@@ -46,9 +49,9 @@ pipeline {
                         currentBuild.result = 'FAILURE' // Mark the build as FAILURE
 
                         // Implement rollback logic here
-                        sh "docker stop my-node" // Stop the current container
-                        sh "docker rm my-node"   // Remove the current container
-                        sh "docker run -d --name my-node ${env.CURRENT_IMAGE_NAME}" // Start the previous container
+                        sh "docker stop ${DOCKER_IMAGE_NAME}" // Stop the current container
+                        sh "docker rm ${DOCKER_IMAGE_NAME}"   // Remove the current container
+                        sh "docker run -d --name ${DOCKER_IMAGE_NAME} ${DOCKER_IMAGE_NAME}:latest" // Start the previous container
 
                         error("Rollback completed. Deployment failed.")
                     }
