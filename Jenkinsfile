@@ -15,9 +15,8 @@ pipeline {
 
         stage('Install Node.js and npm') {
             steps {
-                sh 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash'
-                sh 'source ~/.nvm/nvm.sh && nvm install 14.17.6'
-                sh 'source ~/.nvm/nvm.sh && nvm use 14.17.6'
+                sh '/var/lib/jenkins/.nvm/nvm.sh install 14.17.6'
+                sh '/var/lib/jenkins/.nvm/nvm.sh use 14.17.6'
             }
         }
 
@@ -29,7 +28,7 @@ pipeline {
 
         stage('Install Yarn and Build') {
             steps {
-                sh '/full/path/to/npm install -g yarn'
+                sh 'npm install -g yarn'
                 sh 'yarn install'
                 sh 'yarn workspace client unsafe:build'
                 sh 'rm -r apis/server/public'
@@ -69,17 +68,13 @@ pipeline {
     post {
         success {
             // This block is executed if the pipeline is successful
-            emailext subject: "Pipeline Success - ${currentBuild.fullDisplayName}",
-                body: "The Jenkins pipeline has completed successfully.",
-                to: "bhagath.sr@gmail.com",
-                recipientProviders: [[$class: 'CulpritsRecipientProvider']]
+            // Send a success notification to the specified email address
+            emailext to: 'bhagath.sr@gmail.com', subject: 'Pipeline Success', body: 'The pipeline has completed successfully.'
         }
         failure {
             // This block is executed if the pipeline fails
-            emailext subject: "Pipeline Failure - ${currentBuild.fullDisplayName}",
-                body: "The Jenkins pipeline has failed.",
-                to: "bhagath.sr@gmail.com",
-                recipientProviders: [[$class: 'CulpritsRecipientProvider']]
+            // Send a failure notification to the specified email address
+            emailext to: 'bhagath.sr@gmail.com', subject: 'Pipeline Failure', body: 'The pipeline has failed. Please investigate.'
         }
     }
 }
