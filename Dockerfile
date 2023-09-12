@@ -10,14 +10,8 @@ COPY package*.json ./
 # Install application dependencies
 RUN npm install
 
-# Copy the Node.js application from an absolute path on your local system
-ADD /var/lib/jenkins/workspace/HRMS-pipeline/opt/node_app.tar.gz /app/
-
-# Extract the Node.js application from the tarball
-RUN tar -xzvf node_app.tar.gz
-
-# Remove the tarball file
-RUN rm node_app.tar.gz
+# Copy the rest of the application code to the working directory
+COPY . /app
 
 # Expose the port on which your Node.js app listens
 EXPOSE 3000
