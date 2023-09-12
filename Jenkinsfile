@@ -55,36 +55,3 @@ pipeline {
                 script {
                     def customImageTag = "myapp:${env.BUILD_NUMBER}"
                     
-                    // Authenticate with Docker Hub
-                    withCredentials([usernamePassword(credentialsId: dockerPass, passwordVariable: 'cluBIT$123*', usernameVariable: 'dockadministrator')]) {
-                        sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
-                    }
-
-                    // Build and tag Docker image
-                    sh "docker build -t ${customImageTag} ."
-                    
-                    // Push Docker image to Docker Hub
-                    sh "docker push ${customImageTag}"
-                }
-            }
-        }
-
-        stage('Deploy') {
-            steps {
-                // Replace 'successful ' with your actual deployment command
-                sh 'successful '
-            }
-        }
-    }
-
-    post {
-        success {
-            // This block is executed if the pipeline is successful
-            // You can add post-build actions or notifications here
-        }
-        failure {
-            // This block is executed if the pipeline fails
-            // You can add failure notifications or cleanup steps here
-        }
-    }
-}
