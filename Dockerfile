@@ -1,20 +1,23 @@
-# Use the official Node.js image as the base image
-FROM node:18.17.1
+# Use an official Node.js runtime as the base image
+FROM node:14
 
-# Set the working directory inside the container
+# Set the working directory in the container
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
+# Copy package.json and yarn.lock files to the working directory
+COPY package.json yarn.lock ./
 
-# Install application dependencies
-RUN npm install
+# Install dependencies
+RUN yarn install
 
-# Copy the rest of the application code from HRMS-deployment directory into the working directory
-COPY HRMS-deployment /app
+# Copy the entire project to the working directory
+COPY . .
 
-# Expose the port on which your Node.js app listens
+# Build the server
+RUN yarn build:server
+
+# Expose the port your application will run on
 EXPOSE 3000
 
-# Start the Node.js application
-CMD ["node", "app.js"]
+# Start the server
+CMD ["yarn", "workspace", "server", "start"]
