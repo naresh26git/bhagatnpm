@@ -4,7 +4,6 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerPass')
         EMAIL_RECIPIENT = 'bhagath.sr@gmail.com'
-        NVM_DIR = '/var/lib/jenkins/.nvm' // Set the correct NVM_DIR
     }
 
     stages {
@@ -19,11 +18,14 @@ pipeline {
             steps {
                 // Install NVM
                 sh 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash'
-                sh "export NVM_DIR=${NVM_DIR} && [ -s \"$NVM_DIR/nvm.sh\" ] && \\. \"$NVM_DIR/nvm.sh\""
-
+                
+                // Load NVM without the use of 'source'
+                sh 'export NVM_DIR="$HOME/.nvm"'
+                sh '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"'
+                
                 // Install Node.js
-                sh "export NVM_DIR=${NVM_DIR} && nvm install 14.17.6"
-                sh "export NVM_DIR=${NVM_DIR} && nvm use 14.17.6"
+                sh 'nvm install 14.17.6'
+                sh 'nvm use 14.17.6'
             }
         }
 
