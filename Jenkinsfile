@@ -1,59 +1,46 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE_NAME = "node/hrms-pipeline"
+    parameters {
+        string(name: 'DEPLOY_VERSION', description: 'Version to deploy (e.g., v1.1)')
     }
 
     stages {
-        stage('SCM Checkout') {
+        stage('Checkout') {
             steps {
-                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-                    checkout([$class: 'GitSCM',
-                        branches: [[name: 'main']],
-                        userRemoteConfigs: [[
-                            url: 'https://github.com/Bhagathclubits/HRMS-deployment.git',
-                            credentialsId: 'gitzz'
-                        ]]
-                    ])
-                }
+                // Check out your code from your repository
+                checkout([$class: 'GitSCM',
+                    branches: [[name: 'main']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/Bhagathclubits/HRMS-deployment.git',
+                        credentialsId: 'gitzz'
+                    ]]
+                ])
             }
         }
 
-        stage('Build the Docker image') {
+        stage('Build and Package') {
             steps {
-                script {
-                    // Build the Docker image from the current directory
-                    sh "docker build -t ${DOCKER_IMAGE_NAME}:${BUILD_NUMBER} ."
+                // Your build and packaging steps as before
+            }
+        }
 
-                    // Tag the image as "latest"
-                    sh "docker tag ${DOCKER_IMAGE_NAME}:${BUILD_NUMBER} ${DOCKER_IMAGE_NAME}:latest"
-                }
+        stage('Docker Build') {
+            steps {
+                // Build Docker image as before
             }
         }
 
         stage('Deploy') {
             steps {
+                // Deploy the Docker image with the specified version
                 script {
-                    try {
-                        // Deploy the new version here
-                        // Add commands or scripts for deploying the Docker image to your EC2 instance
-
-                        // Perform testing and validation on the new version
-                        // Add testing and validation steps here
-
-                        // If testing and validation succeed, update the current version
-                        sh "echo ${BUILD_NUMBER} > current_version.txt"
-                    } catch (Exception e) {
-                        echo "Deployment or testing/validation failed. Initiating rollback..."
-                        currentBuild.result = 'FAILURE' // Mark the build as FAILURE
-
-                        // Implement rollback logic here
-                        sh "docker stop ${DOCKER_IMAGE_NAME}" // Stop the current container
-                        sh "docker rm ${DOCKER_IMAGE_NAME}"   // Remove the current container
-                        sh "docker run -d --name ${DOCKER_IMAGE_NAME} ${DOCKER_IMAGE_NAME}:latest" // Start the previous container
-
-                        error("Rollback completed. Deployment failed.")
+                    def customImageName = "my-static-web-app:${params.DEPLOY_VERSION}" // Use the specified version
+                    
+                    // Authenticate with Docker Hub using Jenkins credentials
+                    withCredentials([string(credentialsId: 'dockerPass', variable: 'DOCKER_PASSWORD')]) {
+                        sh "docker login -u dockadministrator -p ${DOCKER_PASSWORD}"
+                        sh "docker push ${customImageName}"
                     }
                 }
             }
@@ -61,15 +48,9 @@ pipeline {
     }
 
     post {
-        success {
-            mail body: 'Dear Balaji your deployment was successful.',
-                 subject: 'Deployment Success',
-                 to: 'bhagath.sr@gmail.com'
-        }
-        failure {
-            mail body: 'Your deployment has failed.',
-                 subject: 'Dear Balaji your Deployment has Failed',
-                 to: 'bhagath.sr@gmail.com'
+        always {
+            // Cleanup any Docker images or containers if needed
+            cleanWs()
         }
     }
 }
