@@ -3,52 +3,39 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerPass')
-        NVM_DIR = '/var/lib/jenkins/.nvm'
     }
 
     stages {
         stage('Checkout') {
             steps {
+                // Replace 'https://github.com/Bhagathclubits/HRMS-deployment.git' with your GitHub repository URL
                 checkout scm
-            }
-        }
-
-        stage('Setup Node.js') {
-            steps {
-                sh '''
-                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
-                    nvm install 14.17.6
-                    nvm use 14.17.6
-                    '''
             }
         }
 
         stage('Install Node.js and npm') {
             steps {
-                sh 'npm install -g npm'
+                sh 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash'
+                sh 'source ~/.nvm/nvm.sh && nvm install 14.17.6'
+                sh 'source ~/.nvm/nvm.sh && nvm use 14.17.6'
             }
         }
 
         stage('Install AWS CLI') {
             steps {
-                sh 'curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"'
-                sh 'unzip awscliv2.zip'
-                sh './aws/install'
+                sh 'pip install awscli'
             }
         }
 
-        stage('Build') {
+        stage('Install Yarn and Build') {
             steps {
-                dir('your-repo-name') {
-                    sh 'npm install -g yarn'
-                    sh 'yarn install'
-                    sh 'yarn workspace client unsafe:build'
-                    sh 'rm -r apis/server/public'
-                    sh 'mkdir apis/server/public'
-                    sh 'cp -r apps/client/dist/ apis/server/public/'
-                    sh 'yarn workspace server build:ts'
-                }
+                sh '/full/path/to/npm install -g yarn'
+                sh 'yarn install'
+                sh 'yarn workspace client unsafe:build'
+                sh 'rm -r apis/server/public'
+                sh 'mkdir apis/server/public'
+                sh 'cp -r apps/client/dist/ apis/server/public/'
+                sh 'yarn workspace server build:ts'
             }
         }
 
@@ -57,11 +44,15 @@ pipeline {
                 script {
                     def customImageTag = "myapp:${env.BUILD_NUMBER}"
                     
-                    withCredentials([usernamePassword(credentialsId: 'dockerPass', passwordVariable: 'cluBIT$123*', usernameVariable: 'dockadministrator')]) {
+                    // Authenticate with Docker Hub
+                    withCredentials([usernamePassword(credentialsId: dockerPass, passwordVariable: 'cluBIT$123*', usernameVariable: 'dockadministrator')]) {
                         sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
                     }
 
+                    // Build and tag Docker image
                     sh "docker build -t ${customImageTag} ."
+                    
+                    // Push Docker image to Docker Hub
                     sh "docker push ${customImageTag}"
                 }
             }
@@ -69,17 +60,20 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sh 'echo "Deploying your application"'
+                // Replace 'successful ' with your actual deployment command
+                sh 'successful '
             }
         }
     }
 
     post {
         success {
-            echo 'Deployment successful!'
+            // This block is executed if the pipeline is successful
+            // You can add post-build actions or notifications here
         }
         failure {
-            echo 'Deployment failed!'
+            // This block is executed if the pipeline fails
+            // You can add failure notifications or cleanup steps here
         }
     }
 }
