@@ -11,7 +11,7 @@ COPY package*.json ./
 RUN npm install
 
 # Copy the Node.js application from the /opt directory to the working directory
-COPY /opt /app
+COPY /opt/ ./
 
 # Expose the port on which your Node.js app listens
 EXPOSE 3000
