@@ -19,6 +19,5 @@
     "apis/*",
     "apps/*",
     "packages/*"
-  ],
-  "main": "app.js"
+  ]
 }
