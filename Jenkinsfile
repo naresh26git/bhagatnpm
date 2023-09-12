@@ -8,18 +8,15 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Replace 'https://github.com/Bhagathclubits/HRMS-deployment.git' with your GitHub repository URL
                 checkout scm
             }
         }
 
         stage('Install Node.js and npm') {
             steps {
-                script {
-                    sh 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash'
-                    sh 'source ~/.nvm/nvm.sh && nvm install 14.17.6'
-                    sh 'source ~/.nvm/nvm.sh && nvm use 14.17.6'
-                }
+                sh 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash'
+                sh 'export NVM_DIR="/var/lib/jenkins/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm install 14.17.6'
+                sh 'export NVM_DIR="/var/lib/jenkins/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm use 14.17.6'
             }
         }
 
@@ -31,8 +28,7 @@ pipeline {
 
         stage('Install Yarn and Build') {
             steps {
-                sh 'npm install -g yarn' // Install Yarn globally
-
+                sh 'npm install -g yarn'
                 sh 'yarn install'
                 sh 'yarn workspace client unsafe:build'
                 sh 'rm -r apis/server/public'
@@ -47,15 +43,11 @@ pipeline {
                 script {
                     def customImageTag = "myapp:${env.BUILD_NUMBER}"
                     
-                    // Authenticate with Docker Hub
                     withCredentials([usernamePassword(credentialsId: 'dockerPass', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
                         sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
                     }
 
-                    // Build and tag Docker image
                     sh "docker build -t ${customImageTag} ."
-                    
-                    // Push Docker image to Docker Hub
                     sh "docker push ${customImageTag}"
                 }
             }
@@ -63,4 +55,19 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Replace 'successful' with
+                sh 'your-deployment-command-here'
+            }
+        }
+    }
+
+    post {
+        success {
+            // This block is executed if the pipeline is successful
+            // You can add post-build actions or notifications here
+        }
+        failure {
+            // This block is executed if the pipeline fails
+            // You can add failure notifications or cleanup steps here
+        }
+    }
+}
