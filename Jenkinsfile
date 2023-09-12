@@ -13,22 +13,25 @@ pipeline {
             }
         }
 
-        stage('Install Node.js and npm') {
+        stage('Install AWS CLI') {
             steps {
-                sh '/var/lib/jenkins/.nvm/nvm.sh install 14.17.6'
-                sh '/var/lib/jenkins/.nvm/nvm.sh use 14.17.6'
+                sh 'curl "https://d1vvhvl2y92vvt.cloudfront.net/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"'
+                sh 'unzip awscliv2.zip'
+                sh './aws/install'
             }
         }
 
-        stage('Install AWS CLI') {
+        stage('Install Node.js and npm') {
             steps {
-                sh 'pip install awscli'
+                sh 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash'
+                sh 'source ~/.nvm/nvm.sh && nvm install 14.17.6'
+                sh 'source ~/.nvm/nvm.sh && nvm use 14.17.6'
             }
         }
 
         stage('Install Yarn and Build') {
             steps {
-                sh 'npm install -g yarn'
+                sh '/full/path/to/npm install -g yarn'
                 sh 'yarn install'
                 sh 'yarn workspace client unsafe:build'
                 sh 'rm -r apis/server/public'
@@ -67,14 +70,16 @@ pipeline {
 
     post {
         success {
-            // This block is executed if the pipeline is successful
-            // Send a success notification to the specified email address
-            emailext to: 'bhagath.sr@gmail.com', subject: 'Pipeline Success', body: 'The pipeline has completed successfully.'
+            // Send email notification on success
+            emailext subject: 'Jenkins Pipeline Success',
+                      body: 'Your Jenkins pipeline has succeeded.',
+                      to: 'bhagath.sr@gmail.com'
         }
         failure {
-            // This block is executed if the pipeline fails
-            // Send a failure notification to the specified email address
-            emailext to: 'bhagath.sr@gmail.com', subject: 'Pipeline Failure', body: 'The pipeline has failed. Please investigate.'
+            // Send email notification on failure
+            emailext subject: 'Jenkins Pipeline Failure',
+                      body: 'Your Jenkins pipeline has failed.',
+                      to: 'bhagath.sr@gmail.com'
         }
     }
 }
