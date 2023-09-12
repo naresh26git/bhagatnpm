@@ -1,20 +1,23 @@
-# Use the Node.js base image
-FROM node:18.17.1
+# Use the official Node.js image with your desired version
+FROM node:14
 
-# Set the working directory
+# Set the working directory inside the container
 WORKDIR /app
 
-# Copy package.json and yarn.lock files
+# Copy the package.json and yarn.lock files to the container
 COPY package.json yarn.lock ./
 
-# Install dependencies
+# Install project dependencies
 RUN yarn install
 
-# Copy other project files
+# Copy the rest of your application code to the container
 COPY . .
 
-# Copy custom-modules directory (including the missing module)
-COPY custom-modules/ ./ui/hooks/useDialog
+# Build your Node.js application
+RUN yarn run build
 
-# Build your application
-RUN yarn build:server
+# Expose the port your application will run on (if applicable)
+# EXPOSE 80
+
+# Define the command to start your application
+CMD [ "yarn", "start" ]
