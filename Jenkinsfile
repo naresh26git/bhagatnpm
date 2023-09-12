@@ -20,7 +20,13 @@ pipeline {
                     [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
                     nvm install 14.17.6
                     nvm use 14.17.6
-                '''
+                    '''
+            }
+        }
+
+        stage('Install Node.js and npm') {
+            steps {
+                sh 'npm install -g npm'
             }
         }
 
