@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerPass')
+        EMAIL_RECIPIENT = 'bhagath.sr@gmail.com'
     }
 
     stages {
@@ -65,11 +66,17 @@ pipeline {
     post {
         success {
             // This block is executed if the pipeline is successful
-            // You can add post-build actions or notifications here
+            emailext to: "${EMAIL_RECIPIENT}",
+                    subject: "Pipeline Success: ${currentBuild.fullDisplayName}",
+                    body: "The Jenkins pipeline was successful."
+            // You can add other post-build actions here
         }
         failure {
             // This block is executed if the pipeline fails
-            // You can add failure notifications or cleanup steps here
+            emailext to: "${EMAIL_RECIPIENT}",
+                    subject: "Pipeline Failure: ${currentBuild.fullDisplayName}",
+                    body: "The Jenkins pipeline has failed."
+            // You can add other post-build actions here
         }
     }
 }
