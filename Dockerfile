@@ -11,12 +11,10 @@ COPY package*.json ./
 RUN npm install
 
 # Copy the rest of the application code to the working directory
-COPY . /app
+COPY . .
 
 # Expose the port on which your Node.js app listens
 EXPOSE 3000
 
 # Start the Node.js application
-CMD ["node", "src/app.js"]  # Update the path to app.js
-
-
+CMD ["node", "app.js"]  # Update the path to app.js if necessary
