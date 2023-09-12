@@ -63,20 +63,4 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Replace 'successful' with your actual deployment command
-                sh 'successful'
-            }
-        }
-    }
-
-    post {
-        success {
-            // This block is executed if the pipeline is successful
-            // You can add post-build actions or notifications here
-        }
-        failure {
-            // This block is executed if the pipeline fails
-            // You can add failure notifications or cleanup steps here
-        }
-    }
-}
+                // Replace 'successful' with
