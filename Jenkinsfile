@@ -1,64 +1,74 @@
 pipeline {
     agent any
 
-    parameters {
-        string(name: 'DEPLOY_VERSION', description: 'Version to deploy (e.g., v1.1)')
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerPass')
     }
 
     stages {
-        stage('Checkout') {
+        stage('Build') {
             steps {
-                // Check out your code from the repository
-                checkout([$class: 'GitSCM',
-                    branches: [[name: 'main']],
-                    userRemoteConfigs: [[
-                        url: 'https://github.com/Bhagathclubits/HRMS-deploy',
-                        credentialsId: 'gitzz'
-                    ]]
-                ])
+                // Replace 'https://github.com/Bhagathclubits/HRMS-deployment.git' with your GitHub repository URL
+                sh 'git clone https://github.com/Bhagathclubits/HRMS-deployment.git'
+
+                // Navigate to the cloned repository directory
+                dir('your-repo-name') {
+                    // Set up Node.js environment
+                    sh 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash'
+                    sh 'source ~/.nvm/nvm.sh && nvm install 14.17.6'
+                    sh 'source ~/.nvm/nvm.sh && nvm use 14.17.6'
+
+                    // Install dependencies and build
+                    sh 'npm install -g yarn'
+                    sh 'yarn install'
+                    sh 'yarn workspace client unsafe:build'
+                    sh 'rm -r apis/server/public'
+                    sh 'mkdir apis/server/public'
+                    sh 'cp -r apps/client/dist/ apis/server/public/'
+                    sh 'yarn workspace server build:ts'
+
+                    // You can run tests or linters here if necessary
+                    // sh 'yarn lint'
+                    // sh 'yarn test'
+                }
             }
         }
 
-        stage('Build and Package') {
+        stage('Docker Build and Push') {
             steps {
-                // Build and package your application
-                // Example: Compile, bundle, or build your code
-                sh 'npm install'  // Replace with your build commands
-                sh 'npm run build'  // Replace with your build commands
-            }
-        }
-
-        stage('Docker Build') {
-            steps {
-                // Build a Docker image with the specified version
                 script {
-                    def customImageName = "my-static-web-app:${params.DEPLOY_VERSION}" // Use the specified version
+                    def customImageTag = "myapp:${env.BUILD_NUMBER}"
                     
-                    sh "docker build -t ${customImageName} ."
+                    // Authenticate with Docker Hub
+                    withCredentials([usernamePassword(credentialsId: dockerPass, passwordVariable: 'cluBIT$123*', usernameVariable: 'dockadministrator')]) {
+                        sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
+                    }
+
+                    // Build and tag Docker image
+                    sh "docker build -t ${customImageTag} ."
+                    
+                    // Push Docker image to Docker Hub
+                    sh "docker push ${customImageTag}"
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                // Deploy the Docker image with the specified version
-                script {
-                    def customImageName = "my-static-web-app:${params.DEPLOY_VERSION}" // Use the specified version
-                    
-                    // Authenticate with Docker Hub using Jenkins credentials
-                    withCredentials([string(credentialsId: 'dockerPass', variable: 'DOCKER_PASSWORD')]) {
-                        sh "docker login -u dockadministrator -p ${DOCKER_PASSWORD}"
-                        sh "docker push ${customImageName}"
-                    }
-                }
+                // Replace 'successful ' with your actual deployment command
+                sh 'successful '
             }
         }
     }
 
     post {
-        always {
-            // Cleanup any Docker images or containers if needed
-            cleanWs()
+        success {
+            // This block is executed if the pipeline is successful
+            // You can add post-build actions or notifications here
+        }
+        failure {
+            // This block is executed if the pipeline fails
+            // You can add failure notifications or cleanup steps here
         }
     }
 }
