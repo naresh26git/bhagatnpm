@@ -1,16 +1,16 @@
-# Use the official Node.js image with your desired version
-FROM node:14
+# Use the specific Node.js version installed on your EC2 server
+FROM node:18.17.1
 
 # Set the working directory inside the container
 WORKDIR /app
 
-# Copy the package.json and yarn.lock files to the container
+# Copy your application code and package.json/yarn.lock files
 COPY package.json yarn.lock ./
 
 # Install project dependencies
 RUN yarn install
 
-# Copy the rest of your application code to the container
+# Copy the rest of your application code
 COPY . .
 
 # Build your Node.js application
