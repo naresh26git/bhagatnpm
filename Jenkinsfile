@@ -63,7 +63,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Replace 'successful ' with your actual deployment command
+                // Replace 'successful' with your actual deployment command
                 sh 'successful'
             }
         }
