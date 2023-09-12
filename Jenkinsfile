@@ -64,11 +64,11 @@ pipeline {
     post {
         success {
             // This block is executed if the pipeline is successful
-            // You can add post-build actions or notifications here
+            echo "Pipeline succeeded!"
         }
         failure {
             // This block is executed if the pipeline fails
-            // You can add failure notifications or cleanup steps here
+            echo "Pipeline failed!"
         }
     }
 }
