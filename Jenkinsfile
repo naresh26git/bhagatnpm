@@ -3,17 +3,10 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerPass')
-        EMAIL_RECIPIENT = 'bhagath.sr@gmail.com'
+        NVM_DIR = "$HOME/.nvm"
     }
 
     stages {
-        stage('Checkout') {
-            steps {
-                // Checkout your code from your version control system (e.g., Git)
-                checkout scm
-            }
-        }
-
         stage('Set up Node.js') {
             steps {
                 // Install NVM
@@ -23,6 +16,9 @@ pipeline {
                 sh 'export NVM_DIR="$HOME/.nvm"'
                 sh '[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"'
                 
+                // Check if nvm.sh exists
+                sh '[ -s "$NVM_DIR/nvm.sh" ] && echo "nvm.sh found" || echo "nvm.sh not found"'
+                
                 // Install Node.js
                 sh 'nvm install 14.17.6'
                 sh 'nvm use 14.17.6'
@@ -31,18 +27,24 @@ pipeline {
 
         stage('Build') {
             steps {
-                // Install dependencies and build
-                sh 'npm install -g yarn'
-                sh 'yarn install'
-                sh 'yarn workspace client unsafe:build'
-                sh 'rm -r apis/server/public'
-                sh 'mkdir apis/server/public'
-                sh 'cp -r apps/client/dist/ apis/server/public/'
-                sh 'yarn workspace server build:ts'
+                // Replace 'https://github.com/Bhagathclubits/HRMS-deployment.git' with your GitHub repository URL
+                sh 'git clone https://github.com/Bhagathclubits/HRMS-deployment.git'
 
-                // You can run tests or linters here if necessary
-                // sh 'yarn lint'
-                // sh 'yarn test'
+                // Navigate to the cloned repository directory
+                dir('HRMS-deployment') {
+                    // Install dependencies and build
+                    sh 'npm install -g yarn'
+                    sh 'yarn install'
+                    sh 'yarn workspace client unsafe:build'
+                    sh 'rm -r apis/server/public'
+                    sh 'mkdir apis/server/public'
+                    sh 'cp -r apps/client/dist/ apis/server/public/'
+                    sh 'yarn workspace server build:ts'
+
+                    // You can run tests or linters here if necessary
+                    // sh 'yarn lint'
+                    // sh 'yarn test'
+                }
             }
         }
 
@@ -52,7 +54,7 @@ pipeline {
                     def customImageTag = "myapp:${env.BUILD_NUMBER}"
                     
                     // Authenticate with Docker Hub
-                    withCredentials([usernamePassword(credentialsId: 'dockerPass', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
+                    withCredentials([usernamePassword(credentialsId: 'dockerPass', passwordVariable: 'cluBIT$123*', usernameVariable: 'dockadministrator')]) {
                         sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
                     }
 
@@ -67,8 +69,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Replace '<YOUR_DEPLOYMENT_COMMAND>' with your actual deployment command
-                sh 'echo "Deploying your application"' // Example deployment command
+                // Replace 'your-deployment-command' with your actual deployment command
+                sh 'your-deployment-command'
             }
         }
     }
@@ -76,17 +78,23 @@ pipeline {
     post {
         success {
             // This block is executed if the pipeline is successful
-            emailext to: "${EMAIL_RECIPIENT}",
-                    subject: "Pipeline Success: ${currentBuild.fullDisplayName}",
-                    body: "The Jenkins pipeline was successful."
-            // You can add other post-build actions here
+            // You can add post-build actions or notifications here
+            echo 'Deployment successful!'
+            emailext(
+                subject: 'Deployment Successful',
+                body: 'Your Jenkins deployment was successful!',
+                to: 'bhagath.sr@gmail.com'
+            )
         }
         failure {
             // This block is executed if the pipeline fails
-            emailext to: "${EMAIL_RECIPIENT}",
-                    subject: "Pipeline Failure: ${currentBuild.fullDisplayName}",
-                    body: "The Jenkins pipeline has failed."
-            // You can add other post-build actions here
+            // You can add failure notifications or cleanup steps here
+            echo 'Deployment failed!'
+            emailext(
+                subject: 'Deployment Failed',
+                body: 'Your Jenkins deployment has failed!',
+                to: 'bhagath.sr@gmail.com'
+            )
         }
     }
 }
