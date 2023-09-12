@@ -20,5 +20,5 @@
     "apps/*",
     "packages/*"
   ],
-  "main": "src/app.js"
+  "main": "app.js"
 }
