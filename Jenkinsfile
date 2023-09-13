@@ -15,25 +15,13 @@ pipeline {
 
         stage('Setup Node.js') {
             steps {
-                sh '''
-                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
-                    nvm install 14.17.6
-                    nvm use 14.17.6
-                '''
+                sh 'npm install'
             }
         }
 
         stage('Build') {
             steps {
                 dir('your-repo-name') {
-                    sh 'echo admin123 | sudo -S npm install -g yarn'
-                    sh 'yarn install'
-                    sh 'yarn workspace client unsafe:build'
-                    sh 'rm -r apis/server/public'
-                    sh 'sudo mkdir apis/server/public'
-                    sh 'cp -r apps/client/dist/ apis/server/public/'
-                    sh 'yarn workspace server build:ts'
                     sh 'npm run build' 
                 }
             }
