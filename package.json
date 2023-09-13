@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "build:server": "yarn workspace client unsafe:build && rm -r apis/server/public && mkdir apis/server/public && cp -r apps/client/dist/ apis/server/public/ && yarn workspace server build:ts",
-    "build": "turbo run build",
+    "build": "npm run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
