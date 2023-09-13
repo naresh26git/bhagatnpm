@@ -1,17 +1,10 @@
 {
   "private": true,
   "scripts": {
-    "build:server": "yarn workspace client unsafe:build && rm -r apis/server/public && mkdir apis/server/public && cp -r apps/client/dist/ apis/server/public/ && yarn workspace server build:ts",
-    "build": "turbo run build",
-    "dev": "turbo run dev",
-    "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    // Your existing scripts
   },
   "devDependencies": {
-    "eslint": "^7.32.0",
-    "eslint-config-custom": "*",
-    "prettier": "^2.5.1",
-    "turbo": "latest"
+    // Your existing devDependencies
   },
   "name": "clubits",
   "packageManager": "yarn@1.22.19",
@@ -19,5 +12,8 @@
     "apis/*",
     "apps/*",
     "packages/*"
-  ]
+  ],
+  "engines": {
+    "node": "^14.18.0 || >=16.0.0"
+  }
 }
