@@ -13,16 +13,17 @@ pipeline {
             }
         }
 
-        stage('Setup Node.js') {
+        stage('Install Dependencies') {
             steps {
-                sh 'npm install'
+                nodejs(nodeJSInstallationName: 'nodejs20.6') {
+                    sh "npm install"
+                }
             }
         }
-
         stage('Build') {
             steps {
-                dir('your-repo-name') {
-                    sh 'npm run build' 
+                nodejs(nodeJSInstallationName: 'nodejs20.6') {
+                    sh "npm run build"
                 }
             }
         }
