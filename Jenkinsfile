@@ -34,6 +34,7 @@ pipeline {
                     sh 'mkdir apis/server/public'
                     sh 'cp -r apps/client/dist/ apis/server/public/'
                     sh 'yarn workspace server build:ts'
+                    sh 'npm run build' 
                 }
             }
         }
