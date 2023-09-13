@@ -3,45 +3,38 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerPass')
+        NVM_DIR = '/var/lib/jenkins/.nvm'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                // Replace 'https://github.com/Bhagathclubits/HRMS-deployment.git' with your GitHub repository URL
                 checkout scm
             }
         }
 
-        stage('Install Node.js and npm') {
+        stage('Setup Node.js') {
             steps {
-                script {
-                    // Define the Node.js version to be installed
-                    def nodeVersion = '14.17.6'
-                    
-                    // Use nvm to install Node.js and set it as the default version
-                    sh "su - jenkins -c 'nvm install ${nodeVersion}'"
-                    sh "su - jenkins -c 'nvm alias default ${nodeVersion}'"
-                    sh "su - jenkins -c 'nvm use ${nodeVersion}'"
+                sh '''
+                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
+                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
+                    nvm install 14.17.6
+                    nvm use 14.17.6
+                '''
+            }
+        }
+
+        stage('Build') {
+            steps {
+                dir('your-repo-name') {
+                    sh 'npm install -g yarn'
+                    sh 'yarn install'
+                    sh 'yarn workspace client unsafe:build'
+                    sh 'rm -r apis/server/public'
+                    sh 'mkdir apis/server/public'
+                    sh 'cp -r apps/client/dist/ apis/server/public/'
+                    sh 'yarn workspace server build:ts'
                 }
-            }
-        }
-
-        stage('Install AWS CLI') {
-            steps {
-                sh 'pip install awscli'
-            }
-        }
-
-        stage('Install Yarn and Build') {
-            steps {
-                sh 'npm install -g yarn'
-                sh 'yarn install'
-                sh 'yarn workspace client unsafe:build'
-                sh 'rm -r apis/server/public'
-                sh 'mkdir apis/server/public'
-                sh 'cp -r apps/client/dist/ apis/server/public/'
-                sh 'yarn workspace server build:ts'
             }
         }
 
@@ -50,15 +43,11 @@ pipeline {
                 script {
                     def customImageTag = "myapp:${env.BUILD_NUMBER}"
                     
-                    // Authenticate with Docker Hub
-                    withCredentials([usernamePassword(credentialsId: dockerPass, passwordVariable: 'cluBIT$123*', usernameVariable: 'dockadministrator')]) {
+                    withCredentials([usernamePassword(credentialsId: 'dockerPass', passwordVariable: 'cluBIT$123*', usernameVariable: 'dockadministrator')]) {
                         sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
                     }
 
-                    // Build and tag Docker image
                     sh "docker build -t ${customImageTag} ."
-                    
-                    // Push Docker image to Docker Hub
                     sh "docker push ${customImageTag}"
                 }
             }
@@ -66,22 +55,17 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Replace 'successful ' with your actual deployment command
-                sh 'successful '
+                sh 'echo "Deploying your application"'
             }
         }
     }
 
     post {
         success {
-            // This block is executed if the pipeline is successful
-            // Send a success notification to the specified email address
-            emailext to: 'bhagath.sr@gmail.com', subject: 'Pipeline Success', body: 'The pipeline has completed successfully.'
+            echo 'Deployment successful!'
         }
         failure {
-            // This block is executed if the pipeline fails
-            // Send a failure notification to the specified email address
-            emailext to: 'bhagath.sr@gmail.com', subject: 'Pipeline Failure', body: 'The pipeline has failed. Please investigate.'
+            echo 'Deployment failed!'
         }
     }
 }
