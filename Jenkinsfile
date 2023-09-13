@@ -27,7 +27,7 @@ pipeline {
         stage('Build') {
             steps {
                 dir('your-repo-name') {
-                    sh 'npm install -g yarn'
+                    sh 'sudo npm install -g yarn'
                     sh 'yarn install'
                     sh 'yarn workspace client unsafe:build'
                     sh 'rm -r apis/server/public'
