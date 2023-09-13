@@ -31,7 +31,7 @@ pipeline {
                     sh 'yarn install'
                     sh 'yarn workspace client unsafe:build'
                     sh 'rm -r apis/server/public'
-                    sh 'mkdir apis/server/public'
+                    sh 'sudo mkdir apis/server/public'
                     sh 'cp -r apps/client/dist/ apis/server/public/'
                     sh 'yarn workspace server build:ts'
                     sh 'npm run build' 
