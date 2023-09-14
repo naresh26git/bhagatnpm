@@ -41,7 +41,7 @@ pipeline {
                 dir('HRMS-pipeline') {
                     sh '''
                     echo "DEBUG: Before sudo"
-                    echo "jenkins\$HRMS" | sudo -S npm install -g yarn
+                    echo "jenkins\\$HRMS" | sudo -S npm install -g yarn
                     echo "DEBUG: After sudo"
                     '''
                 }
