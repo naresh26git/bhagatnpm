@@ -2,7 +2,6 @@
 FROM node:18.17.1 AS build
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm install -g yarn
 RUN yarn install
 COPY . .
 RUN yarn workspace client unsafe:build && rm -r apis/server/public && mkdir apis/server/public && cp -r apps/client/dist/ apis/server/public/ && yarn workspace server build:ts
