@@ -57,11 +57,10 @@ pipeline {
                         def DOCKERHUB_PASSWORD = env.cluBIT$123*
                         sh '''
                         echo -n $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
+                        docker build -t ${customImageTag} .
+                        docker push ${customImageTag}
                         '''
                     }
-
-                    sh "docker build -t ${customImageTag} ."
-                    sh "docker push ${customImageTag}"
                 }
             }
         }
