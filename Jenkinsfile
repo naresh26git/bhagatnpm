@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerPass')
         NVM_DIR = '/var/lib/jenkins/.nvm'
+        NODE_VERSION = '18.17.1'  // Specify the Node.js version here
     }
 
     stages {
@@ -18,8 +19,8 @@ pipeline {
                 sh '''
                     [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
                     [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
-                    nvm install 18.17.1
-                    nvm use 18.17.1
+                    nvm install $NODE_VERSION
+                    nvm use $NODE_VERSION
                 '''
             }
         }
@@ -29,7 +30,7 @@ pipeline {
                 sh '''
                     [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
                     [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
-                    nvm use 18.17.1
+                    nvm use $NODE_VERSION
                     yarn install
                 '''
             }
