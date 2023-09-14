@@ -10,5 +10,5 @@ RUN yarn workspace client unsafe:build && rm -r apis/server/public && mkdir apis
 FROM node:18.17.1
 WORKDIR /app
 COPY --from=build /app .
-EXPOSE 3000  # Expose port 3000
+EXPOSE 3000 
 CMD ["yarn", "turbo", "run", "dev"]
