@@ -52,10 +52,8 @@ pipeline {
                 script {
                     def customImageTag = "myapp:${env.BUILD_NUMBER}"
                     
-                    withCredentials([usernamePassword(credentialsId: 'dockerPass', passwordVariable: 'cluBIT$123*', usernameVariable: 'dockadministrator')]) {
-                        sh """
-                        echo \${dockadministrator} | docker login -u \${dockadministrator} --password-stdin
-                        """
+                    withCredentials([usernamePassword(credentialsId: 'dockerPass', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: ''DOCKERHUB_USERNAME'')]) {
+                        sh "docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD"
                     }
 
                     sh "docker build -t ${customImageTag} ."
