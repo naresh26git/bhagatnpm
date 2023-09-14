@@ -55,11 +55,11 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'dockerPass', passwordVariable: 'cluBIT$123*', usernameVariable: 'dockadministrator')]) {
                         def DOCKERHUB_USERNAME = env.dockadministrator
                         def DOCKERHUB_PASSWORD = env.cluBIT$123*
-                        sh '''
-                        echo -n $DOCKERHUB_PASSWORD | docker login -u $DOCKERHUB_USERNAME --password-stdin
+                        sh """
+                        echo -n \$DOCKERHUB_PASSWORD | docker login -u \$DOCKERHUB_USERNAME --password-stdin
                         docker build -t ${customImageTag} .
                         docker push ${customImageTag}
-                        '''
+                        """
                     }
                 }
             }
