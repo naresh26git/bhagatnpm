@@ -16,34 +16,38 @@ pipeline {
 
         stage('Setup Node.js') {
             steps {
-                sh '''
-                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
-                    nvm install $NODE_VERSION
-                    nvm use $NODE_VERSION
-                '''
+                script {
+                    sh '''
+                        [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
+                        [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
+                        nvm install $NODE_VERSION
+                        nvm use $NODE_VERSION
+                    '''
+                }
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh '''
-                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
-                    nvm use $NODE_VERSION
-                    yarn install
-                '''
+                script {
+                    sh '''
+                        [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
+                        [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
+                        nvm use $NODE_VERSION
+                        yarn install
+                    '''
+                }
             }
         }
 
         stage('Build') {
             steps {
                 dir('HRMS-pipeline') {
-                    sh '''
-                    echo "DEBUG: Before sudo"
-                    echo "jenkins\\$HRMS" | sudo -S npm install -g yarn
-                    echo "DEBUG: After sudo"
-                    '''
+                    script {
+                        echo "DEBUG: Before sudo"
+                        sh "echo 'jenkins\\\$HRMS' | sudo -S npm install -g yarn"
+                        echo "DEBUG: After sudo"
+                    }
                 }
             }
         }
@@ -53,7 +57,7 @@ pipeline {
                 script {
                     def customImageTag = "myapp:${env.BUILD_NUMBER}"
                     
-                    withCredentials([usernamePassword(credentialsId: 'dockerPass', passwordVariable: 'cluBIT$123*', usernameVariable: 'dockadministrator')]) {
+                    withCredentials([usernamePassword(credentialsId: 'dockerPass', passwordVariable: 'DOCKERHUB_PASSWORD', usernameVariable: 'DOCKERHUB_USERNAME')]) {
                         sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
                     }
 
