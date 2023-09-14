@@ -24,6 +24,17 @@ pipeline {
             }
         }
 
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
+                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
+                    nvm use 18.17.1
+                    yarn install
+                '''
+            }
+        }
+
         stage('Build') {
             steps {
                 dir('your-repo-name') {
