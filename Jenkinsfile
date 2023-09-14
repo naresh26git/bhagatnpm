@@ -39,14 +39,11 @@ pipeline {
         stage('Build') {
             steps {
                 dir('HRMS-pipeline') {
-                    sh 'echo jenkins\$HRMS | sudo -S npm install -g yarn'
-                    sh 'yarn install'
-                    sh 'yarn workspace client unsafe:build'
-                    sh 'rm -r apis/server/public'
-                    sh 'sudo mkdir apis/server/public'
-                    sh 'cp -r apps/client/dist/ apis/server/public/'
-                    sh 'yarn workspace server build:ts'
-                    sh 'npm run build' 
+                    sh '''
+                    echo "DEBUG: Before sudo"
+                    echo "jenkins\$HRMS" | sudo -S npm install -g yarn
+                    echo "DEBUG: After sudo"
+                    '''
                 }
             }
         }
