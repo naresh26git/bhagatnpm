@@ -3,8 +3,6 @@ pipeline {
 
     environment {
         DOCKERHUB_CREDENTIALS = credentials('dockerPass')
-        NVM_DIR = '/var/lib/jenkins/.nvm'
-        NODE_VERSION = '18.17.1'  // Specify the Node.js version here
     }
 
     stages {
@@ -16,29 +14,22 @@ pipeline {
 
         stage('Setup Node.js') {
             steps {
-                sh '''
-                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
-                    nvm install $NODE_VERSION
-                    nvm use $NODE_VERSION
-                '''
+                script {
+                    def nodejsInstallation = tool name: 'Node 18.17.1', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                    env.PATH = "${nodejsInstallation}/bin:${env.PATH}"
+                }
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh '''
-                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
-                    nvm use $NODE_VERSION
-                    yarn install
-                '''
+                sh 'yarn install'
             }
         }
 
         stage('Build') {
             steps {
-                dir('your-repo-name') {
+                dir('HRMS-pipeline') {
                     sh 'echo admin123 | sudo -S npm install -g yarn'
                     sh 'yarn install'
                     sh 'yarn workspace client unsafe:build'
