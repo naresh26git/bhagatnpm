@@ -14,7 +14,7 @@
     "turbo": "latest"
   },
   "name": "clubits",
-  "packageManager": "yarn@1.22.19",
+  "packageManager": "yarn@18.17.1",
   "workspaces": [
     "apis/*",
     "apps/*",
