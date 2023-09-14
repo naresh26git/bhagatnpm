@@ -51,16 +51,15 @@ pipeline {
             steps {
                 script {
                     def customImageTag = "myapp:${env.BUILD_NUMBER}"
-                    
-                    withCredentials([usernamePassword(credentialsId: 'dockerPass', passwordVariable: 'cluBIT$123*', usernameVariable: 'dockadministrator')]) {
-                        def DOCKERHUB_USERNAME = env.dockadministrator
-                        def DOCKERHUB_PASSWORD = env.cluBIT$123*
-                        sh """
-                        echo -n \$DOCKERHUB_PASSWORD | docker login -u \$DOCKERHUB_USERNAME --password-stdin
-                        docker build -t ${customImageTag} .
-                        docker push ${customImageTag}
-                        """
+
+                    // Login to Docker Hub
+                    withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerPassword')]) {
+                        sh "docker login -u dockadministrator -p \$dockerPassword"
                     }
+
+                    // Build and push the Docker image
+                    sh "docker build -t ${customImageTag} ."
+                    sh "docker push ${customImageTag}"
                 }
             }
         }
@@ -81,3 +80,4 @@ pipeline {
         }
     }
 }
+
