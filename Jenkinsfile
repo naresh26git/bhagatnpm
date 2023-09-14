@@ -38,8 +38,8 @@ pipeline {
 
         stage('Build') {
             steps {
-                dir('your-repo-name') {
-                    sh 'echo jenkins$HRMS | sudo -S npm install -g yarn'
+                dir('HRMS-pipeline') {
+                    sh 'echo jenkins\$HRMS | sudo -S npm install -g yarn'
                     sh 'yarn install'
                     sh 'yarn workspace client unsafe:build'
                     sh 'rm -r apis/server/public'
