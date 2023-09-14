@@ -1,26 +1,15 @@
-# Use an official Node.js runtime as the base image
-FROM node:18.17.1
-
-# Set the working directory in the container
+# Stage 1: Build the application
+FROM node:18.17.1 AS build
 WORKDIR /app
-
-# Copy package.json and package-lock.json (if available) to the working directory
 COPY package.json package-lock.json* ./
-
-# Install global dependencies
 RUN npm install -g yarn
-
-# Install project dependencies
 RUN yarn install
-
-# Copy the rest of the application code
 COPY . .
-
-# Build the server
 RUN yarn workspace client unsafe:build && rm -r apis/server/public && mkdir apis/server/public && cp -r apps/client/dist/ apis/server/public/ && yarn workspace server build:ts
 
-# Expose a port if your application needs it
-# EXPOSE 8080
-
-# Start your application
+# Stage 2: Create the final image
+FROM node:18.17.1
+WORKDIR /app
+COPY --from=build /app .
+EXPOSE 3000  # Expose port 3000
 CMD ["yarn", "turbo", "run", "dev"]
