@@ -5,6 +5,7 @@ pipeline {
         DOCKERHUB_CREDENTIALS = credentials('dockerPass')
         NVM_DIR = '/var/lib/jenkins/.nvm'
         NODE_VERSION = '18.17.1'  // Specify the Node.js version here
+        DOCKERHUB_USERNAME = credentials('dockerPass').username
     }
 
     stages {
@@ -40,9 +41,9 @@ pipeline {
             steps {
                 dir('HRMS-pipeline') {
                     sh '''
-                    echo "DEBUG: Before sudo"
-                    echo "jenkins\\$HRMS" | sudo -S npm install -g yarn
-                    echo "DEBUG: After sudo"
+                        echo "DEBUG: Before sudo"
+                        echo "jenkins\\$HRMS" | sudo -S npm install -g yarn
+                        echo "DEBUG: After sudo"
                     '''
                 }
             }
@@ -79,3 +80,4 @@ pipeline {
         }
     }
 }
+   
