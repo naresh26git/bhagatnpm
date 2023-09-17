@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerPass')
         NVM_DIR = '/var/lib/jenkins/.nvm'
         NODE_VERSION = '18.17.1'  // Specify the Node.js version here
     }
@@ -51,13 +52,11 @@ pipeline {
             steps {
                 script {
                     def customImageTag = "myapp:${env.BUILD_NUMBER}"
-
-                    // Login to Docker Hub
-                    withCredentials([string(credentialsId: 'dockerPass', variable: 'dockerPassword')]) {
-                        sh "docker login -u dockadministrator -p \$dockerPassword"
+                    
+                    withCredentials([usernamePassword(credentialsId: 'dockerPass', passwordVariable: 'cluBIT$123*', usernameVariable: 'dockadministrator')]) {
+                        sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
                     }
 
-                    // Build and push the Docker image
                     sh "docker build -t ${customImageTag} ."
                     sh "docker push ${customImageTag}"
                 }
@@ -79,5 +78,3 @@ pipeline {
             echo 'Deployment failed!'
         }
     }
-}
-
