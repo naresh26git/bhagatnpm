@@ -1,6 +1,7 @@
 {
   "private": true,
   "scripts": {
+    "start": "pm2 start myapp.js",
     "build:server": "yarn workspace client unsafe:build && rm -r apis/server/public && mkdir apis/server/public && cp -r apps/client/dist/ apis/server/public/ && yarn workspace server build:ts",
     "build": "turbo run build",
     "dev": "turbo run dev",
