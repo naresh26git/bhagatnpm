@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_IMAGE_NAME = 'myapp:latest' // Specify your Docker image name and tag
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -16,8 +20,8 @@ pipeline {
                     sh 'mkdir -p $WORKSPACE/app'
                     
                     // Use an official Node.js runtime as the base image
-                    sh '/usr/bin/docker pull node:18.17.1'
-                    sh '/usr/bin/docker run -t -d -u 115:122 -v ${WORKSPACE}/app:/app -w /app -v /var/lib/jenkins/workspace/HRMS-pipeline:/usr/src/app -e ******** -e ******** node:18.17.1 cat'
+                    sh 'docker pull node:18.17.1'
+                    sh 'docker run -t -d -u 115:122 -v ${WORKSPACE}/app:/app -w /app -v /var/lib/jenkins/workspace/HRMS-pipeline:/usr/src/app -e ******** -e ******** node:18.17.1 cat'
                     
                     // Set the working directory inside the container
                     dir('/app') {
@@ -44,7 +48,7 @@ pipeline {
             steps {
                 // Build a Docker image of your application
                 script {
-                    sh "/usr/bin/docker build -t myapp ."
+                    sh "docker build -t ${DOCKER_IMAGE_NAME} ."
                 }
             }
         }
@@ -54,7 +58,7 @@ pipeline {
                 // Deploy your Docker image as needed
                 script {
                     // Example: Deploy the Docker image to a local Docker host
-                    sh "/usr/bin/docker run -d --name your-container-name -p 3000:3000 myapp"
+                    sh "docker run -d --name your-container-name -p 3000:3000 ${DOCKER_IMAGE_NAME}"
                 }
             }
         }
