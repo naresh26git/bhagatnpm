@@ -16,11 +16,11 @@ pipeline {
         stage('Build and Package') {
             steps {
                 script {
+                    // Create the /app directory in the Jenkins workspace
+                    sh 'mkdir -p $WORKSPACE/app'
+                    
                     // Use an official Node.js runtime as the base image
                     docker.image('node:18.17.1').inside("-v ${WORKSPACE}/app:/app") {
-                        // Create the /app directory inside the container using the Docker volume
-                        sh 'mkdir -p /app'
-                        
                         // Set the working directory inside the container
                         dir('/app') {
                             // Copy package.json and package-lock.json to the working directory
