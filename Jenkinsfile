@@ -33,3 +33,49 @@ pipeline {
                             sh 'yarn install'
                             
                             // Copy the rest of the application code to the working directory
+                            sh 'cp -r /usr/src/app/* .'
+                            
+                            // Build your server and client (adjust the build commands as needed)
+                            sh 'yarn workspace server build:ts'
+                        }
+                    }
+                }
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                // Build a Docker image of your application
+                script {
+                    sh "docker build -t ${DOCKER_IMAGE_NAME} ."
+                }
+            }
+        }
+
+        stage('Docker Deploy') {
+            steps {
+                // Deploy your Docker image as needed
+                script {
+                    // Example: Deploy the Docker image to a local Docker host
+                    sh "docker run -d --name your-container-name -p 3000:3000 ${DOCKER_IMAGE_NAME}"
+                }
+            }
+        }
+
+        stage('Clean Up') {
+            steps {
+                // Clean up any temporary files or resources
+                sh 'yarn clean-up' // Replace with any cleanup command you need
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed!'
+        }
+    }
+}
