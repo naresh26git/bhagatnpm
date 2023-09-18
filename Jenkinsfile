@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE_NAME = 'myapp:latest' // Specify your Docker image name and tag
+        DOCKER_BIN_PATH = '/usr/bin/docker' // Path to the Docker executable on your agent
     }
 
     stages {
@@ -20,25 +21,26 @@ pipeline {
                     sh 'mkdir -p $WORKSPACE/app'
                     
                     // Use an official Node.js runtime as the base image
-                    sh 'docker pull node:18.17.1'
-                    sh 'docker run -t -d -u 115:122 -v ${WORKSPACE}/app:/app -w /app -v /var/lib/jenkins/workspace/HRMS-pipeline:/usr/src/app -e ******** -e ******** node:18.17.1 cat'
+                    sh "$DOCKER_BIN_PATH pull node:18.17.1"
                     
-                    // Set the working directory inside the container
-                    dir('/app') {
-                        // Copy package.json and package-lock.json to the working directory
-                        sh 'cp /usr/src/app/package*.json ./'
-                        
-                        // Use Node.js and Yarn
-                        sh 'npm install -g yarn'
-                        
-                        // Install project dependencies
-                        sh 'yarn install'
-                        
-                        // Copy the rest of the application code to the working directory
-                        sh 'cp -r /usr/src/app/* .'
+                    docker.image('node:18.17.1').inside("-u 115:122 -v ${WORKSPACE}/app:/app") {
+                        // Set the working directory inside the container
+                        dir('/app') {
+                            // Copy package.json and package-lock.json to the working directory
+                            sh 'cp /usr/src/app/package*.json ./'
+                            
+                            // Use Node.js and Yarn
+                            sh 'npm install -g yarn'
+                            
+                            // Install project dependencies
+                            sh 'yarn install'
+                            
+                            // Copy the rest of the application code to the working directory
+                            sh 'cp -r /usr/src/app/* .'
 
-                        // Build your server and client (adjust the build commands as needed)
-                        sh 'yarn workspace server build:ts'
+                            // Build your server and client (adjust the build commands as needed)
+                            sh 'yarn workspace server build:ts'
+                        }
                     }
                 }
             }
@@ -48,7 +50,7 @@ pipeline {
             steps {
                 // Build a Docker image of your application
                 script {
-                    sh "docker build -t ${DOCKER_IMAGE_NAME} ."
+                    sh "$DOCKER_BIN_PATH build -t ${DOCKER_IMAGE_NAME} ."
                 }
             }
         }
@@ -58,7 +60,7 @@ pipeline {
                 // Deploy your Docker image as needed
                 script {
                     // Example: Deploy the Docker image to a local Docker host
-                    sh "docker run -d --name your-container-name -p 3000:3000 ${DOCKER_IMAGE_NAME}"
+                    sh "$DOCKER_BIN_PATH run -d --name your-container-name -p 3000:3000 ${DOCKER_IMAGE_NAME}"
                 }
             }
         }
