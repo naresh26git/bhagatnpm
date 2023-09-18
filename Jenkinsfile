@@ -1,10 +1,13 @@
 pipeline {
-    agent any
-
+    agent {
+        docker {
+            image 'node:18.17.1'
+            args '-u 115:122' // Set user with proper permissions
+        }
+    }
     environment {
         DOCKER_IMAGE_NAME = 'myapp:latest' // Specify your Docker image name and tag
     }
-
     stages {
         stage('Checkout') {
             steps {
@@ -12,7 +15,6 @@ pipeline {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/Bhagathclubits/HRMS-deployment.git', credentialsId: 'github']]])
             }
         }
-
         stage('Build and Package') {
             steps {
                 script {
@@ -20,7 +22,7 @@ pipeline {
                     sh 'mkdir -p $WORKSPACE/app'
                     
                     // Use an official Node.js runtime as the base image
-                    docker.image('node:18.17.1').inside("-u 115:122 -v ${WORKSPACE}/app:/app") {
+                    docker.image('node:18.17.1').inside("-v ${WORKSPACE}/app:/app") {
                         // Set the working directory inside the container
                         dir('/app') {
                             // Copy package.json and package-lock.json to the working directory
@@ -42,7 +44,6 @@ pipeline {
                 }
             }
         }
-
         stage('Docker Build') {
             steps {
                 // Build a Docker image of your application
@@ -51,7 +52,6 @@ pipeline {
                 }
             }
         }
-
         stage('Docker Deploy') {
             steps {
                 // Deploy your Docker image as needed
@@ -61,7 +61,6 @@ pipeline {
                 }
             }
         }
-
         stage('Clean Up') {
             steps {
                 // Clean up any temporary files or resources
@@ -69,7 +68,6 @@ pipeline {
             }
         }
     }
-
     post {
         success {
             echo 'Deployment successful!'
