@@ -7,14 +7,17 @@ WORKDIR /app
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
+# Use Node.js and Yarn
+RUN npm install -g yarn
+
 # Install project dependencies
-RUN npm install
+RUN yarn install
 
 # Copy the rest of the application code to the working directory
 COPY . .
 
 # Build your server and client (adjust the build commands as needed)
-RUN npm run build:server
+RUN yarn workspace server build:ts
 
 # Expose any necessary ports (if your Node.js app listens on a specific port)
 EXPOSE 3000
