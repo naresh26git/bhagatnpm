@@ -2,70 +2,66 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerPass')
-        NVM_DIR = '/var/lib/jenkins/.nvm'
-        NODE_VERSION = '18.17.1'  // Specify the Node.js version here
+        DOCKER_IMAGE_NAME = 'myapp:latest' // Specify your Docker image name and tag
     }
 
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
+                // Checkout your source code from GitHub using Git credentials
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/Bhagathclubits/HRMS-deployment.git', credentialsId: 'github']]])
             }
         }
 
-        stage('Setup Node.js') {
+        stage('Build and Package') {
             steps {
-                sh '''
-                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
-                    nvm install $NODE_VERSION
-                    nvm use $NODE_VERSION
-                '''
-            }
-        }
+                // Use an official Node.js runtime as the base image
+                docker.image('node:18.17.1').inside {
+                    // Set the working directory inside the container
+                    sh 'mkdir -p /app'
+                    dir('/app') {
+                        // Copy package.json and package-lock.json to the working directory
+                        sh 'cp /usr/src/app/package*.json ./'
 
-        stage('Install Dependencies') {
-            steps {
-                sh '''
-                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
-                    nvm use $NODE_VERSION
-                    yarn install
-                '''
-            }
-        }
+                        // Use Node.js and Yarn
+                        sh 'npm install -g yarn'
 
-        stage('Build') {
-            steps {
-                dir('HRMS-pipeline') {
-                    sh '''
-                    echo "DEBUG: Before sudo"
-                    echo "jenkins\\$HRMS" | sudo -S npm install -g yarn
-                    echo "DEBUG: After sudo"
-                    '''
-                }
-            }
-        }
+                        // Install project dependencies
+                        sh 'yarn install'
 
-        stage('Docker Build and Push') {
-            steps {
-                script {
-                    def customImageTag = "myapp:${env.BUILD_NUMBER}"
-                    
-                    withCredentials([usernamePassword(credentialsId: 'dockerPass', passwordVariable: 'cluBIT$123*', usernameVariable: 'dockadministrator')]) {
-                        sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
+                        // Copy the rest of the application code to the working directory
+                        sh 'cp -r /usr/src/app/* .'
+
+                        // Build your server and client (adjust the build commands as needed)
+                        sh 'yarn workspace server build:ts'
                     }
-
-                    sh "docker build -t ${customImageTag} ."
-                    sh "docker push ${customImageTag}"
                 }
             }
         }
 
-        stage('Deploy') {
+        stage('Docker Build') {
             steps {
-                sh 'echo "Deploying your application"'
+                // Build a Docker image of your application
+                script {
+                    sh "docker build -t ${DOCKER_IMAGE_NAME} ."
+                }
+            }
+        }
+
+        stage('Docker Deploy') {
+            steps {
+                // Deploy your Docker image as needed
+                script {
+                    // Example: Deploy the Docker image to a local Docker host
+                    sh "docker run -d --name your-container-name -p 3000:3000 ${DOCKER_IMAGE_NAME}"
+                }
+            }
+        }
+
+        stage('Clean Up') {
+            steps {
+                // Clean up any temporary files or resources
+                sh 'yarn clean-up' // Replace with any cleanup command you need
             }
         }
     }
@@ -78,3 +74,4 @@ pipeline {
             echo 'Deployment failed!'
         }
     }
+}
