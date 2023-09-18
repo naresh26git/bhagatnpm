@@ -1,10 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE_NAME = 'myapp:latest' // Specify your Docker image name and tag
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -48,7 +44,7 @@ pipeline {
             steps {
                 // Build a Docker image of your application
                 script {
-                    sh "/usr/bin/docker build -t ${DOCKER_IMAGE_NAME} ."
+                    sh "/usr/bin/docker build -t myapp ."
                 }
             }
         }
@@ -58,7 +54,7 @@ pipeline {
                 // Deploy your Docker image as needed
                 script {
                     // Example: Deploy the Docker image to a local Docker host
-                    sh "/usr/bin/docker run -d --name your-container-name -p 3000:3000 ${DOCKER_IMAGE_NAME}"
+                    sh "/usr/bin/docker run -d --name your-container-name -p 3000:3000 myapp"
                 }
             }
         }
