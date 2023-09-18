@@ -20,7 +20,7 @@ pipeline {
                     sh 'mkdir -p $WORKSPACE/app'
                     
                     // Use an official Node.js runtime as the base image
-                    docker.image('node:18.17.1').inside("-v ${WORKSPACE}/app:/app") {
+                    docker.image('node:18.17.1').inside("-u 115:122 -v ${WORKSPACE}/app:/app") {
                         // Set the working directory inside the container
                         dir('/app') {
                             // Copy package.json and package-lock.json to the working directory
