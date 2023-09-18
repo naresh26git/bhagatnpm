@@ -3,12 +3,12 @@ pipeline {
 
     environment {
         DOCKER_IMAGE_NAME = 'myapp:latest' // Specify your Docker image name and tag
-        DOCKER_REGISTRY_CREDENTIALS = 'dockerPass' // Specify your Docker credentials ID
     }
 
     stages {
         stage('Checkout') {
             steps {
+                // Checkout your source code from GitHub using Git credentials
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/Bhagathclubits/HRMS-deployment.git', credentialsId: 'github']]])
             }
         }
@@ -16,13 +16,26 @@ pipeline {
         stage('Build and Package') {
             steps {
                 script {
-                    docker.image('node:18.17.1').inside {
+                    // Use an official Node.js runtime as the base image
+                    docker.image('node:18.17.1').inside("-v ${WORKSPACE}/app:/app") {
+                        // Create the /app directory inside the container using the Docker volume
                         sh 'mkdir -p /app'
+                        
+                        // Set the working directory inside the container
                         dir('/app') {
+                            // Copy package.json and package-lock.json to the working directory
                             sh 'cp /usr/src/app/package*.json ./'
+                            
+                            // Use Node.js and Yarn
                             sh 'npm install -g yarn'
+                            
+                            // Install project dependencies
                             sh 'yarn install'
+                            
+                            // Copy the rest of the application code to the working directory
                             sh 'cp -r /usr/src/app/* .'
+
+                            // Build your server and client (adjust the build commands as needed)
                             sh 'yarn workspace server build:ts'
                         }
                     }
@@ -30,25 +43,20 @@ pipeline {
             }
         }
 
-        stage('Docker Build and Push') {
+        stage('Docker Build') {
             steps {
+                // Build a Docker image of your application
                 script {
-                    // Build the Docker image
-                    def customImage = docker.build("${DOCKER_IMAGE_NAME}")
-
-                    // Push the Docker image to the registry using credentials
-                    docker.withRegistry('', "${DOCKER_REGISTRY_CREDENTIALS}") {
-                        customImage.push()
-                    }
+                    sh "docker build -t ${DOCKER_IMAGE_NAME} ."
                 }
             }
         }
 
         stage('Docker Deploy') {
             steps {
+                // Deploy your Docker image as needed
                 script {
-                    // Deploy your Docker image as needed
-                    // Example: Deploy the Docker image to a remote server
+                    // Example: Deploy the Docker image to a local Docker host
                     sh "docker run -d --name your-container-name -p 3000:3000 ${DOCKER_IMAGE_NAME}"
                 }
             }
@@ -56,7 +64,8 @@ pipeline {
 
         stage('Clean Up') {
             steps {
-                sh 'yarn clean-up'
+                // Clean up any temporary files or resources
+                sh 'yarn clean-up' // Replace with any cleanup command you need
             }
         }
     }
