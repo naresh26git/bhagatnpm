@@ -1,13 +1,10 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:18.17.1'
-            args '-u 115:122' // Set user with proper permissions
-        }
-    }
+    agent any
+
     environment {
         DOCKER_IMAGE_NAME = 'myapp:latest' // Specify your Docker image name and tag
     }
+
     stages {
         stage('Checkout') {
             steps {
@@ -15,6 +12,7 @@ pipeline {
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/Bhagathclubits/HRMS-deployment.git', credentialsId: 'github']]])
             }
         }
+
         stage('Build and Package') {
             steps {
                 script {
@@ -22,45 +20,49 @@ pipeline {
                     sh 'mkdir -p $WORKSPACE/app'
                     
                     // Use an official Node.js runtime as the base image
-                    docker.image('node:18.17.1').inside("-v ${WORKSPACE}/app:/app") {
-                        // Set the working directory inside the container
-                        dir('/app') {
-                            // Copy package.json and package-lock.json to the working directory
-                            sh 'cp /usr/src/app/package*.json ./'
-                            
-                            // Use Node.js and Yarn
-                            sh 'npm install -g yarn'
-                            
-                            // Install project dependencies
-                            sh 'yarn install'
-                            
-                            // Copy the rest of the application code to the working directory
-                            sh 'cp -r /usr/src/app/* .'
+                    sh '/usr/bin/docker pull node:18.17.1'
+                    sh '/usr/bin/docker run -t -d -u 115:122 -v ${WORKSPACE}/app:/app -w /app -v /var/lib/jenkins/workspace/HRMS-pipeline:/usr/src/app -e ******** -e ******** node:18.17.1 cat'
+                    
+                    // Set the working directory inside the container
+                    dir('/app') {
+                        // Copy package.json and package-lock.json to the working directory
+                        sh 'cp /usr/src/app/package*.json ./'
+                        
+                        // Use Node.js and Yarn
+                        sh 'npm install -g yarn'
+                        
+                        // Install project dependencies
+                        sh 'yarn install'
+                        
+                        // Copy the rest of the application code to the working directory
+                        sh 'cp -r /usr/src/app/* .'
 
-                            // Build your server and client (adjust the build commands as needed)
-                            sh 'yarn workspace server build:ts'
-                        }
+                        // Build your server and client (adjust the build commands as needed)
+                        sh 'yarn workspace server build:ts'
                     }
                 }
             }
         }
+
         stage('Docker Build') {
             steps {
                 // Build a Docker image of your application
                 script {
-                    sh "docker build -t ${DOCKER_IMAGE_NAME} ."
+                    sh "/usr/bin/docker build -t ${DOCKER_IMAGE_NAME} ."
                 }
             }
         }
+
         stage('Docker Deploy') {
             steps {
                 // Deploy your Docker image as needed
                 script {
                     // Example: Deploy the Docker image to a local Docker host
-                    sh "docker run -d --name your-container-name -p 3000:3000 ${DOCKER_IMAGE_NAME}"
+                    sh "/usr/bin/docker run -d --name your-container-name -p 3000:3000 ${DOCKER_IMAGE_NAME}"
                 }
             }
         }
+
         stage('Clean Up') {
             steps {
                 // Clean up any temporary files or resources
@@ -68,6 +70,7 @@ pipeline {
             }
         }
     }
+
     post {
         success {
             echo 'Deployment successful!'
