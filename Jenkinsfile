@@ -17,7 +17,7 @@ pipeline {
             steps {
                 script {
                     // Use an official Node.js runtime as the base image
-                    docker.withRegistry('https://registry.hub.docker.com', 'docker-hub-credentials') {
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerPass') {
                         // Build your Docker image
                         def customImage = docker.build("${DOCKER_IMAGE_NAME}")
                         
