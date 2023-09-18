@@ -24,7 +24,7 @@ pipeline {
                     sh "$DOCKER_BIN_PATH pull node:18.17.1"
                     
                     // Use an official Node.js runtime as the base image
-                    docker.image('node:18.17.1').inside("-u root -v /var/lib/jenkins/workspace/HRMS-pipeline:/app") {
+                    docker.image('node:18.17.1').inside("-v /var/lib/jenkins/workspace/HRMS-pipeline:/app") {
                         // Set the working directory inside the container
                         dir('/app') {
                             // Copy package.json and package-lock.json to the working directory
