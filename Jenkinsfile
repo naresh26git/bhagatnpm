@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        // Set your desired image name and tag
         IMAGE_NAME = 'myapp'
         IMAGE_TAG = 'latest'
     }
@@ -9,7 +10,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Checkout your source code from GitHub
+                // Checkout your source code from GitHub using credentials
                 checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/Bhagathclubits/HRMS-deployment.git']]])
             }
         }
@@ -63,7 +64,8 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                // Add deployment steps here (e.g., deploy to a Kubernetes cluster)
+                // Use a deployment tool or script to deploy your Docker image
+                // Example: Deploy to a Kubernetes cluster, AWS ECS, or another platform
             }
         }
     }
@@ -77,3 +79,4 @@ pipeline {
         }
     }
 }
+
