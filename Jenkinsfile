@@ -1,54 +1,82 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerPass')
+        NVM_DIR = '/var/lib/jenkins/.nvm'
+        NODE_VERSION = '18.17.1'  // Specify the Node.js version here
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                // Checkout your source code from GitHub using Git credentials
-                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[url: 'https://github.com/Bhagathclubits/HRMS-deployment.git', credentialsId: 'github']]])
+                checkout scm
+            }
+        }
+
+        stage('Setup Node.js') {
+            steps {
+                sh '''
+                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
+                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
+                    nvm install $NODE_VERSION
+                    nvm use $NODE_VERSION
+                '''
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '''
+                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
+                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
+                    nvm use $NODE_VERSION
+                    npm install -g yarn
+                    yarn install
+                '''
             }
         }
 
         stage('Build') {
             steps {
-                // Use Node.js and Yarn
-                tools {
-                    nodejs 'Node.js' // Set up Node.js tool in Jenkins
-                    yarn 'Yarn'     // Set up Yarn tool in Jenkins
+                dir('HRMS-pipeline') {
+                    sh '''
+                    echo "DEBUG: Before sudo"
+                    echo "jenkins\\$HRMS" | sudo -S npm install -g yarn
+                    echo "DEBUG: After sudo"
+                    '''
                 }
-
-                // Install dependencies and build your application
-                sh 'yarn install'
-                sh 'yarn workspace client unsafe:build'
-                sh 'yarn workspace server build:ts'
             }
         }
 
-        stage('Docker Build') {
+        stage('Docker Build and Push') {
             steps {
-                // Build a Docker image of your application using Docker credentials
                 script {
-                    docker.withRegistry('https://your-ecr-url.amazonaws.com', 'dockerPass') {
-                        def imageName = 'myapp:latest'
-
-                        // Include the Dockerfile in the build context
-                        context 'path/to/your/Dockerfile'
-
-                        // Specify the build arguments if needed
-                        args('-e SOME_VAR=some_value')
-
-                        // Build the Docker image
-                        build()
+                    def customImageTag = "myapp:${env.BUILD_NUMBER}"
+                    
+                    withCredentials([usernamePassword(credentialsId: 'dockerPass', passwordVariable: 'cluBIT$123*', usernameVariable: 'dockadministrator')]) {
+                        sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
                     }
+
+                    sh "docker build -t ${customImageTag} ."
+                    sh "docker push ${customImageTag}"
                 }
             }
         }
 
-        stage('Clean Up') {
+        stage('Deploy') {
             steps {
-                // Clean up any temporary files or resources
-                sh 'yarn clean-up' // Replace with any cleanup command you need
+                sh 'echo "Deploying your application"'
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'Deployment successful!'
+        }
+        failure {
+            echo 'Deployment failed!'
         }
     }
 }
