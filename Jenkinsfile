@@ -16,25 +16,25 @@ pipeline {
 
         stage('Setup Node.js') {
             steps {
-                script {
-                    def nvmInitScript = """
-                        export NVM_DIR=$NVM_DIR
-                        [ -s \$NVM_DIR/nvm.sh ] && . \$NVM_DIR/nvm.sh
-                        [ -s \$NVM_DIR/bash_completion ] && . \$NVM_DIR/bash_completion
-                        nvm install $NODE_VERSION
-                        nvm use $NODE_VERSION
-                    """
-                    sh returnStatus: true, script: nvmInitScript.trim()
-                }
+                sh '''
+                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
+                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
+                    nvm install $NODE_VERSION
+                    nvm use $NODE_VERSION
+                '''
             }
         }
 
         stage('Install Dependencies') {
             steps {
                 sh '''
+                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
+                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
                     nvm use $NODE_VERSION
                     npm install -g yarn
                     yarn install
+                    yarn build:server
+                    yarn workspace server start
                 '''
             }
         }
