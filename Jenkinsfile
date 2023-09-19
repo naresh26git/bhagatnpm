@@ -14,11 +14,18 @@ pipeline {
             }
         }
 
+        stage('Install NVM') {
+            steps {
+                sh 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash'
+                sh 'export NVM_DIR="$HOME/.nvm"'
+                sh '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
+                sh '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'
+            }
+        }
+
         stage('Setup Node.js') {
             steps {
                 sh '''
-                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
                     nvm install $NODE_VERSION
                     nvm use $NODE_VERSION
                 '''
@@ -28,8 +35,6 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
                     nvm use $NODE_VERSION
                     npm install -g yarn
                     yarn install
