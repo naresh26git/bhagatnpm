@@ -43,7 +43,7 @@ pipeline {
                 // Build your Docker image and pass IMAGE_NAME and IMAGE_TAG as build arguments
                 script {
                     withCredentials([string(credentialsId: 'dockerPass', variable: 'DOCKER_CREDENTIALS')]) {
-                        sh "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} --build-arg IMAGE_NAME=${env.IMAGE_NAME} --build-arg IMAGE_TAG=${env.IMAGE_TAG} -f /path/to/your/Dockerfile ."
+                        sh "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} --build-arg IMAGE_NAME=${env.IMAGE_NAME} --build-arg IMAGE_TAG=${env.IMAGE_TAG} -f Dockerfile ."
                     }
                 }
             }
@@ -62,12 +62,9 @@ pipeline {
         }
 
         stage('Deploy with Docker') {
-    steps {
-        // Deploy your Docker image using Docker Compose
-        sh 'docker-compose up -d'  // Replace 'docker-compose up -d' with your actual deployment command
-    }
-}
-
+            steps {
+                // Replace 'docker-compose -f /path/to/your/docker-compose.yaml up -d' with your actual deployment command
+                sh 'docker-compose -f /root/docker-compose.yaml up -d'
             }
         }
     }
@@ -81,3 +78,4 @@ pipeline {
         }
     }
 }
+
