@@ -13,6 +13,7 @@
     "eslint-config-custom": "*",
     "prettier": "^2.5.1",
     "turbo": "latest"
+    "@types/nodes": "20.3.2"
   },
   "name": "clubits",
   "packageManager": "yarn",
