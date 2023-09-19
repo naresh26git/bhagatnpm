@@ -1,23 +1,26 @@
-# Use an official Node.js runtime as the base image
+# Use an official Node.js runtime as a parent image
 FROM node:18.17.1
 
-# Set the working directory inside the container
+# Set the working directory in the container
 WORKDIR /app
+
+# Install npm globally and use it to install yarn
+RUN npm install -g yarn
 
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Install project dependencies
-RUN npm install
+# Install project dependencies using yarn
+RUN yarn install
 
 # Copy the rest of the application code to the working directory
 COPY . .
 
-# Build your server and client (adjust the build commands as needed)
-RUN npm run build:server
+# Expose a port if your application listens on a specific port
+EXPOSE $PORT
 
-# Expose any necessary ports (if your Node.js app listens on a specific port)
-EXPOSE 3000
+# Build the server using yarn
+RUN yarn build:server
 
-# Define the command to start your application (modify as needed)
-CMD ["npm", "run", "dev"]
+# Define the command to start your Node.js application
+CMD ["yarn", "workspace", "server", "start"]
