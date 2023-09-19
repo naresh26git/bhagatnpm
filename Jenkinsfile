@@ -1,10 +1,11 @@
 pipeline {
     agent any
-
+    
     environment {
         // Set your desired image name and tag
         IMAGE_NAME = 'myapp'
         IMAGE_TAG = 'latest'
+        DOCKER_USERNAME = 'dockadministrator' // Replace with your Docker Hub username
     }
 
     stages {
@@ -19,9 +20,6 @@ pipeline {
             steps {
                 // Install global yarn
                 sh '/root/.nvm/versions/node/v18.17.1/bin/yarn install'
-
-                // Optionally, you can also install any global npm packages here
-                // sh '/root/.nvm/versions/node/v18.17.1/bin/npm install -g some-package'
             }
         }
 
@@ -44,7 +42,7 @@ pipeline {
                 // Build your Docker image and pass IMAGE_NAME and IMAGE_TAG as build arguments
                 script {
                     withCredentials([string(credentialsId: 'dockerPass', variable: 'DOCKER_CREDENTIALS')]) {
-                        sh "/usr/bin/docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} --build-arg IMAGE_NAME=${env.IMAGE_NAME} --build-arg IMAGE_TAG=${env.IMAGE_TAG} -f /path/to/your/Dockerfile ."
+                        sh "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} --build-arg IMAGE_NAME=${env.IMAGE_NAME} --build-arg IMAGE_TAG=${env.IMAGE_TAG} -f Dockerfile ."
                     }
                 }
             }
@@ -55,27 +53,27 @@ pipeline {
                 // Push the Docker image to Docker Hub
                 script {
                     withCredentials([string(credentialsId: 'dockerPass', variable: 'DOCKER_CREDENTIALS')]) {
-                        sh "/usr/bin/docker login -u your-docker-username -p ${DOCKER_CREDENTIALS}"
-                        sh "/usr/bin/docker push ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
+                        sh "docker login -u ${DOCKER_USERNAME} -p ${DOCKER_CREDENTIALS}"
+                        sh "docker push ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
                     }
                 }
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy with Docker') {
             steps {
-                // Use a deployment tool or script to deploy your Docker image
-                // Example: Deploy to a Kubernetes cluster, AWS ECS, or another platform
+                // Deploy your Docker image using Docker Compose or any other method
+                // Example: docker-compose up -d
             }
         }
     }
 
     post {
         success {
-            echo 'Build and deployment completed successfully.'
+            echo 'Build, push, and deployment completed successfully.'
         }
         failure {
-            echo 'Build or deployment failed.'
+            echo 'Build, push, or deployment failed.'
         }
     }
 }
