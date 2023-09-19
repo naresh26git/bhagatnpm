@@ -17,15 +17,14 @@ pipeline {
         stage('Setup Node.js') {
             steps {
                 script {
-                    def nvmScript = "${NVM_DIR}/nvm.sh"
-                    if (fileExists(nvmScript)) {
-                        sh "source ${nvmScript}"
-                        sh "nvm install ${NODE_VERSION}"
-                        sh "nvm use ${NODE_VERSION}"
-                        sh "npm install -g yarn"  // Add this line
-                    } else {
-                        error "NVM setup script not found at ${nvmScript}"
-                    }
+                    def nvmInitScript = """
+                        export NVM_DIR=$NVM_DIR
+                        [ -s \$NVM_DIR/nvm.sh ] && . \$NVM_DIR/nvm.sh
+                        [ -s \$NVM_DIR/bash_completion ] && . \$NVM_DIR/bash_completion
+                        nvm install $NODE_VERSION
+                        nvm use $NODE_VERSION
+                    """
+                    sh returnStatus: true, script: nvmInitScript.trim()
                 }
             }
         }
@@ -33,8 +32,8 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 sh '''
-                    [ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
                     nvm use $NODE_VERSION
+                    npm install -g yarn
                     yarn install
                 '''
             }
@@ -47,7 +46,6 @@ pipeline {
                     echo "DEBUG: Before sudo"
                     echo "jenkins\\$HRMS" | sudo -S npm install -g yarn
                     echo "DEBUG: After sudo"
-                    yarn build:server  // Add this line
                     '''
                 }
             }
