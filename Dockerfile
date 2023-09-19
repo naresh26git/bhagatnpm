@@ -2,7 +2,7 @@
 FROM node:18.17.1
 
 # Set the user to 'node'
-USER node
+USER jenkins
 
 # Set the working directory inside the container
 WORKDIR /app
