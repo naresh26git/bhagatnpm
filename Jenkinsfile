@@ -14,7 +14,7 @@ pipeline {
 
     tools {
         // Define the NodeJS installation name here
-        nodejs 'NodeJS-18.17.1'
+        nodejs 'NodeJS'
     }
 
     stages {
