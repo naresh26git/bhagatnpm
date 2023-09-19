@@ -17,12 +17,12 @@ pipeline {
         }
 
         stage('Install Dependencies') {
-    steps {
-        // Install global yarn
-        sh '/full/path/to/npm install -g yarn'
-        sh '/full/path/to/npm install'
-    }
-}
+            steps {
+                // Install global yarn
+                sh '/root/.nvm/versions/node/v18.17.1/bin/npm install -g yarn'
+                sh '/root/.nvm/versions/node/v18.17.1/bin/npm install'
+            }
+        }
 
         stage('Build Server') {
             steps {
@@ -62,13 +62,9 @@ pipeline {
         }
 
         stage('Deploy with Docker') {
-    steps {
-        // Deploy your Docker image using Docker Compose
-        sh 'docker-compose -f /root/docker-compose.yaml up -d'
-  
-    }
-}
-
+            steps {
+                // Deploy your Docker image using Docker Compose
+                sh 'docker-compose -f /root/docker-compose.yaml up -d'
             }
         }
     }
@@ -82,4 +78,3 @@ pipeline {
         }
     }
 }
-
