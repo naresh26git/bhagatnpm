@@ -8,6 +8,11 @@ pipeline {
         DOCKER_USERNAME = 'dockadministrator' // Replace with your Docker Hub username
     }
 
+    tools {
+        // Define the NodeJS installation name here
+        nodejs 'NodeJS-18.17.1'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -19,9 +24,17 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                // Use the configured NodeJS installation
-               tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
                sh 'npm install -g yarn'
                sh 'yarn install'
+            }
+        }
+
+        stage('Install Yarn') {
+            steps {
+                script {
+                    sh 'npm config set prefix $WORKSPACE/.npm-global'
+                    sh 'npm install -g yarn'
+                }
             }
         }
 
@@ -79,5 +92,3 @@ pipeline {
         }
     }
 }
-
-
