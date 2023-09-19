@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     environment {
         // Set your desired image name and tag
         IMAGE_NAME = 'myapp'
@@ -19,21 +19,22 @@ pipeline {
         stage('Install Dependencies') {
             steps {
                 // Install global yarn
-                sh '/root/.nvm/versions/node/v18.17.1/bin/yarn install'
+                sh 'npm install -g yarn'
+                sh 'yarn install'
             }
         }
 
         stage('Build Server') {
             steps {
                 // Build the server
-                sh '/root/.nvm/versions/node/v18.17.1/bin/yarn build:server'
+                sh 'yarn build:server'
             }
         }
 
         stage('Start Server') {
             steps {
                 // Start the server
-                sh '/root/.nvm/versions/node/v18.17.1/bin/yarn workspace server start'
+                sh 'yarn workspace server start'
             }
         }
 
