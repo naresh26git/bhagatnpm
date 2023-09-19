@@ -2,83 +2,80 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerPass')
-        NVM_DIR = '/var/lib/jenkins/.nvm'
-        NODE_VERSION = '18.17.1'  // Specify the Node.js version here
+        // Set your desired image name and tag
+        IMAGE_NAME = 'myapp'
+        IMAGE_TAG = 'latest'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                checkout scm
-            }
-        }
-
-        stage('Setup Node.js') {
-            steps {
-                sh '''
-                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
-                    nvm install $NODE_VERSION
-                    nvm use $NODE_VERSION
-                '''
+                // Checkout your source code from GitHub using credentials
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/Bhagathclubits/HRMS-deployment.git']]])
             }
         }
 
         stage('Install Dependencies') {
             steps {
-                sh '''
-                    [ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh"
-                    [ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion"
-                    nvm use $NODE_VERSION
-                    npm install -g yarn
-                    yarn install
-                    yarn build:server
-                    yarn workspace server start
-                '''
+                // Install global yarn
+                sh 'npm install -g yarn'
+                // Install project dependencies
+                sh 'yarn install'
             }
         }
 
-        stage('Build') {
+        stage('Build Server') {
             steps {
-                dir('HRMS-pipeline') {
-                    sh '''
-                    echo "DEBUG: Before sudo"
-                    echo "jenkins\\$HRMS" | sudo -S npm install -g yarn
-                    echo "DEBUG: After sudo"
-                    '''
+                // Build the server
+                sh 'yarn build:server'
+            }
+        }
+
+        stage('Start Server') {
+            steps {
+                // Start the server
+                sh 'yarn workspace server start'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                // Build your Docker image and pass IMAGE_NAME and IMAGE_TAG as build arguments
+                script {
+                    withCredentials([string(credentialsId: 'dockerPass', variable: 'DOCKER_CREDENTIALS')]) {
+                        docker.build("${env.IMAGE_NAME}:${env.IMAGE_TAG}", '--build-arg IMAGE_NAME=${env.IMAGE_NAME} --build-arg IMAGE_TAG=${env.IMAGE_TAG} -f ./path/to/your/Dockerfile .')
+                    }
                 }
             }
         }
 
-        stage('Docker Build and Push') {
+        stage('Push Docker Image') {
             steps {
+                // Push the Docker image to Docker Hub
                 script {
-                    def customImageTag = "myapp:${env.BUILD_NUMBER}"
-                    
-                    withCredentials([usernamePassword(credentialsId: 'dockerPass', passwordVariable: 'cluBIT$123*', usernameVariable: 'dockadministrator')]) {
-                        sh "docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}"
+                    withCredentials([string(credentialsId: 'dockerPass', variable: 'DOCKER_CREDENTIALS')]) {
+                        docker.withRegistry('https://registry.hub.docker.com', "${DOCKER_CREDENTIALS}") {
+                            dockerImage.push()
+                        }
                     }
-
-                    sh "docker build -t ${customImageTag} ."
-                    sh "docker push ${customImageTag}"
                 }
             }
         }
 
         stage('Deploy') {
             steps {
-                sh 'echo "Deploying your application"'
+                // Use a deployment tool or script to deploy your Docker image
+                // Example: Deploy to a Kubernetes cluster, AWS ECS, or another platform
             }
         }
     }
 
     post {
         success {
-            echo 'Deployment successful!'
+            echo 'Build and deployment completed successfully.'
         }
         failure {
-            echo 'Deployment failed!'
+            echo 'Build or deployment failed.'
         }
     }
 }
