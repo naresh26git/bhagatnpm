@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    parameters {
+        string(name: 'DOCKERFILE_PATH', defaultValue: '/path/to/your/Dockerfile', description: 'Path to your Dockerfile')
+    }
+
     environment {
         // Set your desired image name and tag
         IMAGE_NAME = 'myapp'
@@ -23,9 +27,9 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-               // Use the configured NodeJS installation
-               sh 'npm install -g yarn'
-               sh 'yarn install'
+                // Use the configured NodeJS installation
+                sh 'npm install -g yarn'
+                sh 'yarn install'
             }
         }
 
@@ -40,7 +44,7 @@ pipeline {
 
         stage('Build Server') {
             steps {
-            // Build the server
+                // Build the server
                 sh 'yarn build:server'
             }
         }
@@ -57,7 +61,7 @@ pipeline {
                 // Build your Docker image and pass IMAGE_NAME and IMAGE_TAG as build arguments
                 script {
                     withCredentials([string(credentialsId: 'dockerPass', variable: 'DOCKER_CREDENTIALS')]) {
-                        sh "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} --build-arg IMAGE_NAME=${env.IMAGE_NAME} --build-arg IMAGE_TAG=${env.IMAGE_TAG} -f /path/to/your/Dockerfile ."
+                        sh "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} --build-arg IMAGE_NAME=${env.IMAGE_NAME} --build-arg IMAGE_TAG=${env.IMAGE_TAG} -f ./Dockerfile ."
                     }
                 }
             }
