@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        DOCKER_IMAGE_NAME = 'myapp:latest' // Specify your Docker image name and tag
-        DOCKER_BIN_PATH = '/usr/bin/docker' // Specify the path to the docker executable
-    }
-
     stages {
         stage('Checkout') {
             steps {
@@ -14,54 +9,37 @@ pipeline {
             }
         }
 
-        stage('Build and Package') {
+        stage('Build') {
             steps {
-                script {
-                    // Use the $WORKSPACE environment variable to create the /app directory
-                    sh "mkdir -p \$WORKSPACE/app"
-                    
-                    // Pull the Node.js Docker image
-                    sh "$DOCKER_BIN_PATH pull node:18.17.1"
-                    
-                    // Use an official Node.js runtime as the base image
-                    docker.image('node:18.17.1').inside("-v /var/lib/jenkins/workspace/HRMS-pipeline:/app") {
-                        // Set the working directory inside the container
-                        dir('/app') {
-                            // Copy package.json and package-lock.json to the working directory
-                            sh 'cp /usr/src/app/package*.json ./'
-                            
-                            // Use Node.js and Yarn
-                            sh 'npm install -g yarn'
-                            
-                            // Install project dependencies
-                            sh 'yarn install'
-                            
-                            // Copy the rest of the application code to the working directory
-                            sh 'cp -r /usr/src/app/* .'
-
-                            // Build your server and client (adjust the build commands as needed)
-                            sh 'yarn workspace server build:ts'
-                        }
-                    }
+                // Use Node.js and Yarn
+                tools {
+                    nodejs 'Node.js' // Set up Node.js tool in Jenkins
+                    yarn 'Yarn'     // Set up Yarn tool in Jenkins
                 }
+
+                // Install dependencies and build your application
+                sh 'yarn install'
+                sh 'yarn workspace client unsafe:build'
+                sh 'yarn workspace server build:ts'
             }
         }
 
         stage('Docker Build') {
             steps {
-                // Build a Docker image of your application
+                // Build a Docker image of your application using Docker credentials
                 script {
-                    sh "$DOCKER_BIN_PATH build -t ${DOCKER_IMAGE_NAME} ."
-                }
-            }
-        }
+                    docker.withRegistry('https://your-ecr-url.amazonaws.com', 'dockerPass') {
+                        def imageName = 'myapp:latest'
 
-        stage('Docker Deploy') {
-            steps {
-                // Deploy your Docker image as needed
-                script {
-                    // Example: Deploy the Docker image to a local Docker host
-                    sh "$DOCKER_BIN_PATH run -d --name your-container-name -p 3000:3000 ${DOCKER_IMAGE_NAME}"
+                        // Include the Dockerfile in the build context
+                        context 'path/to/your/Dockerfile'
+
+                        // Specify the build arguments if needed
+                        args('-e SOME_VAR=some_value')
+
+                        // Build the Docker image
+                        build()
+                    }
                 }
             }
         }
@@ -71,15 +49,6 @@ pipeline {
                 // Clean up any temporary files or resources
                 sh 'yarn clean-up' // Replace with any cleanup command you need
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'Deployment successful!'
-        }
-        failure {
-            echo 'Deployment failed!'
         }
     }
 }
