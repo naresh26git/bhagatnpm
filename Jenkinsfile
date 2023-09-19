@@ -17,12 +17,12 @@ pipeline {
         }
 
         stage('Install Dependencies') {
-            steps {
-                // Install global yarn
-                sh 'npm install -g yarn'
-                sh 'yarn install'
-            }
-        }
+    steps {
+        // Install global yarn
+        sh '/full/path/to/npm install -g yarn'
+        sh '/full/path/to/npm install'
+    }
+}
 
         stage('Build Server') {
             steps {
@@ -43,7 +43,7 @@ pipeline {
                 // Build your Docker image and pass IMAGE_NAME and IMAGE_TAG as build arguments
                 script {
                     withCredentials([string(credentialsId: 'dockerPass', variable: 'DOCKER_CREDENTIALS')]) {
-                        sh "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} --build-arg IMAGE_NAME=${env.IMAGE_NAME} --build-arg IMAGE_TAG=${env.IMAGE_TAG} -f Dockerfile ."
+                        sh "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} --build-arg IMAGE_NAME=${env.IMAGE_NAME} --build-arg IMAGE_TAG=${env.IMAGE_TAG} -f /path/to/your/Dockerfile ."
                     }
                 }
             }
@@ -62,9 +62,13 @@ pipeline {
         }
 
         stage('Deploy with Docker') {
-            steps {
-                // Replace 'docker-compose -f /path/to/your/docker-compose.yaml up -d' with your actual deployment command
-                sh 'docker-compose -f /root/docker-compose.yaml up -d'
+    steps {
+        // Deploy your Docker image using Docker Compose
+        sh 'docker-compose -f /root/docker-compose.yaml up -d'
+  
+    }
+}
+
             }
         }
     }
