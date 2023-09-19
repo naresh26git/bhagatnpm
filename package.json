@@ -3,7 +3,7 @@
   "scripts": {
     "start": "pm2 start myapp.js",
     "build:server": "yarn workspace client unsafe:build && rm -r apis/server/public && mkdir apis/server/public && cp -r apps/client/dist/ apis/server/public/ && yarn workspace server build:ts",
-    "build": "npm run build",
+    "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
@@ -13,7 +13,6 @@
     "eslint-config-custom": "*",
     "prettier": "^2.5.1",
     "turbo": "latest"
-    "@types/nodes": "20.3.2"
   },
   "name": "clubits",
   "packageManager": "yarn",
