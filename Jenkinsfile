@@ -62,9 +62,12 @@ pipeline {
         }
 
         stage('Deploy with Docker') {
-            steps {
-                // Deploy your Docker image using Docker Compose or any other method
-                // Example: docker-compose up -d
+    steps {
+        // Deploy your Docker image using Docker Compose
+        sh 'docker-compose up -d'  // Replace 'docker-compose up -d' with your actual deployment command
+    }
+}
+
             }
         }
     }
