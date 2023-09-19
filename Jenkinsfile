@@ -18,15 +18,16 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                // Install global yarn
-                sh '/root/.nvm/versions/node/v18.17.1/bin/npm install -g yarn'
-                sh '/root/.nvm/versions/node/v18.17.1/bin/npm install'
+               // Use the configured NodeJS installation
+               tool name: 'NodeJS', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+               sh 'npm install -g yarn'
+               sh 'yarn install'
             }
         }
 
         stage('Build Server') {
             steps {
-                // Build the server
+            // Build the server
                 sh 'yarn build:server'
             }
         }
@@ -78,3 +79,5 @@ pipeline {
         }
     }
 }
+
+
