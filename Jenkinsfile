@@ -16,13 +16,14 @@ pipeline {
         }
 
         stage('Install Dependencies') {
-            steps {
-                // Install global yarn
-                sh 'npm install -g yarn'
-                // Install project dependencies
-                sh 'yarn install'
-            }
-        }
+    steps {
+        // Install global yarn
+        sh '/root/.nvm/versions/node/v18.17.1/bin/npm install -g yarn'
+        // Install project dependencies
+        sh '/root/.nvm/versions/node/v18.17.1/bin/npm install'
+    }
+}
+
 
         stage('Build Server') {
             steps {
