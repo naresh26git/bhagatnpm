@@ -16,26 +16,26 @@ pipeline {
         }
 
         stage('Install Dependencies') {
-    steps {
-        // Install global yarn
-        sh '/root/.nvm/versions/node/v18.17.1/bin/npm install -g yarn'
-        // Install project dependencies
-        sh '/root/.nvm/versions/node/v18.17.1/bin/npm install'
-    }
-}
+            steps {
+                // Install global yarn
+                sh '/root/.nvm/versions/node/v18.17.1/bin/yarn install'
 
+                // Optionally, you can also install any global npm packages here
+                // sh '/root/.nvm/versions/node/v18.17.1/bin/npm install -g some-package'
+            }
+        }
 
         stage('Build Server') {
             steps {
                 // Build the server
-                sh 'yarn build:server'
+                sh '/root/.nvm/versions/node/v18.17.1/bin/yarn build:server'
             }
         }
 
         stage('Start Server') {
             steps {
                 // Start the server
-                sh 'yarn workspace server start'
+                sh '/root/.nvm/versions/node/v18.17.1/bin/yarn workspace server start'
             }
         }
 
@@ -44,7 +44,7 @@ pipeline {
                 // Build your Docker image and pass IMAGE_NAME and IMAGE_TAG as build arguments
                 script {
                     withCredentials([string(credentialsId: 'dockerPass', variable: 'DOCKER_CREDENTIALS')]) {
-                        docker.build("${env.IMAGE_NAME}:${env.IMAGE_TAG}", '--build-arg IMAGE_NAME=${env.IMAGE_NAME} --build-arg IMAGE_TAG=${env.IMAGE_TAG} -f ./path/to/your/Dockerfile .')
+                        sh "/usr/bin/docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} --build-arg IMAGE_NAME=${env.IMAGE_NAME} --build-arg IMAGE_TAG=${env.IMAGE_TAG} -f /path/to/your/Dockerfile ."
                     }
                 }
             }
@@ -55,18 +55,17 @@ pipeline {
                 // Push the Docker image to Docker Hub
                 script {
                     withCredentials([string(credentialsId: 'dockerPass', variable: 'DOCKER_CREDENTIALS')]) {
-                        docker.withRegistry('https://registry.hub.docker.com', "${DOCKER_CREDENTIALS}") {
-                            dockerImage.push()
-                        }
+                        sh "/usr/bin/docker login -u your-docker-username -p ${DOCKER_CREDENTIALS}"
+                        sh "/usr/bin/docker push ${env.IMAGE_NAME}:${env.IMAGE_TAG}"
                     }
                 }
             }
         }
 
-        stage('Deploy to Local Docker') {
+        stage('Deploy') {
             steps {
-                // Deploy the Docker image to a local Docker environment
-                sh 'docker run -d -p 8080:3000 --name myapp-container ${env.IMAGE_NAME}:${env.IMAGE_TAG}'
+                // Use a deployment tool or script to deploy your Docker image
+                // Example: Deploy to a Kubernetes cluster, AWS ECS, or another platform
             }
         }
     }
