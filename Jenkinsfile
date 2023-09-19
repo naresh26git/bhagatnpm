@@ -62,10 +62,10 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
+        stage('Deploy to Local Docker') {
             steps {
-                // Use a deployment tool or script to deploy your Docker image
-                // Example: Deploy to a Kubernetes cluster, AWS ECS, or another platform
+                // Deploy the Docker image to a local Docker environment
+                sh 'docker run -d -p 8080:3000 --name myapp-container ${env.IMAGE_NAME}:${env.IMAGE_TAG}'
             }
         }
     }
@@ -79,4 +79,3 @@ pipeline {
         }
     }
 }
-
