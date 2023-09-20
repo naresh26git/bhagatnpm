@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     parameters {
-        string(name: 'DOCKERFILE_PATH', defaultValue: '/path/to/your/Dockerfile', description: 'Path to your Dockerfile')
+        string(name: 'DOCKERFILE_PATH', defaultValue: '/var/lib/jenkins/workspace/HRMS-pipeline/Dockerfile', description: 'Path to your Dockerfile')
     }
 
     environment {
