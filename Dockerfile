@@ -20,4 +20,4 @@ EXPOSE 3000
 RUN yarn build:ts
 
 # Define the command to start your Node.js application
-CMD ["yarn", "start"]
+CMD ["yarn", "workspace","server","start"]
