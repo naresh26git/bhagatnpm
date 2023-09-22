@@ -56,6 +56,23 @@ pipeline {
             }
         }
 
+        stage('Transfer .env file') {
+            steps {
+                script {
+                    // Define the local file path
+                    def localFilePath = 'C:/Users/BHAGATH/Downloads/.env'
+
+                    // Define the remote server details
+                    def remoteUser = 'jenkins'
+                    def remoteHost = '10.0.1.195'
+                    def remoteFilePath = '/var/lib/jenkins/workspace/HRMS-pipeline/apis/server/'
+
+                    // Use the 'sh' step to execute the 'scp' command
+                    sh(script: "scp ${localFilePath} ${remoteUser}@${remoteHost}:${remoteFilePath}")
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 // Build your Docker image and pass IMAGE_NAME and IMAGE_TAG as build arguments
