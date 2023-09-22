@@ -66,7 +66,7 @@ pipeline {
         stage('Build Server') {
             steps {
                 // Build the server
-                sh 'npm run build'
+                sh 'yarn build:server'
             }
         }
 
