@@ -82,7 +82,7 @@ pipeline {
                 // Build your Docker image and pass IMAGE_NAME and IMAGE_TAG as build arguments
                 script {
                     withCredentials([string(credentialsId: 'dockerPass', variable: 'DOCKER_CREDENTIALS')]) {
-                        sh "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} --build-arg IMAGE_NAME=${env.IMAGE_NAME} --build-arg IMAGE_TAG=${env.IMAGE_TAG} -f ./Dockerfile ."
+                        sh "docker build -t ${env.IMAGE_NAME}:${env.IMAGE_TAG} --build-arg IMAGE_NAME=${env.IMAGE_NAME} --build-arg IMAGE_TAG=${env.IMAGE_TAG} -f ${env.DOCKERFILE_PATH} ."
                     }
                 }
             }
