@@ -42,6 +42,17 @@ pipeline {
             }
         }
 
+        stage('Install Server Dependencies') {
+            steps {
+                script {
+                    def serverDirectory = "${WORKSPACE}/apps/server"
+                    dir(serverDirectory) {
+                        sh 'yarn install'
+                    }
+                }
+            }
+        }
+
         stage('Install Client Dependencies') {
             steps {
                 dir('apps/client') {
