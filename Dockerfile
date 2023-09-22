@@ -13,6 +13,9 @@ RUN yarn install
 # Copy the rest of the application code to the working directory
 COPY . .
 
+# Build the server
+RUN yarn build:server
+
 # Expose a port (if needed)
 EXPOSE 3000
 
