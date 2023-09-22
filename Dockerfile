@@ -1,5 +1,5 @@
 # Use Node.js version 18.17.1 as a parent image
-FROM node:18.17.1
+FROM node:18.18.0
 
 # Set the working directory in the container
 WORKDIR /app
