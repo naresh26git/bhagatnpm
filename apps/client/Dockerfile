@@ -8,20 +8,16 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install project dependencies
-RUN npm install --legacy-peer-deps
-
-
-# Install TypeScript globally in the container
-RUN npm install -g typescript
+RUN yarn install
 
 # Copy the rest of your application code to the working directory
 COPY . .
 
 # Build your TypeScript code
-RUN npm run build
+#RUN npm run build
 
 # Expose a port if your application serves HTTP
  EXPOSE 3000
 
 # Define the command to start your application
- CMD [ "npm", "start" ]
+ CMD [ "yarn", "start" ,"npm"]
