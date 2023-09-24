@@ -7,8 +7,8 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "build": "pnpm build",  // Added "build" script
-    "dev": "pnpm dev"      // Added "dev" script
+    "build": "pnpm build", 
+    "dev": "pnpm dev"   
   },
   "devDependencies": {
     "eslint": "^7.32.0",
