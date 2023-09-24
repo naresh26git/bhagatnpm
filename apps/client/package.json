@@ -18,7 +18,7 @@
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@popperjs/core": "^2.11.7",
-    "@trpc/client": "^9.27.2",
+    "@trpc/client": "^10.38.4",
     "@trpc/server": "^10.20.0",
     "bootstrap": "^5.2.3",
     "date-fns": "^2.30.0",
