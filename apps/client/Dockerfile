@@ -8,7 +8,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install project dependencies
-RUN npm install
+RUN npm install --legacy-peer-deps
+
 
 # Install TypeScript globally in the container
 RUN npm install -g typescript
