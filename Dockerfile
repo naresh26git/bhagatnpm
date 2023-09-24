@@ -1,5 +1,5 @@
 # Use an official Node.js runtime as the base image
-FROM node:14
+FROM node:18.18.0
 
 # Set the working directory inside the container
 WORKDIR /app
@@ -7,8 +7,8 @@ WORKDIR /app
 # Copy the package.json and package-lock.json files to the working directory
 COPY package*.json ./
 
-# Install project dependencies
-RUN npm install
+# Install project dependencies using yarn
+RUN yarn install
 
 # Copy the rest of the project files to the working directory
 COPY . .
@@ -16,5 +16,5 @@ COPY . .
 # Expose any necessary ports (if your applications run on specific ports)
 EXPOSE 3000
 
-# Define the command to start your development server (update this accordingly)
-CMD ["npm", "dev"]
+# Define the command to start your application (update this accordingly)
+CMD ["yarn", "start"]
